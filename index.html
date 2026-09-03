@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shop &amp; Win</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-dark-1:#232326;
+    --bg-dark-2:#0a0a0c;
+    --accent-red:#ff2d55;
+    --accent-red-soft:#ff5c7c;
+    --accent-gold:#f3b93b;
+    --accent-lime:#c8ff5c;
+    --white:#ffffff;
+    --ink:#15151a;
+    --muted:#8b8b93;
+    --body-bg:#f0f0f2;
+    --card-bg:#ffffff;
+    --pill-radius:999px;
+    --nav-height:30vh;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Poppins', system-ui, sans-serif;
+    background:var(--body-bg);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:calc(84px + env(safe-area-inset-bottom));
+  }
+
+  /* ===================== TOP BANNER / NAV ===================== */
+  .topnav{
+    position:relative;
+    width:100%;
+    height:var(--nav-height);
+    min-height:230px;
+    overflow:hidden;
+    background:linear-gradient(180deg, var(--bg-dark-1) 0%, var(--bg-dark-2) 100%);
+  }
+
+  .nav-row{
+    position:absolute;
+    top:0; left:0; right:0;
+    z-index:5;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 16px 0;
+  }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .brand-logo{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    object-fit:contain;
+    background:#ffffff;
+    box-shadow:0 0 0 2px rgba(255,255,255,0.15);
+    flex-shrink:0;
+    padding:2px;
+  }
+  .brand-name{
+    color:var(--white);
+    font-weight:800;
+    font-size:1.05rem;
+    letter-spacing:0.2px;
+    white-space:nowrap;
+  }
+
+  .nav-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .login-btn{
+    background:var(--white);
+    color:var(--ink);
+    border:none;
+    font-family:inherit;
+    font-weight:700;
+    font-size:0.78rem;
+    letter-spacing:0.3px;
+    padding:11px 18px;
+    border-radius:var(--pill-radius);
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .menu-btn{
+    background:transparent;
+    border:none;
+    padding:6px;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    cursor:pointer;
+  }
+  .menu-btn span{
+    display:block;
+    width:22px;
+    height:3px;
+    border-radius:2px;
+    background:var(--white);
+  }
+
+  /* ---- slider ---- */
+  .banner-slider{
+    display:flex;
+    width:100%;
+    height:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .banner-slider::-webkit-scrollbar{display:none;}
+
+  .slide{
+    flex:0 0 100%;
+    width:100%;
+    height:100%;
+    scroll-snap-align:start;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .slide-image{
+    background-size:cover;
+    background-position:center;
+  }
+  .slide-image::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 35%, rgba(0,0,0,0.35) 100%);
+  }
+
+  /* ---- spin to win slide ---- */
+  .slide-spin{
+    background:radial-gradient(circle at 50% 30%, #29292e 0%, var(--bg-dark-2) 75%);
+  }
+
+  .spin-copy{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    transform:translateY(-6px);
+  }
+  .spin-copy .spin-line1{
+    font-weight:900;
+    font-size:clamp(1.9rem, 8vw, 2.6rem);
+    letter-spacing:1px;
+    line-height:1;
+    background:linear-gradient(180deg, #e8ffb0 0%, var(--accent-lime) 55%, #9ee62c 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    filter:drop-shadow(0 0 14px rgba(200,255,92,0.45));
+  }
+  .spin-copy .spin-line2{
+    font-weight:900;
+    font-size:clamp(1.9rem, 8vw, 2.6rem);
+    letter-spacing:1px;
+    line-height:1;
+    background:linear-gradient(180deg, #e8ffb0 0%, var(--accent-lime) 55%, #9ee62c 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    filter:drop-shadow(0 0 14px rgba(200,255,92,0.45));
+  }
+  .spin-copy .spin-live{
+    margin-top:6px;
+    font-weight:600;
+    font-size:0.85rem;
+    letter-spacing:4px;
+    background:linear-gradient(90deg, #9c9ca4 0%, #ffffff 50%, #9c9ca4 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  /* ---- floating promo boxes ---- */
+  .float-stage{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:1;
+  }
+  .fbox{
+    position:absolute;
+    bottom:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:var(--white);
+    font-weight:800;
+    line-height:1.1;
+    border-radius:10px;
+    opacity:0;
+    padding:6px;
+    animation-name:floatUp;
+    animation-timing-function:ease-in-out;
+    animation-iteration-count:infinite;
+  }
+  @keyframes floatUp{
+    0%   { transform:translateY(90px) scale(0.85); opacity:0; }
+    14%  { transform:translateY(0) scale(1);       opacity:1; }
+    70%  { transform:translateY(0) scale(1);       opacity:1; }
+    100% { transform:translateY(-140px) scale(0.9); opacity:0; }
+  }
+
+  .fbox.b1{ left:8%;  width:64px;  height:64px;  font-size:0.72rem; background:#e83e8c; animation-duration:7s; animation-delay:0s; }
+  .fbox.b2{ left:24%; width:56px;  height:84px;  font-size:0.68rem; background:#2f3a6b; animation-duration:7s; animation-delay:1.4s; }
+  .fbox.b3{ left:42%; width:78px;  height:56px;  font-size:0.72rem; background:#ffb24a; color:var(--ink); animation-duration:7s; animation-delay:2.8s; }
+  .fbox.b4{ left:60%; width:70px;  height:70px;  font-size:0.66rem; background:#3fbf6f; animation-duration:7s; animation-delay:0.7s; }
+  .fbox.b5{ left:77%; width:58px;  height:90px;  font-size:0.68rem; background:#ff4d4d; animation-duration:7s; animation-delay:2.1s; }
+
+  /* ---- dots ---- */
+  .dots-row{
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:6px;
+    padding:14px 18px 6px;
+  }
+  .dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#c9c9cf;
+    transition:width 0.25s ease, background 0.25s ease;
+  }
+  .dot.active{
+    width:20px;
+    border-radius:4px;
+    background:var(--ink);
+  }
+
+  /* ===================== BODY ===================== */
+  .body-content{
+    min-height:40vh;
+  }
+
+  /* ===================== BOTTOM NAV ===================== */
+  .bottom-nav{
+    position:fixed;
+    left:0; right:0; bottom:0;
+    z-index:20;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:6px;
+    padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+    background:var(--white);
+    box-shadow:0 -6px 24px rgba(0,0,0,0.08);
+  }
+  .nav-item{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:3px;
+    background:none;
+    border:none;
+    font-family:inherit;
+    color:var(--muted);
+    font-size:0.68rem;
+    font-weight:600;
+    cursor:pointer;
+    padding:6px 2px;
+  }
+  .nav-item svg{ width:22px; height:22px; }
+  .nav-item.active{ color:#5b4bff; }
+  .nav-item.active svg{ stroke:#5b4bff; }
+
+  .nav-item.cart{
+    position:relative;
+    flex:0 0 auto;
+    width:60px;
+  }
+  .cart-circle{
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    background:#5b4bff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-top:-30px;
+    box-shadow:0 8px 18px rgba(91,75,255,0.4);
+  }
+  .cart-circle svg{ width:24px; height:24px; stroke:var(--white); }
+  .nav-item.cart span{ color:var(--ink); font-weight:700; }
+</style>
+</head>
+<body>
+
+  <header class="topnav">
+    <div class="nav-row">
+      <div class="brand">
+        <img class="brand-logo" src="https://i.ibb.co/5W0V0c1h/photo-2026-09-01-17-01-22.jpg" alt="Shop & Win logo">
+        <span class="brand-name">Shop &amp; Win</span>
+      </div>
+      <div class="nav-actions">
+        <button class="login-btn">LOGIN / SIGN-UP</button>
+        <button class="menu-btn" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="banner-slider" id="bannerSlider">
+      <div class="slide slide-image" style="background-image:url('https://i.ibb.co/TxbfX3k9/photo-2026-09-01-17-17-13.jpg')"></div>
+
+      <div class="slide slide-spin">
+        <div class="float-stage">
+          <div class="fbox b1">15%<br>OFF</div>
+          <div class="fbox b2">10%<br>OFF</div>
+          <div class="fbox b3">30% OFF</div>
+          <div class="fbox b4">5X<br>TICKETS</div>
+          <div class="fbox b5">3x<br>TICKETS</div>
+        </div>
+        <div class="spin-copy">
+          <span class="spin-line1">SPIN TO WIN</span>
+          <span class="spin-live">IS LIVE</span>
+        </div>
+      </div>
+      <!-- Admin-uploaded banners get injected here at runtime -->
+    </div>
+
+    <div class="dots-row" id="dotsRow">
+      <!-- dots are generated to match however many slides end up in the slider -->
+    </div>
+  </header>
+
+  <main class="body-content">
+    <!-- intentionally empty for now -->
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#5b4bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>
+      <span>Draws</span>
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a2 2 0 0 1 2-2h2a2 2 0 0 0 4 0h2a2 2 0 0 1 2 2v1a2 2 0 0 0 0 4v1a2 2 0 0 1-2 2h-2a2 2 0 0 0-4 0H5a2 2 0 0 1-2-2v-1a2 2 0 0 0 0-4z"/></svg>
+      <span>Tickets</span>
+    </button>
+    <button class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-3a1.5 1.5 0 0 0 0 3h3"/></svg>
+      <span>Wallet</span>
+    </button>
+    <button class="nav-item cart">
+      <span class="cart-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2l2 4h8l2-4"/><path d="M3 7h18l-1.5 11a2 2 0 0 1-2 1.8H6.5a2 2 0 0 1-2-1.8L3 7z"/><path d="M9 11v5"/><path d="M15 11v5"/></svg>
+      </span>
+      <span>Cart</span>
+    </button>
+  </nav>
+
+  <script>
+    // Banners uploaded from admin.html are stored in localStorage
+    // (shared across pages on the same origin) under this key.
+    const STORAGE_KEY = "sw_banners";
+
+    function getAdminBanners(){
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+      catch { return []; }
+    }
+
+    // ---- inject any admin-uploaded banners as extra slides ----
+    const slider = document.getElementById('bannerSlider');
+    const spinSlide = slider.querySelector('.slide-spin');
+    getAdminBanners().forEach((b) => {
+      const slide = document.createElement('div');
+      slide.className = 'slide slide-image';
+      slide.style.backgroundImage = `url('${b.url}')`;
+      slider.insertBefore(slide, spinSlide);
+    });
+
+    // ---- build dots to match the final slide count ----
+    const dotsRow = document.getElementById('dotsRow');
+    const slides = Array.from(slider.children);
+    slides.forEach((_, i) => {
+      const dot = document.createElement('span');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.dataset.index = i;
+      dotsRow.appendChild(dot);
+    });
+
+    // ---- banner slider <-> dots sync ----
+    const dots = Array.from(dotsRow.querySelectorAll('.dot'));
+    const slideCount = slides.length;
+
+    function setActiveDot(index){
+      dots.forEach((d, i) => d.classList.toggle('active', i === index));
+    }
+
+    let scrollTimeout;
+    slider.addEventListener('scroll', () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        const index = Math.round(slider.scrollLeft / slider.clientWidth);
+        setActiveDot(index);
+      }, 60);
+    });
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        if (i >= slideCount) return;
+        slider.scrollTo({ left: i * slider.clientWidth, behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>
