@@ -414,7 +414,7 @@
   }
   .menu-back{
     position:fixed;
-    top:calc(14px + env(safe-area-inset-top));
+    top:calc(72px + env(safe-area-inset-top));
     left:16px;
     z-index:5;
     display:flex !important;
@@ -2414,6 +2414,14 @@ height: clamp(58px, 18vw, 80px);
     document.getElementById("menuBack").addEventListener("click", () => setModal(menuBackdrop, false));
     document.getElementById("addressClose").addEventListener("click", () => setModal(addressBackdrop, false));
     document.getElementById("infoClose").addEventListener("click", () => setModal(infoBackdrop, false));
+    document.getElementById("walletExpiry").addEventListener("input", (event) => {
+      const input = event.currentTarget;
+      const digits = input.value.replace(/\D/g, "").slice(0, 4);
+      input.value = digits.length > 2
+        ? `${digits.slice(0, 2)}/${digits.slice(2)}`
+        : digits;
+    });
+
     document.getElementById("walletForm").addEventListener("submit", (event) => {
       event.preventDefault();
       const form = event.currentTarget;
