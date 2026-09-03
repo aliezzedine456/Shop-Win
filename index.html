@@ -31,7 +31,7 @@
     background:var(--body-bg);
     color:var(--ink);
     -webkit-font-smoothing:antialiased;
-    padding-bottom:calc(84px + env(safe-area-inset-bottom));
+    padding-bottom:calc(96px + env(safe-area-inset-bottom));
   }
 
   /* ===================== TOP BANNER / NAV ===================== */
@@ -51,17 +51,20 @@
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:18px 16px 0;
+    gap:clamp(8px, 3vw, 16px);
+    padding:18px clamp(10px, 4vw, 16px) 0;
   }
 
   .brand{
     display:flex;
     align-items:center;
-    gap:8px;
+    gap:clamp(5px, 2vw, 8px);
+    flex:1 1 auto;
+    min-width:0;
   }
   .brand-logo{
-    width:34px;
-    height:34px;
+    width:clamp(30px, 9vw, 40px);
+    height:clamp(30px, 9vw, 40px);
     border-radius:50%;
     object-fit:contain;
     background:#ffffff;
@@ -72,7 +75,7 @@
   .brand-name{
     color:var(--white);
     font-weight:800;
-    font-size:1.05rem;
+    font-size:clamp(0.95rem, 4.6vw, 1.2rem);
     letter-spacing:0.2px;
     white-space:nowrap;
   }
@@ -80,7 +83,411 @@
   .nav-actions{
     display:flex;
     align-items:center;
+    gap:clamp(6px, 2.5vw, 10px);
+    flex:0 0 auto;
+  }
+  /* ---- compact top navigation shown after scrolling or on app sections ---- */
+  .compact-topbar{
+    position:fixed;
+    top:10px;
+    left:8px;
+    right:8px;
+    z-index:25;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    min-height:68px;
+    padding:10px 14px;
+    border-radius:24px;
+    background:rgba(255,255,255,0.97);
+    box-shadow:0 8px 24px rgba(21,21,26,0.14);
+    transform:translateY(calc(-100% - 24px));
+    opacity:0;
+    pointer-events:none;
+    transition:transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease;
+    will-change:transform, opacity;
+  }
+  body.compact-nav-visible .compact-topbar{
+    transform:translateY(0);
+    opacity:1;
+    pointer-events:auto;
+  }
+  .compact-brand{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    min-width:0;
+  }
+  .compact-brand-logo{
+    width:40px;
+    height:40px;
+    flex:0 0 40px;
+    padding:2px;
+    object-fit:contain;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 0 0 2px #f0f0f2;
+  }
+  .compact-brand-name{
+    overflow:hidden;
+    color:var(--ink);
+    font-size:clamp(0.92rem, 4.2vw, 1.1rem);
+    font-weight:900;
+    letter-spacing:0.1px;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .compact-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex:0 0 auto;
+  }
+  .compact-login-btn{
+    padding:11px clamp(11px, 3.5vw, 18px);
+    border:0;
+    border-radius:999px;
+    color:var(--ink);
+    background:#ededf0;
+    box-shadow:0 4px 12px rgba(21,21,26,0.1);
+    font-family:inherit;
+    font-size:clamp(0.6rem, 2.5vw, 0.74rem);
+    font-weight:800;
+    letter-spacing:0.15px;
+    white-space:nowrap;
+  }
+  .compact-menu-btn{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    padding:7px 3px 7px 7px;
+    border:0;
+    background:transparent;
+    cursor:pointer;
+  }
+  .compact-menu-btn span{
+    display:block;
+    width:25px;
+    height:3px;
+    border-radius:999px;
+    background:var(--ink);
+  }
+  body.is-authenticated .login-btn,
+  body.is-authenticated .compact-login-btn{
+    display:none;
+  }
+  .modal-backdrop{
+    position:fixed;
+    inset:0;
+    z-index:40;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    visibility:hidden;
+    opacity:0;
+    pointer-events:none;
+    background:rgba(0,0,0,0.7);
+    transition:opacity 0.3s ease, visibility 0s linear 0.4s;
+  }
+  .modal-backdrop.open{
+    visibility:visible;
+    opacity:1;
+    pointer-events:auto;
+    transition:opacity 0.3s ease, visibility 0s linear 0s;
+  }
+  .auth-sheet,
+  .menu-sheet{
+    width:min(100%, 520px);
+    max-height:92vh;
+    overflow-y:auto;
+    padding:18px 18px calc(24px + env(safe-area-inset-bottom));
+    border-radius:30px 30px 0 0;
+    background:#f2f2f3;
+    transform:translateY(100%);
+    transition:transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change:transform;
+  }
+  .modal-backdrop.open .auth-sheet,
+  .modal-backdrop.open .menu-sheet{
+    transform:translateY(0);
+  }
+  .sheet-modal-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:14px;
+  }
+  .sheet-modal-header h2{
+    font-size:1rem;
+    font-weight:900;
+  }
+  .modal-close{
+    width:34px;
+    height:34px;
+    border:0;
+    border-radius:50%;
+    color:#55555d;
+    background:#e1e1e4;
+    font-size:1.4rem;
+    line-height:1;
+    cursor:pointer;
+  }
+  .auth-promo{
+    position:relative;
+    min-height:178px;
+    display:flex;
+    align-items:center;
+    overflow:hidden;
+    margin-bottom:22px;
+    padding:22px;
+    border-radius:25px;
+    color:#fff;
+    background:linear-gradient(135deg,#ff252d 0%,#f91545 55%,#e9009f 100%);
+  }
+  .auth-promo::after{
+    content:"";
+    position:absolute;
+    right:-30px;
+    bottom:-38px;
+    width:190px;
+    height:190px;
+    border:22px dotted rgba(255,255,255,0.78);
+    border-radius:50%;
+    transform:rotate(18deg);
+  }
+  .auth-promo-copy{
+    position:relative;
+    z-index:1;
+    max-width:62%;
+    font-size:1.58rem;
+    line-height:1.05;
+    font-weight:900;
+    text-transform:uppercase;
+  }
+  .auth-promo-copy small{
+    display:block;
+    margin-top:12px;
+    font-size:0.7rem;
+    letter-spacing:0.2px;
+    font-weight:700;
+  }
+  .auth-title{
+    margin-bottom:12px;
+    font-size:1.45rem;
+    line-height:1.05;
+    font-weight:900;
+  }
+  .phone-row{
+    display:flex;
     gap:10px;
+    margin-bottom:16px;
+  }
+  .country-code,
+  .phone-input,
+  .profile-input,
+  .profile-select{
+    min-height:55px;
+    border:0;
+    border-radius:16px;
+    background:#fff;
+    color:var(--ink);
+    font-family:inherit;
+    font-size:0.88rem;
+    outline:none;
+  }
+  .country-code{
+    width:137px;
+    flex:0 0 137px;
+    padding:0 14px;
+    font-weight:700;
+  }
+  .phone-input{
+    width:100%;
+    padding:0 16px;
+  }
+  .auth-submit,
+  .primary-action{
+    width:100%;
+    min-height:58px;
+    border:0;
+    border-radius:999px;
+    color:#fff;
+    background:linear-gradient(100deg,#a6a6aa,#909094);
+    font-family:inherit;
+    font-size:0.94rem;
+    font-weight:900;
+    cursor:pointer;
+    transition:transform 0.2s ease, filter 0.2s ease, background 0.2s ease;
+  }
+  .auth-submit.ready,
+  .primary-action{
+    background:linear-gradient(100deg,#6551ee,#4432dc);
+  }
+  .auth-submit:active,
+  .primary-action:active{ transform:scale(0.98); }
+  .auth-note{
+    margin-top:14px;
+    color:#55555d;
+    text-align:center;
+    font-size:0.72rem;
+    line-height:1.45;
+  }
+  .profile-form{
+    display:grid;
+    gap:11px;
+  }
+  .profile-input,
+  .profile-select{
+    width:100%;
+    padding:0 16px;
+  }
+  .profile-gender-label{
+    display:block;
+    margin:4px 3px -5px;
+    color:#777780;
+    font-size:0.7rem;
+    font-weight:700;
+    text-align:left;
+  }
+  .menu-sheet{
+    width:100%;
+    max-height:none;
+    min-height:100vh;
+    height:100vh;
+    overflow-y:auto;
+    border-radius:0;
+    padding:18px 18px calc(30px + env(safe-area-inset-bottom));
+    transform:translateY(100%);
+  }
+  .menu-sheet .sheet-modal-header{
+    position:sticky;
+    top:0;
+    z-index:2;
+    padding:4px 0 14px;
+    background:#f2f2f3;
+  }
+  .menu-back{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 0;
+    border:0;
+    color:var(--ink);
+    background:transparent;
+    font:800 0.8rem/1 inherit;
+    cursor:pointer;
+  }
+  .menu-profile{
+    padding:12px 4px 22px;
+    text-align:center;
+  }
+  .menu-avatar{
+    width:100px;
+    height:100px;
+    display:block;
+    margin:0 auto 12px;
+    border-radius:50%;
+    object-fit:cover;
+    background:#e4e4e8;
+    box-shadow:0 0 0 5px #fff, 0 5px 16px rgba(0,0,0,0.1);
+  }
+  .menu-profile h2{
+    font-size:1.45rem;
+    line-height:1.1;
+    font-weight:900;
+    text-transform:uppercase;
+  }
+  .menu-profile p{
+    margin-top:5px;
+    color:#52525b;
+    font-size:0.83rem;
+  }
+  #menuUserPhone{
+    color:#777780;
+    font-size:0.74rem;
+  }
+  .wallet-balance{
+    display:inline-block;
+    margin-top:14px;
+    padding:11px 24px;
+    border-radius:999px;
+    color:#fff;
+    background:linear-gradient(100deg,#ff1e38,#e800a6);
+    font-size:0.76rem;
+    font-weight:800;
+  }
+  .menu-list{
+    display:grid;
+    gap:12px;
+  }
+  .menu-list button{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    width:100%;
+    min-height:66px;
+    padding:10px 15px;
+    border:0;
+    border-radius:22px;
+    color:var(--ink);
+    background:#fff;
+    font-family:inherit;
+    font-size:0.91rem;
+    font-weight:900;
+    text-align:left;
+    cursor:pointer;
+  }
+  .menu-list button.menu-logout{
+    color:#d51e52;
+    background:#fff0f3;
+  }
+  body:not(.is-authenticated) .menu-list button.menu-logout{
+    display:none;
+  }
+  .menu-icon{
+    width:42px;
+    height:42px;
+    display:grid;
+    place-items:center;
+    flex:0 0 42px;
+    border-radius:14px;
+    background:#f0f0f2;
+    font-size:1.35rem;
+  }
+  .about-card{
+    margin-top:18px;
+    padding:22px 16px;
+    border-radius:24px;
+    background:#fff;
+    font-size:0.8rem;
+    line-height:1.55;
+  }
+  .menu-content-card{
+    margin-top:18px;
+    padding:20px 16px;
+    border-radius:24px;
+    color:#383840;
+    background:#fff;
+    font-size:0.8rem;
+    line-height:1.6;
+  }
+  .menu-content-card h3{
+    margin-bottom:8px;
+    color:var(--ink);
+    font-size:1.2rem;
+    font-weight:900;
+  }
+  @media (prefers-reduced-motion:reduce){
+    .compact-topbar,
+    .modal-backdrop,
+    .auth-sheet,
+    .menu-sheet,
+    .draw-tab,
+    .auth-submit,
+    .primary-action{ transition:none; }
+    .upcoming-draw-card,
+    .past-draw-card{ animation:none; }
   }
   .login-btn{
     background:var(--white);
@@ -88,12 +495,13 @@
     border:none;
     font-family:inherit;
     font-weight:700;
-    font-size:0.78rem;
+    font-size:clamp(0.62rem, 2.6vw, 0.78rem);
     letter-spacing:0.3px;
-    padding:11px 18px;
+    padding:clamp(8px, 2.6vw, 11px) clamp(10px, 4vw, 18px);
     border-radius:var(--pill-radius);
     cursor:pointer;
     white-space:nowrap;
+    flex-shrink:0;
   }
   .menu-btn{
     background:transparent;
@@ -103,6 +511,7 @@
     flex-direction:column;
     gap:5px;
     cursor:pointer;
+    flex-shrink:0;
   }
   .menu-btn span{
     display:block;
@@ -145,6 +554,63 @@
     position:absolute;
     inset:0;
     background:linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 35%, rgba(0,0,0,0.35) 100%);
+  }
+
+  /* ---- win big prizes slide ---- */
+  .slide-prizes{
+    background:radial-gradient(circle at 50% 22%, #2b2b2f 0%, var(--bg-dark-2) 72%);
+  }
+  .prize-sparkle{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background-image:
+      radial-gradient(2px 2px at 12% 30%, rgba(243,185,59,0.55) 0%, transparent 60%),
+      radial-gradient(2px 2px at 28% 68%, rgba(243,185,59,0.4) 0%, transparent 60%),
+      radial-gradient(1.5px 1.5px at 46% 20%, rgba(255,255,255,0.4) 0%, transparent 60%),
+      radial-gradient(2px 2px at 64% 74%, rgba(243,185,59,0.5) 0%, transparent 60%),
+      radial-gradient(1.5px 1.5px at 78% 32%, rgba(255,255,255,0.35) 0%, transparent 60%),
+      radial-gradient(2px 2px at 90% 60%, rgba(243,185,59,0.45) 0%, transparent 60%);
+  }
+  .prize-copy{
+    position:relative;
+    z-index:2;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
+    text-align:center;
+    padding:0 16px;
+    transform:translateY(26px);
+  }
+  .win-badge{
+    display:inline-block;
+    background:linear-gradient(135deg, #ff5c7c 0%, #ff2d55 55%, #d90f60 100%);
+    color:#fff;
+    font-weight:900;
+    font-size:clamp(1.1rem, 5vw, 1.5rem);
+    letter-spacing:1px;
+    padding:9px 30px;
+    border-radius:999px;
+    box-shadow:0 6px 18px rgba(255,45,120,0.45);
+  }
+  .prize-line{
+    font-weight:900;
+    font-size:clamp(2rem, 10.5vw, 3.2rem);
+    letter-spacing:0.5px;
+    line-height:1.05;
+    background:linear-gradient(180deg, #fff6cf 0%, #f7d774 25%, #d99a26 55%, #a86a12 80%, #f7d774 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    filter:drop-shadow(0 3px 0 rgba(120,70,10,0.55)) drop-shadow(0 0 22px rgba(243,185,59,0.4));
+  }
+  .prize-sub{
+    font-weight:600;
+    font-size:clamp(0.72rem, 3.2vw, 1rem);
+    letter-spacing:5px;
+    color:#d8d8de;
+    text-transform:uppercase;
   }
 
   /* ---- spin to win slide ---- */
@@ -204,33 +670,38 @@
   }
   .fbox{
     position:absolute;
-    bottom:0;
     display:flex;
     align-items:center;
     justify-content:center;
     text-align:center;
     color:var(--white);
     font-weight:800;
-    line-height:1.1;
-    border-radius:10px;
+    letter-spacing:0.2px;
+    line-height:1.15;
+    border-radius:6px;
     opacity:0;
     padding:6px;
+    box-shadow:0 10px 22px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.28);
     animation-name:floatUp;
     animation-timing-function:ease-in-out;
     animation-iteration-count:infinite;
+    will-change:transform, opacity;
   }
   @keyframes floatUp{
-    0%   { transform:translateY(90px) scale(0.85); opacity:0; }
-    14%  { transform:translateY(0) scale(1);       opacity:1; }
-    70%  { transform:translateY(0) scale(1);       opacity:1; }
-    100% { transform:translateY(-140px) scale(0.9); opacity:0; }
+    0%   { transform:translateY(90px)   scale(0.8);  opacity:0; }
+    14%  { transform:translateY(6px)    scale(1);    opacity:1; }
+    40%  { transform:translateY(0px)    scale(1);    opacity:1; }
+    60%  { transform:translateY(0px)    scale(1);    opacity:1; }
+    86%  { transform:translateY(-140px) scale(0.86); opacity:0.4; }
+    100% { transform:translateY(-150px) scale(0.85); opacity:0; }
   }
 
-  .fbox.b1{ left:8%;  width:64px;  height:64px;  font-size:0.72rem; background:#e83e8c; animation-duration:7s; animation-delay:0s; }
-  .fbox.b2{ left:24%; width:56px;  height:84px;  font-size:0.68rem; background:#2f3a6b; animation-duration:7s; animation-delay:1.4s; }
-  .fbox.b3{ left:42%; width:78px;  height:56px;  font-size:0.72rem; background:#ffb24a; color:var(--ink); animation-duration:7s; animation-delay:2.8s; }
-  .fbox.b4{ left:60%; width:70px;  height:70px;  font-size:0.66rem; background:#3fbf6f; animation-duration:7s; animation-delay:0.7s; }
-  .fbox.b5{ left:77%; width:58px;  height:90px;  font-size:0.68rem; background:#ff4d4d; animation-duration:7s; animation-delay:2.1s; }
+  .fbox{ width:clamp(46px, 14.5vw, 58px); height:clamp(46px, 14.5vw, 58px); font-size:0.66rem; }
+  .fbox.b1{ left:3%;  bottom:6%;  background:linear-gradient(150deg, #ff84ad 0%, #e83e8c 100%); animation-duration:4s; animation-delay:0s;   animation-play-state:running; }
+  .fbox.b2{ left:22%; bottom:16%; background:linear-gradient(150deg, #46548f 0%, #262f5c 100%); animation-duration:4s; animation-delay:0.8s; animation-play-state:running; }
+  .fbox.b3{ left:38%; bottom:2%;  background:linear-gradient(150deg, #ffca66 0%, #f3a733 100%); color:var(--ink); animation-duration:4s; animation-delay:1.6s; animation-play-state:running; }
+  .fbox.b4{ left:57%; bottom:12%; width:clamp(56px, 17.5vw, 70px); height:clamp(56px, 17.5vw, 70px); font-size:0.74rem; background:linear-gradient(150deg, #63d68e 0%, #2fa864 100%); animation-duration:4s; animation-delay:0.4s; animation-play-state:running; }
+  .fbox.b5{ left:79%; bottom:4%;  width:clamp(56px, 17.5vw, 70px); height:clamp(56px, 17.5vw, 70px); font-size:0.74rem; background:linear-gradient(150deg, #ff7a7a 0%, #ef3d3d 100%); animation-duration:4s; animation-delay:1.2s; animation-play-state:running; }
 
   /* ---- dots ---- */
   .dots-row{
@@ -257,6 +728,616 @@
   .body-content{
     min-height:40vh;
   }
+  .app-view[hidden]{ display:none !important; }
+  .draws-view,
+  .account-view{
+    min-height:calc(100vh - 96px);
+    padding:104px 18px calc(116px + env(safe-area-inset-bottom));
+  }
+  .screen-title{
+    margin-bottom:16px;
+    font-size:1.55rem;
+    line-height:1;
+    font-weight:900;
+    letter-spacing:-0.7px;
+  }
+  .draw-tabs{
+    display:flex;
+    align-items:center;
+    margin-bottom:18px;
+    padding:4px;
+    border-radius:999px;
+    background:#dcdcdf;
+  }
+  .draw-tab{
+    flex:1;
+    min-height:48px;
+    border:0;
+    border-radius:999px;
+    color:var(--ink);
+    background:transparent;
+    font-family:inherit;
+    font-size:0.72rem;
+    font-weight:900;
+    cursor:pointer;
+    transition:background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  }
+  .draw-tab.active{
+    background:#fff;
+    box-shadow:0 3px 9px rgba(0,0,0,0.1);
+    transform:translateY(-1px);
+  }
+  .draw-list{
+    display:grid;
+    gap:14px;
+  }
+  /* The draw tabs control these two lists. Author CSS must not override
+     the browser's hidden attribute when .draw-list has display:grid. */
+  .draw-list[hidden]{ display:none !important; }
+  .upcoming-draw-card{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    min-height:128px;
+    padding:12px;
+    overflow:hidden;
+    border-radius:25px;
+    background:#fff;
+    box-shadow:0 4px 15px rgba(0,0,0,0.06);
+    animation:drawCardIn 0.38s ease both;
+  }
+  .upcoming-draw-image{
+    width:112px;
+    height:104px;
+    flex:0 0 112px;
+    border-radius:19px;
+    background:#ededee center/cover no-repeat;
+  }
+  .upcoming-draw-copy{
+    min-width:0;
+  }
+  .draw-win-label{
+    display:inline-block;
+    margin-bottom:4px;
+    padding:4px 14px;
+    border-radius:999px;
+    color:#fff;
+    background:linear-gradient(100deg,#f22e57,#df17ab);
+    font-size:1.35rem;
+    line-height:1;
+    font-weight:900;
+  }
+  .upcoming-draw-title{
+    overflow:hidden;
+    font-size:0.95rem;
+    line-height:1.15;
+    font-weight:900;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .upcoming-draw-meta,
+  .past-draw-meta{
+    margin-top:4px;
+    color:#94949b;
+    font-size:0.69rem;
+    line-height:1.4;
+  }
+  .upcoming-draw-meta strong{ color:#df275f; }
+  .past-draw-card{
+    position:relative;
+    min-height:390px;
+    overflow:hidden;
+    border-radius:28px;
+    background:#dedee0 center/cover no-repeat;
+    box-shadow:0 5px 15px rgba(0,0,0,0.09);
+    animation:drawCardIn 0.42s ease both;
+  }
+  .past-draw-card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg,rgba(255,255,255,0.05),rgba(0,0,0,0.5));
+  }
+  .past-draw-card .winner-info{
+    position:absolute;
+    z-index:1;
+    right:12px;
+    bottom:12px;
+    left:12px;
+    min-height:162px;
+    padding:16px;
+    border-radius:25px;
+    background:#fff;
+    box-shadow:0 3px 12px rgba(0,0,0,0.12);
+  }
+  .winner-info .winner-photo{
+    float:right;
+    width:82px;
+    height:68px;
+    margin:-5px -2px 4px 12px;
+    object-fit:cover;
+    border-radius:15px;
+    background:#e8e8ea;
+  }
+  .winner-congrats{
+    font-size:1.45rem;
+    line-height:1;
+    font-weight:900;
+  }
+  .winner-name{
+    margin-top:4px;
+    color:#d61b69;
+    font-size:1.18rem;
+    line-height:1.1;
+    font-weight:900;
+  }
+  .winner-prize,
+  .winner-ticket{
+    margin-top:6px;
+    font-size:0.76rem;
+    line-height:1.3;
+    font-weight:800;
+  }
+  .winner-empty{
+    color:#777780;
+    font-size:0.75rem;
+    font-weight:600;
+  }
+  .empty-draws{
+    padding:40px 14px;
+    color:var(--muted);
+    text-align:center;
+    font-size:0.86rem;
+  }
+  .account-view{
+    text-align:center;
+  }
+  .account-card{
+    max-width:460px;
+    margin:0 auto;
+    padding:28px 20px;
+    border-radius:28px;
+    background:#fff;
+    box-shadow:0 5px 18px rgba(0,0,0,0.06);
+  }
+  .account-card p{
+    margin-top:9px;
+    color:var(--muted);
+    font-size:0.82rem;
+  }
+  @keyframes drawCardIn{
+    from{ opacity:0; transform:translateY(12px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  /* ---- category chips ---- */
+  .category-row{
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding:18px 20px 14px;
+  }
+  .category-row::-webkit-scrollbar{ display:none; }
+  .category-row.hidden{ display:none; }
+  .category-chip{
+    flex:0 0 auto;
+    background:var(--white);
+    border:none;
+    color:var(--muted);
+    font-family:inherit;
+    font-weight:800;
+    font-size:0.82rem;
+    padding:12px 25px;
+    border-radius:999px;
+    white-space:nowrap;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+    cursor:pointer;
+  }
+  .category-chip.active{ color:var(--ink); }
+
+  /* ---- campaign cards ---- */
+  .campaign-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:18px;
+    padding:8px 20px 24px;
+  }
+  .campaign-card{
+    overflow:hidden;
+    background:#fff;
+    border-radius:28px;
+    box-shadow:0 3px 12px rgba(0,0,0,0.03);
+  }
+  .campaign-visual{
+    position:relative;
+    min-height:330px;
+    background:
+      radial-gradient(circle at 50% 30%, rgba(255,255,255,0.9), rgba(218,218,218,0.95) 75%),
+      linear-gradient(140deg,#ededed,#c8c8c8);
+    background-size:cover;
+    background-position:center;
+  }
+  .campaign-visual.has-countdown{
+    padding-top:78px;
+  }
+  .campaign-countdown{
+    position:absolute;
+    z-index:3;
+    top:0;
+    left:0;
+    right:0;
+    height:78px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    background:#ff1e2d;
+    border-radius:28px 28px 0 0;
+    font-size:clamp(1rem,4.8vw,1.4rem);
+    font-weight:900;
+    letter-spacing:-0.5px;
+  }
+  .campaign-visual::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg,rgba(255,255,255,0.05),rgba(0,0,0,0.12));
+    pointer-events:none;
+  }
+  .campaign-win{
+    position:absolute;
+    z-index:2;
+    left:50%;
+    bottom:-30px;
+    transform:translateX(-50%);
+    padding:10px 28px;
+    border-radius:999px;
+    color:#fff;
+    background:linear-gradient(100deg,#ff273d 0%,#f40050 52%,#d71bdb 100%);
+    font-size:2rem;
+    line-height:1;
+    font-weight:900;
+    box-shadow:0 7px 16px rgba(221,26,116,0.25);
+  }
+  .campaign-info{
+    padding:52px 22px 20px;
+    text-align:center;
+  }
+  .campaign-title{
+    font-size:clamp(1.35rem,6vw,2rem);
+    line-height:1.15;
+    font-weight:900;
+    letter-spacing:-0.7px;
+  }
+  .campaign-shop{
+    width:100%;
+    border:0;
+    margin-top:20px;
+    padding:17px 20px;
+    border-radius:999px;
+    color:#fff;
+    background:linear-gradient(100deg,#6551ee,#4432dc);
+    font-family:inherit;
+    font-size:clamp(1rem,4.7vw,1.35rem);
+    font-weight:900;
+    cursor:pointer;
+    box-shadow:0 5px 12px rgba(76,58,224,0.18);
+  }
+  .campaign-meta{
+    margin-top:17px;
+    color:#202026;
+    font-size:0.75rem;
+    line-height:1.55;
+  }
+  .campaign-meta strong{ font-weight:500; }
+  .campaign-ticket-progress{
+    margin-top:14px;
+    text-align:left;
+  }
+  .campaign-ticket-progress .progress-label{
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    color:#65656d;
+    font-size:0.7rem;
+    font-weight:700;
+  }
+  .campaign-ticket-progress .progress-track{
+    height:9px;
+    margin-top:7px;
+    overflow:hidden;
+    border-radius:999px;
+    background:#e8e8ec;
+  }
+  .campaign-ticket-progress .progress-fill{
+    height:100%;
+    min-width:0;
+    border-radius:inherit;
+    background:linear-gradient(100deg,#6551ee,#e31a8c);
+  }
+
+  /* ---- product picker bottom sheet ---- */
+  .sheet-backdrop{
+    position:fixed;
+    inset:0;
+    z-index:30;
+    visibility:hidden;
+    opacity:0;
+    pointer-events:none;
+    background:rgba(0,0,0,0.62);
+    transition:opacity 0.3s ease, visibility 0s linear 0.36s;
+  }
+  .sheet-backdrop.open{
+    visibility:visible;
+    opacity:1;
+    pointer-events:auto;
+    transition:opacity 0.3s ease, visibility 0s linear 0s;
+  }
+  .product-sheet{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    max-height:88vh;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    touch-action:pan-y;
+    padding:26px 24px calc(24px + env(safe-area-inset-bottom));
+    border-radius:28px 28px 0 0;
+    background:#f8f8f9;
+    box-shadow:0 -8px 30px rgba(0,0,0,0.16);
+    transform:translateY(100%);
+    transition:transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change:transform;
+  }
+  .sheet-backdrop.open .product-sheet{
+    transform:translateY(0);
+  }
+  .sheet-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:18px;
+  }
+  .sheet-header h2{
+    font-size:1.08rem;
+    line-height:1.2;
+    font-weight:800;
+  }
+  .sheet-close{
+    width:32px;
+    height:32px;
+    border:0;
+    border-radius:50%;
+    color:#777783;
+    background:#e9e9ed;
+    font-size:1.2rem;
+    cursor:pointer;
+  }
+  .sheet-product-track{
+    display:flex;
+    gap:14px;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    scrollbar-width:none;
+    margin:0 -24px;
+    padding:6px 32px 12px;
+    scroll-padding-left:32px;
+    touch-action:pan-x;
+  }
+  .sheet-product-track::-webkit-scrollbar{ display:none; }
+  .sheet-product{
+    position:relative;
+    flex:0 0 80%;
+    min-height:126px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 14px;
+    scroll-snap-align:start;
+    border:3px solid transparent;
+    border-radius:17px;
+    background:#fff;
+  }
+  .sheet-product.selected{ border-color:#7060c8; }
+  .sheet-product-copy{ flex:1; min-width:0; }
+  .sheet-product-name{
+    font-size:1.02rem;
+    line-height:1.1;
+    font-weight:800;
+  }
+  .sheet-product-price{
+    margin-top:6px;
+    color:#4533a8;
+    font-size:0.98rem;
+    font-weight:800;
+  }
+  .sheet-product-tickets{
+    margin-top:22px;
+    color:#4c8132;
+    font-size:0.8rem;
+    font-weight:700;
+  }
+  .sheet-product img{
+    width:96px;
+    height:96px;
+    flex:0 0 96px;
+    object-fit:contain;
+    border-radius:18px;
+    background:#fafafa;
+  }
+  .quantity-row{
+    display:flex;
+    gap:12px;
+    overflow-x:auto;
+    padding:8px 2px 2px;
+    scrollbar-width:none;
+  }
+  .quantity-row::-webkit-scrollbar{ display:none; }
+  .quantity-btn{
+    flex:0 0 64px;
+    height:64px;
+    border:0;
+    border-radius:50%;
+    background:#fff;
+    color:#17171b;
+    font-family:inherit;
+    font-size:1rem;
+    cursor:pointer;
+  }
+  .quantity-btn.selected{
+    border:3px solid #7060c8;
+    color:#4333a8;
+    font-weight:800;
+  }
+  .sheet-checkout{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:14px;
+    margin-top:14px;
+  }
+  .sheet-totals{
+    font-size:0.98rem;
+    line-height:1.45;
+    font-weight:700;
+  }
+  .sheet-totals .total{ color:#4433a8; }
+  .add-cart-btn{
+    flex:0 0 48%;
+    border:0;
+    padding:17px 14px;
+    border-radius:999px;
+    color:#fff;
+    background:linear-gradient(100deg,#6551ee,#4432dc);
+    font-family:inherit;
+    font-size:0.92rem;
+    font-weight:900;
+    cursor:pointer;
+  }
+  .sheet-empty{
+    padding:22px 2px 12px;
+    color:var(--muted);
+    font-size:0.85rem;
+  }
+  .cart-list{
+    display:grid;
+    gap:12px;
+    margin-top:18px;
+    text-align:left;
+  }
+  .cart-item{
+    display:grid;
+    grid-template-columns:76px 1fr auto;
+    align-items:center;
+    gap:12px;
+    padding:12px;
+    border-radius:18px;
+    background:#fff;
+  }
+  .cart-item img{
+    width:76px;
+    height:76px;
+    object-fit:contain;
+    border-radius:14px;
+    background:#f3f3f5;
+  }
+  .cart-item h3{ font-size:0.88rem; line-height:1.2; font-weight:900; }
+  .cart-item p{ margin-top:4px; color:#777780; font-size:0.68rem; line-height:1.4; }
+  .cart-item .cart-price{ color:#4433a8; font-size:0.78rem; font-weight:900; white-space:nowrap; }
+  .cart-remove{
+    grid-column:2 / 4;
+    justify-self:start;
+    padding:5px 0;
+    border:0;
+    color:#d51e52;
+    background:transparent;
+    font:700 0.7rem/1 inherit;
+    cursor:pointer;
+  }
+  .cart-total{
+    display:flex;
+    justify-content:space-between;
+    margin-top:16px;
+    padding:16px 4px 0;
+    border-top:1px solid #e2e2e6;
+    font-weight:900;
+  }
+
+  .product-grid{ display:none; }
+  .products-empty{
+    color:var(--muted);
+    font-size:0.85rem;
+    text-align:center;
+    padding:24px 16px;
+  }
+  @media (min-width:700px){
+    .campaign-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+    .campaign-visual{ min-height:360px; }
+  }
+  @media (max-width:480px){
+    body{ padding-bottom:calc(88px + env(safe-area-inset-bottom)); }
+    .topnav{ min-height:230px; }
+    .nav-row{ padding-left:12px; padding-right:12px; }
+    .brand-name{ max-width:42vw; overflow:hidden; text-overflow:ellipsis; }
+    .draws-view,
+    .account-view{ padding:92px 12px calc(104px + env(safe-area-inset-bottom)); }
+    .screen-title{ font-size:1.35rem; }
+    .category-row{ padding-left:12px; padding-right:12px; }
+    .campaign-grid{ gap:14px; padding:6px 12px 20px; }
+    .campaign-visual{ min-height:250px; }
+    .campaign-win{ bottom:-25px; padding:8px 23px; font-size:1.55rem; }
+    .campaign-info{ padding:44px 14px 16px; }
+    .campaign-shop{ margin-top:15px; padding:14px 12px; font-size:0.96rem; }
+    .product-sheet{ padding:20px 14px calc(18px + env(safe-area-inset-bottom)); }
+    .sheet-product-track{ margin-left:-14px; margin-right:-14px; padding-left:20px; padding-right:20px; }
+    .sheet-product{ flex-basis:91%; min-height:112px; padding:10px; }
+    .sheet-product img{ width:76px; height:76px; flex-basis:76px; }
+    .sheet-product-tickets{ margin-top:13px; }
+    .sheet-checkout{ align-items:stretch; flex-direction:column; }
+    .add-cart-btn{ width:100%; flex-basis:auto; }
+    .cart-item{ grid-template-columns:60px minmax(0,1fr); gap:9px; }
+    .cart-item img{ width:60px; height:60px; }
+    .cart-item .cart-price{ grid-column:2; grid-row:1; justify-self:end; }
+    .cart-remove{ grid-column:2; }
+  }
+
+  /* legacy empty state kept for data compatibility */
+  .legacy-product-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+    padding:2px 16px 20px;
+  }
+  .legacy-product-card{
+    background:var(--card-bg);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 4px 14px rgba(0,0,0,0.05);
+  }
+  .legacy-product-card img{
+    width:100%;
+    aspect-ratio:1/1;
+    object-fit:cover;
+    display:block;
+    background:#e8e8ea;
+  }
+  .legacy-product-card .pinfo{ padding:10px 12px 12px; }
+  .legacy-product-card .pname{
+    font-size:0.82rem;
+    font-weight:700;
+    line-height:1.25;
+  }
+  .legacy-product-card .pprice{
+    font-size:0.78rem;
+    font-weight:700;
+    color:var(--accent-red);
+    margin-top:4px;
+  }
 
   /* ===================== BOTTOM NAV ===================== */
   .bottom-nav{
@@ -264,58 +1345,127 @@
     left:0; right:0; bottom:0;
     z-index:20;
     display:flex;
+    align-items:end;
     justify-content:space-between;
-    align-items:center;
-    gap:6px;
-    padding:10px 14px calc(10px + env(safe-area-inset-bottom));
-    background:var(--white);
-    box-shadow:0 -6px 24px rgba(0,0,0,0.08);
+    padding:14px clamp(4px, 2vw, 16px) calc(4px + env(safe-area-inset-bottom));
+    background:#eeeef0;
+    border-radius:28px 28px 0 0;
+    box-shadow:0 -6px 20px rgba(0,0,0,0.08);
+  }
+  .nav-group{
+    display:flex;
+    align-items:end;
+    gap:clamp(0px, 0.6vw, 6px);
+  }
+  .nav-group .nav-item{ width:auto; }
+  .nav-item.wallet-item{ position:relative; z-index:1; }
+  .nav-item.cart{
+    position:relative;
+    z-index:2;
+    margin-left:clamp(-20px, -5vw, -10px);
   }
   .nav-item{
-    flex:1;
+    width:100%;
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:3px;
+    justify-content:flex-end;
+    gap:6px;
     background:none;
     border:none;
     font-family:inherit;
-    color:var(--muted);
-    font-size:0.68rem;
-    font-weight:600;
     cursor:pointer;
-    padding:6px 2px;
+    padding:0;
+    min-width:0;
   }
-  .nav-item svg{ width:22px; height:22px; }
-  .nav-item.active{ color:#5b4bff; }
-  .nav-item.active svg{ stroke:#5b4bff; }
-
-  .nav-item.cart{
-    position:relative;
-    flex:0 0 auto;
-    width:60px;
-  }
-  .cart-circle{
-    width:52px;
-    height:52px;
+  .icon-circle{
+    width: clamp(58px, 18vw, 80px);
+height: clamp(58px, 18vw, 80px);
     border-radius:50%;
-    background:#5b4bff;
+    background:var(--white);
     display:flex;
+    flex-direction:column;
     align-items:center;
     justify-content:center;
-    margin-top:-30px;
-    box-shadow:0 8px 18px rgba(91,75,255,0.4);
+    gap:clamp(3px, 1.2vw, 6px);
+    box-shadow:0 2px 8px rgba(0,0,0,0.06);
+    transition:background 0.2s ease, transform 0.2s ease;
+    margin : 3px;
   }
-  .cart-circle svg{ width:24px; height:24px; stroke:var(--white); }
-  .nav-item.cart span{ color:var(--ink); font-weight:700; }
+  .nav-item .nav-icon{
+    width:clamp(22px, 6.4vw, 28px);
+    height:clamp(22px, 6.4vw, 28px);
+    object-fit:contain;
+    flex-shrink:0;
+  }
+  .nav-label{
+    color:#a3a3a9;
+    font-size:clamp(0.58rem, 2.5vw, 0.7rem);
+    font-weight:600;
+    line-height:1;
+    white-space:nowrap;
+   
+
+  }
+  .nav-item.active .nav-icon{
+    filter:invert(33%) sepia(98%) saturate(3374%) hue-rotate(239deg) brightness(93%) contrast(103%);
+  }
+  .nav-item.active .nav-label{ color:var(--ink); font-weight:700; }
+  .nav-dash{
+    width:19px;
+    height:5px;
+    border-radius:999px;
+    background:transparent;
+    margin-top:1px;
+  }
+  .nav-item.active .nav-dash{ background:#5b4bff; }
+
+  .nav-item.cart .icon-circle{
+    background:linear-gradient(150deg, #7266ff 0%, #5b4bff 100%);
+    box-shadow:0 8px 20px rgba(91,75,255,0.38), 0 0 0 4px #eeeef0;
+  }
+  .nav-item.cart .nav-icon{
+    filter:brightness(0) invert(1);
+  }
+  .nav-item.cart .nav-label{ color:var(--white); font-weight:700; }
+  .nav-item.cart .nav-dash{ visibility:hidden; }
+  .cart-badge{
+    position:absolute;
+    top:0;
+    right:2px;
+    min-width:22px;
+    padding:4px 6px;
+    border-radius:999px;
+    color:#fff;
+    background:#ff2d55;
+    font-size:0.62rem;
+    line-height:1;
+    font-weight:900;
+    text-align:center;
+  }
+
+
 </style>
 </head>
 <body>
 
-  <header class="topnav">
+  <header id="compactTopbar" class="compact-topbar" aria-hidden="true">
+    <div class="compact-brand">
+      <img class="compact-brand-logo" src="https://i.ibb.co/rRH62LcC/photo-2026-09-01-17-01-22.png" alt="Shop & Win logo">
+      <span class="compact-brand-name">Shop &amp; Win</span>
+    </div>
+    <div class="compact-actions">
+      <button id="compactLoginBtn" class="compact-login-btn" type="button">LOGIN / SIGN-UP</button>
+      <button class="compact-menu-btn" type="button" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <header id="homeHero" class="topnav">
     <div class="nav-row">
       <div class="brand">
-        <img class="brand-logo" src="https://i.ibb.co/5W0V0c1h/photo-2026-09-01-17-01-22.jpg" alt="Shop & Win logo">
+        <img class="brand-logo" src="https://i.ibb.co/rRH62LcC/photo-2026-09-01-17-01-22.png" alt="Shop & Win logo">
         <span class="brand-name">Shop &amp; Win</span>
       </div>
       <div class="nav-actions">
@@ -327,7 +1477,14 @@
     </div>
 
     <div class="banner-slider" id="bannerSlider">
-      <div class="slide slide-image" style="background-image:url('https://i.ibb.co/TxbfX3k9/photo-2026-09-01-17-17-13.jpg')"></div>
+      <div class="slide slide-prizes">
+        <div class="prize-sparkle"></div>
+        <div class="prize-copy">
+          <span class="win-badge">WIN</span>
+          <span class="prize-line">BIG PRIZES</span>
+          <span class="prize-sub">BEYOND IMAGINATION</span>
+        </div>
+      </div>
 
       <div class="slide slide-spin">
         <div class="float-stage">
@@ -350,34 +1507,430 @@
     </div>
   </header>
 
-  <main class="body-content">
-    <!-- intentionally empty for now -->
+  <main id="homeView" class="body-content app-view">
+    <div id="categoryRow" class="category-row"></div>
+    <div id="campaignGrid" class="campaign-grid"></div>
+    <div id="productGrid" class="legacy-product-grid" aria-hidden="true"></div>
+    <p id="productsEmpty" class="products-empty" style="display:none;">No products in this category yet.</p>
   </main>
 
+  <section id="drawsView" class="draws-view app-view" hidden>
+    <h1 class="screen-title">DRAWS</h1>
+    <div class="draw-tabs" role="tablist" aria-label="Draw history">
+      <button id="pastDrawsTab" class="draw-tab active" type="button" role="tab">PAST DRAWS</button>
+      <button id="upcomingDrawsTab" class="draw-tab" type="button" role="tab">UPCOMING DRAWS</button>
+    </div>
+    <div id="pastDrawsList" class="draw-list"></div>
+    <div id="upcomingDrawsList" class="draw-list" hidden></div>
+  </section>
+
+  <section id="ticketsView" class="account-view app-view" hidden>
+    <div class="account-card">
+      <h1 class="screen-title">TICKETS</h1>
+      <p id="ticketsMessage">Your tickets will appear here after you participate in a draw.</p>
+    </div>
+  </section>
+
+  <section id="walletView" class="account-view app-view" hidden>
+    <div class="account-card">
+      <h1 class="screen-title">WALLET</h1>
+      <p id="walletMessage">Your wallet balance and activity will appear here.</p>
+    </div>
+  </section>
+
+  <section id="cartView" class="account-view app-view" hidden>
+    <div class="account-card">
+      <h1 class="screen-title">CART</h1>
+      <p id="cartMessage">Your selected products will appear here.</p>
+      <div id="cartList" class="cart-list"></div>
+      <div id="cartTotal" class="cart-total" hidden></div>
+    </div>
+  </section>
+
+  <div id="sheetBackdrop" class="sheet-backdrop" aria-hidden="true">
+    <section class="product-sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+      <div class="sheet-header">
+        <h2 id="sheetTitle">Shop these products to participate</h2>
+        <button id="sheetClose" class="sheet-close" type="button" aria-label="Close">×</button>
+      </div>
+      <div id="sheetCampaignProgress" class="campaign-ticket-progress" hidden></div>
+      <div id="sheetProductTrack" class="sheet-product-track"></div>
+      <p id="sheetEmpty" class="sheet-empty" style="display:none;">No products have been added to this win yet.</p>
+      <div id="quantityArea" style="display:none;">
+        <div id="quantityRow" class="quantity-row"></div>
+        <div class="sheet-checkout">
+          <div id="sheetTotals" class="sheet-totals"></div>
+          <button id="addCartBtn" class="add-cart-btn" type="button">ADD TO CART</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="authBackdrop" class="modal-backdrop" aria-hidden="true">
+    <section class="auth-sheet" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <div class="sheet-modal-header">
+        <h2>Shop &amp; Win</h2>
+        <button id="authClose" class="modal-close" type="button" aria-label="Close">×</button>
+      </div>
+      <div id="phoneStep">
+        <div class="auth-promo">
+          <div class="auth-promo-copy">GET<br>INSTANT<br>REWARDS<small>Shop, collect tickets, and win big.</small></div>
+        </div>
+        <h2 id="authTitle" class="auth-title">ENTER YOUR MOBILE NO.</h2>
+        <div class="phone-row">
+          <input class="country-code" type="text" value="+961" aria-label="Country code" readonly>
+           <input id="phoneNumber" class="phone-input" type="tel" inputmode="numeric" maxlength="8" placeholder="Mobile Number" value="" aria-label="Mobile number">
+        </div>
+        <button id="phoneContinue" class="auth-submit ready" type="button">LOGIN / SIGN-UP</button>
+        <p id="authError" class="auth-note" style="display:none;color:#d51e52;">Enter an 8-digit Lebanese mobile number.</p>
+        <p class="auth-note">No verification code is required. Enter your number to continue.</p>
+      </div>
+      <div id="profileStep" hidden>
+        <h2 class="auth-title">TELL US ABOUT YOU</h2>
+        <p class="auth-note" style="margin:0 0 14px;text-align:left;">Complete your profile to finish signing in.</p>
+        <form id="profileForm" class="profile-form">
+          <input id="profileFirstName" class="profile-input" type="text" placeholder="First name" autocomplete="given-name" required>
+          <input id="profileLastName" class="profile-input" type="text" placeholder="Last name" autocomplete="family-name" required>
+          <label class="profile-gender-label" for="profileGender">Gender</label>
+          <select id="profileGender" class="profile-select" required>
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+          <input id="profileEmail" class="profile-input" type="email" placeholder="Email address" autocomplete="email" required>
+          <button class="primary-action" type="submit">FINISH</button>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <div id="menuBackdrop" class="modal-backdrop" aria-hidden="true">
+    <section class="menu-sheet" role="dialog" aria-modal="true" aria-labelledby="menuTitle">
+      <div class="sheet-modal-header">
+        <button id="menuBack" class="menu-back" type="button" aria-label="Return to the app">← BACK</button>
+        <h2 id="menuTitle">Shop &amp; Win</h2>
+        <button id="menuClose" class="modal-close" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="menu-profile">
+        <img id="menuAvatar" class="menu-avatar" alt="Default profile picture">
+        <h2 id="menuUserName">WELCOME</h2>
+        <p id="menuUserEmail">Sign in to manage your account.</p>
+        <p id="menuUserPhone"></p>
+        <div id="menuBalance" class="wallet-balance">Wallet Balance $0.00</div>
+      </div>
+      <div class="menu-list">
+        <button type="button" data-menu-action="profile"><span class="menu-icon">♙</span>PERSONAL DETAILS</button>
+        <button type="button" data-menu-action="how"><span class="menu-icon">?</span>HOW IT WORKS</button>
+        <button type="button" data-menu-action="language"><span class="menu-icon">◉</span>LANGUAGE</button>
+        <button type="button" data-menu-action="cards"><span class="menu-icon">▣</span>SAVED CARDS</button>
+        <button type="button" data-menu-action="orders"><span class="menu-icon">♧</span>ORDERS</button>
+        <button type="button" data-menu-action="favorites"><span class="menu-icon">♡</span>FAVORITES</button>
+        <button type="button" data-menu-action="addresses"><span class="menu-icon">⌾</span>ADDRESSES</button>
+        <button type="button" data-menu-action="about"><span class="menu-icon">D</span>ABOUT US</button>
+        <button id="menuLogoutBtn" class="menu-logout" type="button"><span class="menu-icon">↪</span>LOG OUT</button>
+      </div>
+      <div id="menuHowCard" class="menu-content-card" hidden>
+        <h3>HOW IT WORKS</h3>
+        <p id="menuHowText"></p>
+      </div>
+      <div id="menuAboutCard" class="about-card">
+        <h3>ABOUT US</h3>
+        <p id="menuAboutText">Shop &amp; Win is part of a global community built around rewarding everyday shopping with more chances to win.</p>
+      </div>
+    </section>
+  </div>
+
   <nav class="bottom-nav">
-    <button class="nav-item active">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#5b4bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
-      <span>Home</span>
-    </button>
-    <button class="nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>
-      <span>Draws</span>
-    </button>
-    <button class="nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a2 2 0 0 1 2-2h2a2 2 0 0 0 4 0h2a2 2 0 0 1 2 2v1a2 2 0 0 0 0 4v1a2 2 0 0 1-2 2h-2a2 2 0 0 0-4 0H5a2 2 0 0 1-2-2v-1a2 2 0 0 0 0-4z"/></svg>
-      <span>Tickets</span>
-    </button>
-    <button class="nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-3a1.5 1.5 0 0 0 0 3h3"/></svg>
-      <span>Wallet</span>
-    </button>
-    <button class="nav-item cart">
-      <span class="cart-circle">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2l2 4h8l2-4"/><path d="M3 7h18l-1.5 11a2 2 0 0 1-2 1.8H6.5a2 2 0 0 1-2-1.8L3 7z"/><path d="M9 11v5"/><path d="M15 11v5"/></svg>
+    <div class="nav-group nav-group-left">
+    <button class="nav-item active" data-section="home">
+      <span class="icon-circle">
+        <svg class="nav-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path fill="#0F0F0F" fill-rule="evenodd" clip-rule="evenodd" d="M4.18753 11.3788C4.03002 11.759 4 11.9533 4 12V20.0018C4 20.5529 4.44652 21 5 21H8V15C8 13.8954 8.89543 13 10 13H14C15.1046 13 16 13.8954 16 15V21H19C19.5535 21 20 20.5529 20 20.0018V12C20 11.9533 19.97 11.759 19.8125 11.3788C19.6662 11.0256 19.4443 10.5926 19.1547 10.1025C18.5764 9.1238 17.765 7.97999 16.8568 6.89018C15.9465 5.79788 14.9639 4.78969 14.0502 4.06454C13.5935 3.70204 13.1736 3.42608 12.8055 3.2444C12.429 3.05862 12.1641 3 12 3C11.8359 3 11.571 3.05862 11.1945 3.2444C10.8264 3.42608 10.4065 3.70204 9.94978 4.06454C9.03609 4.78969 8.05348 5.79788 7.14322 6.89018C6.23505 7.97999 5.42361 9.1238 4.8453 10.1025C4.55568 10.5926 4.33385 11.0256 4.18753 11.3788ZM10.3094 1.45091C10.8353 1.19138 11.4141 1 12 1C12.5859 1 13.1647 1.19138 13.6906 1.45091C14.2248 1.71454 14.7659 2.07921 15.2935 2.49796C16.3486 3.33531 17.4285 4.45212 18.3932 5.60982C19.3601 6.77001 20.2361 8.0012 20.8766 9.08502C21.1963 9.62614 21.4667 10.1462 21.6602 10.6134C21.8425 11.0535 22 11.5467 22 12V20.0018C22 21.6599 20.6557 23 19 23H16C14.8954 23 14 22.1046 14 21V15H10V21C10 22.1046 9.10457 23 8 23H5C3.34434 23 2 21.6599 2 20.0018V12C2 11.5467 2.15748 11.0535 2.33982 10.6134C2.53334 10.1462 2.80369 9.62614 3.12345 9.08502C3.76389 8.0012 4.63995 6.77001 5.60678 5.60982C6.57152 4.45212 7.65141 3.33531 8.70647 2.49796C9.2341 2.07921 9.77521 1.71454 10.3094 1.45091Z"/>
+        </svg>
+        <span class="nav-label">Home</span>
       </span>
-      <span>Cart</span>
+      <span class="nav-dash"></span>
     </button>
+    <button class="nav-item" data-section="draws">
+      <span class="icon-circle">
+        <svg class="nav-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+          <path fill="#000000" d="M28,12A12,12,0,1,0,9,21.73V31a1,1,0,0,0,.42.81,1,1,0,0,0,.9.14L16,30.05,21.68,32A1.19,1.19,0,0,0,22,32a.94.94,0,0,0,.58-.19A1,1,0,0,0,23,31V21.73A12,12,0,0,0,28,12ZM21,29.61l-4.68-1.56a1,1,0,0,0-.64,0L11,29.61V22.89a11.82,11.82,0,0,0,10,0ZM16,22A10,10,0,1,1,26,12,10,10,0,0,1,16,22Z"/>
+          <path fill="#000000" d="M15.5,8H19a1,1,0,0,0,0-2H17V5a1,1,0,0,0-2,0v1a3.49,3.49,0,0,0,.5,7h1a1.5,1.5,0,0,1,0,3H13a1,1,0,0,0,0,2h2v1a1,1,0,0,0,2,0V18A3.49,3.49,0,0,0,16.5,11h-1a1.5,1.5,0,0,1,0-3Z"/>
+        </svg>
+        <span class="nav-label">Draws</span>
+      </span>
+      <span class="nav-dash"></span>
+    </button>
+    <button class="nav-item wallet-item" data-section="tickets">
+      <span class="icon-circle">
+        <svg class="nav-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path fill="#000000" d="M22,10V6c0-1.1-0.9-2-2-2H4C2.9,4,2,4.9,2,6v4c1.1,0,2,0.9,2,2s-0.9,2-2,2v4c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2v-4  c-1.1,0-2-0.9-2-2S20.9,10,22,10z M15.1,16.2L12,14.4l-3.1,1.9l0.8-3.5L7,10.4l3.6-0.3L12,6.8l1.4,3.3l3.6,0.3l-2.7,2.4L15.1,16.2z"/>
+        </svg>
+        <span class="nav-label">Tickets</span>
+      </span>
+      <span class="nav-dash"></span>
+    </button>
+    </div>
+    <div class="nav-group nav-group-right">
+    <button class="nav-item" data-section="wallet">
+      <span class="icon-circle">
+        <svg class="nav-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M18 8V7.2C18 6.0799 18 5.51984 17.782 5.09202C17.5903 4.71569 17.2843 4.40973 16.908 4.21799C16.4802 4 15.9201 4 14.8 4H6.2C5.07989 4 4.51984 4 4.09202 4.21799C3.71569 4.40973 3.40973 4.71569 3.21799 5.09202C3 5.51984 3 6.0799 3 7.2V8M3 8V16.8C3 17.9201 3 18.4802 3.21799 18.908C3.40973 19.2843 3.71569 19.5903 4.09202 19.782C4.51984 20 5.07989 20 6.2 20H17.8C18.9201 20 19.4802 20 19.908 19.782C20.2843 19.5903 20.5903 19.2842 20.782 18.908C21 18.4802 21 17.9201 21 16.8V11.2C21 10.0799 21 9.51984 20.782 9.09202C20.5903 8.71569 20.2843 8.40973 19.908 8.21799C19.4802 8 18.9201 8 17.8 8H3Z"/>
+          <path fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M21 12H19C17.8954 12 17 12.8954 17 14C17 15.1046 17.8954 16 19 16H21"/>
+        </svg>
+        <span class="nav-label">Wallet</span>
+      </span>
+      <span class="nav-dash"></span>
+    </button>
+    <button class="nav-item cart" data-section="cart">
+      <span class="icon-circle">
+        <svg class="nav-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path fill="#1C274C" fill-rule="evenodd" clip-rule="evenodd" d="M8.4179 3.25077C8.69861 2.65912 9.30146 2.25 9.99986 2.25H13.9999C14.6983 2.25 15.3011 2.65912 15.5818 3.25077C16.2654 3.25574 16.7981 3.28712 17.2737 3.47298C17.8418 3.69505 18.3361 4.07255 18.6998 4.5623C19.0667 5.05639 19.2389 5.68968 19.476 6.56133C19.4882 6.60604 19.5005 6.65137 19.513 6.69735L20.1039 8.86428C20.4914 9.06271 20.8304 9.32993 21.1133 9.6922C21.7353 10.4888 21.8454 11.4377 21.7348 12.5261C21.6274 13.5822 21.2949 14.9122 20.8787 16.577L20.8523 16.6824C20.5891 17.7352 20.3755 18.59 20.1213 19.2572C19.8563 19.9527 19.5199 20.5227 18.9653 20.9558C18.4107 21.3888 17.7761 21.5769 17.0371 21.6653C16.3281 21.75 15.4472 21.75 14.362 21.75H9.63771C8.55255 21.75 7.67147 21.75 6.96266 21.6653C6.22365 21.5769 5.58901 21.3888 5.03439 20.9558C4.47977 20.5227 4.14337 19.9527 3.8784 19.2572C3.62426 18.5901 3.41058 17.7353 3.1474 16.6825L3.121 16.5769C2.70479 14.9121 2.37229 13.5822 2.26492 12.5261C2.15427 11.4377 2.26442 10.4888 2.88642 9.6922C3.16927 9.32993 3.50834 9.06271 3.89582 8.86428L4.48667 6.69735C4.49921 6.65137 4.51154 6.60604 4.5237 6.56134C4.76077 5.68968 4.93302 5.05639 5.29995 4.5623C5.66367 4.07255 6.15788 3.69505 6.72607 3.47298C7.20162 3.28712 7.73436 3.25574 8.4179 3.25077ZM8.41931 4.75219C7.75748 4.75888 7.4919 4.78416 7.2721 4.87007C6.96615 4.98964 6.70003 5.19291 6.50419 5.45662C6.32808 5.69376 6.22474 6.02508 5.93384 7.09195L5.58026 8.38869C6.61806 8.24996 7.95786 8.24998 9.62247 8.25H14.3772C16.0419 8.24998 17.3817 8.24996 18.4195 8.38869L18.0659 7.09194C17.775 6.02508 17.6716 5.69377 17.4955 5.45663C17.2997 5.19291 17.0336 4.98964 16.7276 4.87007C16.5078 4.78416 16.2422 4.75888 15.5804 4.75219C15.2991 5.34225 14.6971 5.75 13.9999 5.75H9.99986C9.30262 5.75 8.70062 5.34225 8.41931 4.75219ZM9.99986 3.75C9.86179 3.75 9.74986 3.86193 9.74986 4C9.74986 4.13807 9.86179 4.25 9.99986 4.25H13.9999C14.1379 4.25 14.2499 4.13807 14.2499 4C14.2499 3.86193 14.1379 3.75 13.9999 3.75H9.99986ZM5.69971 9.88649C4.78854 10.0183 4.34756 10.2582 4.06873 10.6153C3.78989 10.9725 3.66411 11.4584 3.75723 12.3744C3.85233 13.3099 4.15656 14.5345 4.59127 16.2733C4.86853 17.3824 5.06163 18.1496 5.28013 18.7231C5.49144 19.2778 5.69835 19.5711 5.95751 19.7735C6.21667 19.9758 6.5514 20.1054 7.14076 20.1759C7.75015 20.2488 8.54133 20.25 9.68452 20.25H14.3152C15.4584 20.25 16.2496 20.2488 16.859 20.1759C17.4483 20.1058 17.783 19.9758 18.0422 19.7735C18.3014 19.5711 18.5083 19.2778 18.7196 18.7231C18.9381 18.1496 19.1312 17.3824 19.4084 16.2733C19.8432 14.5345 20.1474 13.3099 20.2425 12.3744C20.3356 11.4584 20.2098 10.9725 19.931 10.6153C19.6522 10.2582 19.2112 10.0183 18.3 9.88649C17.3694 9.75187 16.1075 9.75 14.3152 9.75H9.68452C7.89217 9.75 6.63034 9.75187 5.69971 9.88649Z"/>
+        </svg>
+         <span id="cartBadge" class="cart-badge">0</span>
+        <span class="nav-label">Cart</span>
+      </span>
+      <span class="nav-dash"></span>
+    </button>
+    </div>
   </nav>
+
+  <script>
+    // Compact navigation, account flow, and the mobile menu.
+    const compactTopbar = document.getElementById("compactTopbar");
+    const navItems = Array.from(document.querySelectorAll(".bottom-nav .nav-item"));
+    const homeHero = document.getElementById("homeHero");
+    const homeView = document.getElementById("homeView");
+    const drawsView = document.getElementById("drawsView");
+    const ticketsView = document.getElementById("ticketsView");
+    const walletView = document.getElementById("walletView");
+    const cartView = document.getElementById("cartView");
+    const authBackdrop = document.getElementById("authBackdrop");
+    const menuBackdrop = document.getElementById("menuBackdrop");
+    const phoneStep = document.getElementById("phoneStep");
+    const profileStep = document.getElementById("profileStep");
+    const phoneNumber = document.getElementById("phoneNumber");
+    const phoneContinue = document.getElementById("phoneContinue");
+    const authError = document.getElementById("authError");
+    const profileForm = document.getElementById("profileForm");
+    const menuUserName = document.getElementById("menuUserName");
+    const menuUserEmail = document.getElementById("menuUserEmail");
+    const menuUserPhone = document.getElementById("menuUserPhone");
+    const menuAvatar = document.getElementById("menuAvatar");
+    const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='60' fill='%23e6e6ed'/%3E%3Ccircle cx='60' cy='43' r='22' fill='%2390909b'/%3E%3Cpath d='M22 105c4-25 18-37 38-37s34 12 38 37' fill='%2390909b'/%3E%3C/svg%3E";
+    const DEFAULT_PHONE = "12345677";
+    const PROFILE_KEY = "sw_user_profile";
+    let activeSection = "home";
+    let pendingSection = null;
+
+    function readProfile(){
+      try { return JSON.parse(localStorage.getItem(PROFILE_KEY)) || null; }
+      catch { return null; }
+    }
+
+    function isLoggedIn(){
+      return Boolean(window.firebaseUser);
+    }
+
+    function setModal(backdrop, open){
+      backdrop.classList.toggle("open", open);
+      backdrop.setAttribute("aria-hidden", String(!open));
+      document.body.style.overflow = open ? "hidden" : "";
+    }
+
+    function updateCompactTopbar(){
+      const shouldShow = activeSection !== "home" || window.scrollY > 42;
+      document.body.classList.toggle("compact-nav-visible", shouldShow);
+      compactTopbar.setAttribute("aria-hidden", String(!shouldShow));
+    }
+
+    function showView(view){
+      [homeView, drawsView, ticketsView, walletView, cartView].forEach((item) => {
+        item.hidden = item !== view;
+      });
+    }
+
+    function setSection(section){
+      activeSection = section;
+      navItems.forEach((item) => item.classList.toggle("active", item.dataset.section === section));
+      homeHero.hidden = section !== "home";
+      if (section === "home") {
+        showView(homeView);
+        window.scrollTo({ top:0, behavior:"smooth" });
+      } else if (section === "draws") {
+        showView(drawsView);
+        window.scrollTo({ top:0, behavior:"smooth" });
+        if (window.renderDraws) window.renderDraws();
+      } else {
+        if (!isLoggedIn()) {
+          pendingSection = section;
+          openAuthPanel();
+          updateCompactTopbar();
+          return;
+        }
+        showView(section === "tickets" ? ticketsView : section === "wallet" ? walletView : cartView);
+        window.scrollTo({ top:0, behavior:"smooth" });
+        if (section === "cart" && window.renderCart) window.renderCart();
+      }
+      updateCompactTopbar();
+    }
+
+    function openAuthPanel(){
+      const profile = readProfile();
+      phoneStep.hidden = false;
+      profileStep.hidden = true;
+      phoneNumber.value = profile?.phone?.replace("+961", "") || "";
+      authError.style.display = "none";
+      setModal(authBackdrop, true);
+    }
+
+    function openProfilePanel(){
+      const profile = readProfile() || {};
+      phoneStep.hidden = true;
+      profileStep.hidden = false;
+      document.getElementById("profileFirstName").value = profile.firstName || "";
+      document.getElementById("profileLastName").value = profile.lastName || "";
+      document.getElementById("profileGender").value = profile.gender || "";
+      document.getElementById("profileEmail").value = profile.email || "";
+      setModal(authBackdrop, true);
+    }
+
+    function updateMenuProfile(){
+      const profile = window.firebaseProfile || readProfile() || {};
+      menuAvatar.src = profile?.photoURL || DEFAULT_AVATAR;
+      if (window.firebaseUser) {
+        menuUserName.textContent = `${profile.firstName || ""} ${profile.lastName || ""}`.trim() || "SHOP & WIN MEMBER";
+        menuUserEmail.textContent = profile.email || "Email not added";
+        menuUserPhone.textContent = profile.phone || window.firebaseUser.phoneNumber || "";
+      } else {
+        menuAvatar.src = DEFAULT_AVATAR;
+        menuUserName.textContent = "WELCOME";
+        menuUserEmail.textContent = "Sign in to manage your account.";
+        menuUserPhone.textContent = "";
+      }
+    }
+
+    window.applyAppSettings = (settings = {}) => {
+      document.getElementById("menuHowText").textContent = settings.howItWorks ||
+        "Shop, choose a product, collect tickets, and follow the draw date to see if you win.";
+      document.getElementById("menuAboutText").textContent = settings.aboutUs ||
+        "Shop & Win is part of a global community built around rewarding everyday shopping with more chances to win.";
+    };
+
+    document.querySelectorAll(".login-btn, .compact-login-btn").forEach((button) => {
+      button.addEventListener("click", openAuthPanel);
+    });
+    document.querySelectorAll(".menu-btn, .compact-menu-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        updateMenuProfile();
+        setModal(menuBackdrop, true);
+      });
+    });
+    document.getElementById("authClose").addEventListener("click", () => setModal(authBackdrop, false));
+    document.getElementById("menuClose").addEventListener("click", () => setModal(menuBackdrop, false));
+    document.getElementById("menuBack").addEventListener("click", () => setModal(menuBackdrop, false));
+    [authBackdrop, menuBackdrop].forEach((backdrop) => {
+      backdrop.addEventListener("click", (event) => {
+        if (event.target === backdrop) setModal(backdrop, false);
+      });
+    });
+    document.getElementById("menuLogoutBtn").addEventListener("click", async () => {
+      document.body.classList.remove("is-authenticated");
+      if (window.signOutFirebase) await window.signOutFirebase();
+      updateMenuProfile();
+      setModal(menuBackdrop, false);
+      setSection("home");
+    });
+
+    phoneNumber.addEventListener("input", () => {
+      phoneNumber.value = phoneNumber.value.replace(/\D/g, "").slice(0, 8);
+      const valid = /^\d{8}$/.test(phoneNumber.value);
+      phoneContinue.classList.toggle("ready", valid);
+      authError.style.display = "none";
+    });
+    phoneContinue.addEventListener("click", async () => {
+      if (!/^\d{8}$/.test(phoneNumber.value)) {
+        authError.style.display = "block";
+        return;
+      }
+      if (typeof window.startPhoneLogin !== "function") {
+        authError.textContent = "Phone login is still loading. Please try again.";
+        authError.style.display = "block";
+        return;
+      }
+      phoneContinue.disabled = true;
+      try {
+        await window.startPhoneLogin(`+961${phoneNumber.value}`);
+      } catch {}
+      phoneContinue.disabled = false;
+    });
+    profileForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const profile = {
+        phone:`+961${phoneNumber.value}`,
+        firstName:document.getElementById("profileFirstName").value.trim(),
+        lastName:document.getElementById("profileLastName").value.trim(),
+        gender:document.getElementById("profileGender").value,
+        email:document.getElementById("profileEmail").value.trim()
+      };
+      if (typeof window.saveProfileToFirebase !== "function") return;
+      const submitButton = profileForm.querySelector("button[type=submit]");
+      submitButton.disabled = true;
+      try {
+        const saved = await window.saveProfileToFirebase(profile);
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(saved));
+        document.body.classList.add("is-authenticated");
+        updateMenuProfile();
+        setModal(authBackdrop, false);
+        const nextSection = pendingSection;
+        pendingSection = null;
+        if (nextSection) setSection(nextSection);
+      } catch (err) {
+        authError.textContent = err.message || "Could not save your profile.";
+        authError.style.display = "block";
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+    document.querySelectorAll("[data-menu-action]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const action = button.dataset.menuAction;
+        if (action === "profile") {
+          setModal(menuBackdrop, false);
+          isLoggedIn() ? openProfilePanel() : openAuthPanel();
+        } else if (action === "how") {
+          const card = document.getElementById("menuHowCard");
+          card.hidden = false;
+          card.scrollIntoView({ behavior:"smooth", block:"center" });
+        } else if (action === "language") {
+          window.alert("English is the only language available for now.");
+        } else if (action === "about") {
+          document.getElementById("menuAboutCard").scrollIntoView({ behavior:"smooth", block:"center" });
+        }
+      });
+    });
+
+    window.addEventListener("scroll", updateCompactTopbar, { passive:true });
+    window.addEventListener("sw-profile-updated", () => {
+      updateMenuProfile();
+      if (pendingSection && window.firebaseUser && window.firebaseProfile) {
+        const nextSection = pendingSection;
+        pendingSection = null;
+        setSection(nextSection);
+      }
+    });
+
+    navItems.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        setSection(btn.dataset.section || "home");
+      });
+    });
+
+    updateMenuProfile();
+    updateCompactTopbar();
+    window.updateMenuProfile = updateMenuProfile;
+    window.applyAppSettings({});
+  </script>
 
   <script>
     // Banners uploaded from admin.html are stored in localStorage
@@ -390,18 +1943,21 @@
     }
 
     // ---- inject any admin-uploaded banners as extra slides ----
+    // The photo banner is always slide 1 and "Spin to Win" is always kept as
+    // the fixed 2nd slide — admin banners are appended AFTER it instead of
+    // being inserted between the two.
     const slider = document.getElementById('bannerSlider');
     const spinSlide = slider.querySelector('.slide-spin');
     getAdminBanners().forEach((b) => {
       const slide = document.createElement('div');
       slide.className = 'slide slide-image';
       slide.style.backgroundImage = `url('${b.url}')`;
-      slider.insertBefore(slide, spinSlide);
+      slider.appendChild(slide);
     });
 
     // ---- build dots to match the final slide count ----
     const dotsRow = document.getElementById('dotsRow');
-    const slides = Array.from(slider.children);
+    let slides = Array.from(slider.children);
     slides.forEach((_, i) => {
       const dot = document.createElement('span');
       dot.className = 'dot' + (i === 0 ? ' active' : '');
@@ -410,11 +1966,18 @@
     });
 
     // ---- banner slider <-> dots sync ----
-    const dots = Array.from(dotsRow.querySelectorAll('.dot'));
-    const slideCount = slides.length;
+    let dots = Array.from(dotsRow.querySelectorAll('.dot'));
+    let slideCount = slides.length;
+    let activeIndex = 0;
 
     function setActiveDot(index){
+      activeIndex = index;
       dots.forEach((d, i) => d.classList.toggle('active', i === index));
+    }
+
+    function goToSlide(index, smooth = true){
+      slider.scrollTo({ left: index * slider.clientWidth, behavior: smooth ? 'smooth' : 'auto' });
+      setActiveDot(index);
     }
 
     let scrollTimeout;
@@ -426,11 +1989,790 @@
       }, 60);
     });
 
-    dots.forEach((dot, i) => {
+    function bindDot(dot, i){
       dot.addEventListener('click', () => {
         if (i >= slideCount) return;
-        slider.scrollTo({ left: i * slider.clientWidth, behavior: 'smooth' });
+        goToSlide(i);
+        restartAutoplay();
       });
+    }
+    dots.forEach(bindDot);
+
+    // ---- autoplay: banners start cycling automatically ----
+    const AUTOPLAY_MS = 4500;
+    let autoplayTimer = null;
+
+    function startAutoplay(){
+      if (slideCount <= 1) return;
+      autoplayTimer = setInterval(() => {
+        goToSlide((activeIndex + 1) % slideCount);
+      }, AUTOPLAY_MS);
+    }
+
+    function stopAutoplay(){
+      if (autoplayTimer) clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+
+    function restartAutoplay(){
+      stopAutoplay();
+      startAutoplay();
+    }
+
+    window.renderFirebaseBanners = (banners = []) => {
+      slider.querySelectorAll(".firebase-banner").forEach((slide) => slide.remove());
+      banners.forEach((banner) => {
+        const slide = document.createElement("div");
+        slide.className = "slide slide-image firebase-banner";
+        slide.dataset.bannerId = banner.id || "";
+        slide.style.backgroundImage = `url("${banner.url || ""}")`;
+        slider.appendChild(slide);
+      });
+      dotsRow.innerHTML = "";
+      slides = Array.from(slider.children);
+      slideCount = slides.length;
+      slides.forEach((_, i) => {
+        const dot = document.createElement("span");
+        dot.className = "dot" + (i === activeIndex ? " active" : "");
+        dot.dataset.index = i;
+        dotsRow.appendChild(dot);
+      });
+      dots = Array.from(dotsRow.querySelectorAll(".dot"));
+      dots.forEach(bindDot);
+      activeIndex = Math.min(activeIndex, Math.max(0, slideCount - 1));
+      setActiveDot(activeIndex);
+      restartAutoplay();
+    };
+
+    // pause while the user is actively swiping, resume right after
+    let userInteracting = false;
+    slider.addEventListener('pointerdown', () => { userInteracting = true; stopAutoplay(); });
+    slider.addEventListener('pointerup', () => {
+      userInteracting = false;
+      setTimeout(() => { if (!userInteracting) restartAutoplay(); }, 200);
+    });
+
+    startAutoplay();
+  </script>
+
+  <!-- ===================== CATEGORIES & PRODUCTS ===================== -->
+  <script>
+    // Firebase web configuration for the Fahes project.
+    const firebaseConfig = {
+      apiKey: "AIzaSyANI2p4RswQKNY3EsbDp1vNWWujTyzwOHk",
+      authDomain: "fahes-4a3bc.firebaseapp.com",
+      databaseURL: "https://fahes-4a3bc-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "fahes-4a3bc",
+      storageBucket: "fahes-4a3bc.firebasestorage.app",
+      messagingSenderId: "19167149206",
+      appId: "1:19167149206:web:a93a75492829177bff56b7",
+      measurementId: "G-2W8277G4NB"
+    };
+  </script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getAuth, onAuthStateChanged, signOut, signInAnonymously
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+      getFirestore, collection, onSnapshot, orderBy, query, doc, getDoc, setDoc, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    window.signOutFirebase = () => signOut(auth);
+    const db = getFirestore(app);
+    const bannersCol = collection(db, "banners");
+    const categoriesCol = collection(db, "categories");
+    const campaignsCol = collection(db, "campaigns");
+    const productsCol = collection(db, "products");
+    const cartList = document.getElementById("cartList");
+    const cartTotal = document.getElementById("cartTotal");
+    const cartMessage = document.getElementById("cartMessage");
+    const sheetCampaignProgress = document.getElementById("sheetCampaignProgress");
+    let firebaseUser = null;
+    let firebaseProfile = null;
+    let cartItems = [];
+    let unsubscribeCart = null;
+
+    window.firebaseUser = null;
+    window.firebaseProfile = null;
+
+    function cachedCart(){
+      try {
+        const value = JSON.parse(localStorage.getItem("sw_cart_items") || "[]");
+        return Array.isArray(value) ? value : [];
+      } catch { return []; }
+    }
+
+    function renderCart(){
+      cartList.innerHTML = "";
+      document.getElementById("cartBadge").textContent = String(
+        cartItems.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0)
+      );
+      if (!cartItems.length) {
+        cartMessage.textContent = "Your cart is empty. Add a product to participate in a draw.";
+        cartTotal.hidden = true;
+        return;
+      }
+      cartMessage.textContent = firebaseUser
+        ? "Your cart is saved to your account."
+        : "Sign in to sync this cart across devices.";
+      let total = 0;
+      let ticketTotal = 0;
+      cartItems.forEach((item, index) => {
+        const price = Number.parseFloat(item.price) || 0;
+        const qty = Number.parseInt(item.quantity, 10) || 1;
+        const tickets = Number.parseInt(item.tickets, 10) || 1;
+        total += price * qty;
+        ticketTotal += tickets * qty;
+        const card = document.createElement("article");
+        card.className = "cart-item";
+        card.innerHTML = `
+          <img src="${escapeHtml(item.imageUrl || DEFAULT_BANNER)}" alt="${escapeHtml(item.productName)}">
+          <div>
+            <h3>${escapeHtml(item.productName)}</h3>
+            <p>${escapeHtml(item.campaignName || "Winning campaign")}<br>Quantity: ${qty} • ${tickets * qty} ticket${tickets * qty === 1 ? "" : "s"}</p>
+          </div>
+          <div class="cart-price">${money(price * qty)}</div>
+          <button class="cart-remove" type="button">REMOVE</button>`;
+        card.querySelector(".cart-remove").addEventListener("click", () => removeCartItem(index));
+        cartList.appendChild(card);
+      });
+      cartTotal.hidden = false;
+      cartTotal.innerHTML = `<span>${ticketTotal} ticket${ticketTotal === 1 ? "" : "s"}</span><span>${money(total)}</span>`;
+    }
+    window.renderCart = renderCart;
+
+    async function persistCart(){
+      localStorage.setItem("sw_cart_items", JSON.stringify(cartItems));
+      localStorage.setItem("sw_cart_count", String(cartItems.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0)));
+      renderCart();
+      if (firebaseUser) {
+        await setDoc(doc(db, "carts", firebaseUser.uid), {
+          userId: firebaseUser.uid,
+          items: cartItems,
+          updatedAt: serverTimestamp()
+        }, { merge:true });
+      }
+    }
+
+    async function removeCartItem(index){
+      cartItems.splice(index, 1);
+      await persistCart();
+    }
+
+    async function syncCartForUser(user){
+      if (unsubscribeCart) unsubscribeCart();
+      unsubscribeCart = onSnapshot(doc(db, "carts", user.uid), async (snap) => {
+        const remote = snap.exists() && Array.isArray(snap.data().items) ? snap.data().items : [];
+        if (remote.length || !cartItems.length) {
+          cartItems = remote;
+          localStorage.setItem("sw_cart_items", JSON.stringify(cartItems));
+          renderCart();
+        } else {
+          await persistCart();
+        }
+      }, (err) => console.warn("Cart sync unavailable:", err));
+    }
+
+    function normalizePhone(value){
+      return String(value || "").replace(/\D/g, "");
+    }
+
+    function readCachedProfile(){
+      try { return JSON.parse(localStorage.getItem("sw_user_profile")) || null; }
+      catch { return null; }
+    }
+
+    async function ensureAnonymousUser(){
+      if (firebaseUser) return firebaseUser;
+      const credential = await signInAnonymously(auth);
+      firebaseUser = credential.user;
+      window.firebaseUser = firebaseUser;
+      return firebaseUser;
+    }
+
+    async function loadFirebaseProfile(user){
+      const profileSnap = await getDoc(doc(db, "users", user.uid));
+      firebaseProfile = profileSnap.exists() ? { id:user.uid, ...profileSnap.data() } : null;
+      window.firebaseProfile = firebaseProfile;
+      if (firebaseProfile) {
+        localStorage.setItem("sw_user_profile", JSON.stringify(firebaseProfile));
+        document.getElementById("phoneStep").hidden = true;
+        document.getElementById("profileStep").hidden = true;
+        document.getElementById("authBackdrop").classList.remove("open");
+        document.getElementById("authBackdrop").setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      } else if (user) {
+        document.getElementById("phoneStep").hidden = true;
+        document.getElementById("profileStep").hidden = false;
+        document.getElementById("authBackdrop").classList.add("open");
+        document.getElementById("authBackdrop").setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        let cached = {};
+        try { cached = JSON.parse(localStorage.getItem("sw_user_profile")) || {}; } catch {}
+        document.getElementById("profileFirstName").value = cached.firstName || "";
+        document.getElementById("profileLastName").value = cached.lastName || "";
+        document.getElementById("profileGender").value = cached.gender || "";
+        document.getElementById("profileEmail").value = cached.email || "";
+      }
+      if (window.updateMenuProfile) window.updateMenuProfile();
+      window.dispatchEvent(new Event("sw-profile-updated"));
+    }
+
+    window.startPhoneLogin = async (phone) => {
+      document.getElementById("authError").style.display = "none";
+      try {
+        await ensureAnonymousUser();
+        let existing = null;
+        try {
+          const accountSnap = await getDoc(doc(db, "phoneAccounts", normalizePhone(phone)));
+          if (accountSnap.exists()) existing = accountSnap.data();
+        } catch (err) {
+          console.warn("Phone account lookup unavailable:", err);
+        }
+        const cached = readCachedProfile();
+        if (!existing && cached && normalizePhone(cached.phone) === normalizePhone(phone)) {
+          existing = cached;
+        }
+        if (existing) {
+          firebaseProfile = { ...existing, phone };
+          window.firebaseProfile = firebaseProfile;
+          const saved = await window.saveProfileToFirebase(firebaseProfile);
+          localStorage.setItem("sw_user_profile", JSON.stringify(saved));
+          document.body.classList.add("is-authenticated");
+          document.getElementById("authBackdrop").classList.remove("open");
+          document.getElementById("authBackdrop").setAttribute("aria-hidden", "true");
+          document.body.style.overflow = "";
+          if (window.updateMenuProfile) window.updateMenuProfile();
+          window.dispatchEvent(new Event("sw-profile-updated"));
+          return;
+        }
+        document.getElementById("phoneStep").hidden = true;
+        document.getElementById("profileStep").hidden = false;
+        document.getElementById("profileFirstName").focus();
+        document.getElementById("profileStep").dataset.phone = phone;
+      } catch (err) {
+        document.getElementById("authError").textContent =
+          err.message || "Could not start your account.";
+        document.getElementById("authError").style.display = "block";
+        throw err;
+      }
+    };
+
+    window.saveProfileToFirebase = async (profile) => {
+      await ensureAnonymousUser();
+      const saved = {
+        ...profile,
+        uid: firebaseUser.uid,
+        phone: firebaseUser.phoneNumber || profile.phone,
+        photoURL: firebaseProfile?.photoURL || "",
+        updatedAt: serverTimestamp()
+      };
+      await setDoc(doc(db, "users", firebaseUser.uid), {
+        ...saved,
+        createdAt: firebaseProfile?.createdAt || serverTimestamp()
+      }, { merge:true });
+      try {
+        await setDoc(doc(db, "phoneAccounts", normalizePhone(saved.phone)), {
+          firstName: saved.firstName || "",
+          lastName: saved.lastName || "",
+          gender: saved.gender || "",
+          email: saved.email || "",
+          phone: saved.phone,
+          photoURL: saved.photoURL || "",
+          updatedAt: serverTimestamp()
+        }, { merge:true });
+      } catch (err) {
+        console.warn("Phone account index could not be saved:", err);
+      }
+      firebaseProfile = { ...firebaseProfile, ...profile, uid:firebaseUser.uid, phone:saved.phone };
+      window.firebaseProfile = firebaseProfile;
+      await syncCartForUser(firebaseUser);
+      return firebaseProfile;
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+      firebaseUser = user;
+      window.firebaseUser = user;
+      document.body.classList.toggle("is-authenticated", Boolean(user));
+      if (unsubscribeCart) unsubscribeCart();
+      if (user) {
+        try {
+          await loadFirebaseProfile(user);
+          await syncCartForUser(user);
+        } catch (err) {
+          console.warn("Could not load the member profile:", err);
+        }
+      } else {
+        firebaseProfile = null;
+        window.firebaseProfile = null;
+        cartItems = cachedCart();
+        renderCart();
+        window.dispatchEvent(new Event("sw-profile-updated"));
+      }
+    });
+
+    onSnapshot(doc(db, "appSettings", "general"), (snap) => {
+      if (snap.exists() && window.applyAppSettings) window.applyAppSettings(snap.data());
+    }, (err) => console.warn("App settings unavailable:", err));
+
+    onSnapshot(query(bannersCol, orderBy("createdAt", "desc")), (snap) => {
+      if (window.renderFirebaseBanners) {
+        window.renderFirebaseBanners(snap.docs.map((bannerSnap) => ({
+          id:bannerSnap.id,
+          ...bannerSnap.data()
+        })));
+      }
+    }, (err) => console.warn("Banners unavailable:", err));
+
+    const categoryRow = document.getElementById("categoryRow");
+    const campaignGrid = document.getElementById("campaignGrid");
+    const productsEmpty = document.getElementById("productsEmpty");
+    const sheetBackdrop = document.getElementById("sheetBackdrop");
+    const sheetClose = document.getElementById("sheetClose");
+    const sheetTitle = document.getElementById("sheetTitle");
+    const sheetProductTrack = document.getElementById("sheetProductTrack");
+    const sheetEmpty = document.getElementById("sheetEmpty");
+    const quantityArea = document.getElementById("quantityArea");
+    const quantityRow = document.getElementById("quantityRow");
+    const sheetTotals = document.getElementById("sheetTotals");
+    const addCartBtn = document.getElementById("addCartBtn");
+    const pastDrawsList = document.getElementById("pastDrawsList");
+    const upcomingDrawsList = document.getElementById("upcomingDrawsList");
+    const pastDrawsTab = document.getElementById("pastDrawsTab");
+    const upcomingDrawsTab = document.getElementById("upcomingDrawsTab");
+    let activeDrawTab = "past";
+
+    let categories = [];
+    let campaigns = [];
+    let products = [];
+    let selectedId = "ALL"; // "ALL" = ALL CAMPAIGNS
+    let activeCampaign = null;
+    let activeProducts = [];
+    let activeProductIndex = 0;
+    let quantity = 1;
+    let cartCount = Number(localStorage.getItem("sw_cart_count") || 0);
+    let productsLoadFailed = false;
+
+    const DEFAULT_BANNER = "photo_2026-09-03_17-37-11_1788447542034.jpg";
+
+    const money = (value) => {
+      const amount = Number.parseFloat(value);
+      return Number.isFinite(amount) ? `$${amount.toFixed(2)}` : "$0.00";
+    };
+
+    const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
+      "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
+    }[char]));
+
+    cartItems = cachedCart();
+    renderCart();
+
+    function formatDrawDate(value){
+      if (!value) return "Draw date announced soon";
+      const parsed = new Date(`${value}T00:00:00`);
+      if (Number.isNaN(parsed.getTime())) return value;
+      return parsed.toLocaleDateString("en-US", {
+        day:"numeric", month:"long", year:"numeric"
+      });
+    }
+
+    function campaignEndDate(value){
+      if (!value) return null;
+      const parsed = new Date(`${value}T23:59:59`);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    function remainingCampaignTime(value){
+      const end = campaignEndDate(value);
+      if (!end) return null;
+      const remaining = end.getTime() - Date.now();
+      return remaining > 0 ? remaining : 0;
+    }
+
+    function campaignIsExpired(campaign){
+      const remaining = remainingCampaignTime(campaign.drawDate);
+      return remaining !== null && remaining <= 0;
+    }
+
+    function formatCountdown(remaining){
+      const totalSeconds = Math.max(0, Math.floor(remaining / 1000));
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      return [hours, minutes, seconds].map((value) => String(value).padStart(2, "0")).join(":");
+    }
+
+    function closingCountdown(value){
+      const remaining = remainingCampaignTime(value);
+      const twentyFourHours = 24 * 60 * 60 * 1000;
+      return remaining !== null && remaining > 0 && remaining <= twentyFourHours
+        ? formatCountdown(remaining)
+        : "";
+    }
+
+    function visibleCampaigns(){
+      // Keep older campaign records working while new records use the
+      // categories -> campaigns -> products hierarchy.
+      const current = campaigns.map((campaign) => ({ ...campaign, legacy:false }));
+      const legacy = categories
+        .filter((category) => category.prizeTitle || category.bannerUrl || category.winTitle)
+        .map((category) => ({
+          ...category,
+          legacy:true,
+          categoryId:category.id,
+          campaignId:category.campaignId || category.id
+        }));
+      return [...current, ...legacy].filter((campaign) => !campaignIsExpired(campaign));
+    }
+
+    function allDrawCampaigns(){
+      const current = campaigns.map((campaign) => ({ ...campaign, legacy:false }));
+      const legacy = categories
+        .filter((category) => category.prizeTitle || category.bannerUrl || category.winTitle)
+        .map((category) => ({
+          ...category,
+          legacy:true,
+          categoryId:category.id,
+          campaignId:category.campaignId || category.id
+        }));
+      return [...current, ...legacy];
+    }
+
+    function drawCampaignId(campaign){
+      return campaign.campaignId || campaign.code || "SW-00000";
+    }
+
+    function renderDraws(){
+      const all = allDrawCampaigns();
+      const past = all.filter((campaign) => (
+        campaign.winnerName || campaign.winnerTicket
+      ));
+      const upcoming = all.filter((campaign) => (
+        !past.includes(campaign) && !campaignIsExpired(campaign)
+      ));
+
+      pastDrawsList.innerHTML = "";
+      if (!past.length) {
+        pastDrawsList.innerHTML = `<p class="empty-draws">Past winners will appear here after a draw is completed.</p>`;
+      } else {
+        past.forEach((campaign, index) => {
+          const card = document.createElement("article");
+          card.className = "past-draw-card";
+          card.style.backgroundImage = `url("${campaign.bannerUrl || campaign.imageUrl || DEFAULT_BANNER}")`;
+          card.style.animationDelay = `${index * 55}ms`;
+          const winnerPhoto = campaign.winnerPhotoUrl || campaign.winnerImageUrl || campaign.bannerUrl || DEFAULT_BANNER;
+          const title = campaign.prizeTitle || campaign.winTitle || campaign.name || "Prize";
+          const winnerName = campaign.winnerName || "Winner details coming soon";
+          const winnerPrize = campaign.winnerPrizeTitle || title;
+          card.innerHTML = `
+            <div class="winner-info">
+              <img class="winner-photo" src="${escapeHtml(winnerPhoto)}" alt="${escapeHtml(winnerName)}">
+              <div class="winner-congrats">CONGRATS!</div>
+              <div class="winner-name">${escapeHtml(winnerName)}</div>
+              ${campaign.winnerTicket ? `<div class="winner-ticket">Ticket No.: ${escapeHtml(campaign.winnerTicket)}</div>` : ""}
+              <div class="winner-prize">${escapeHtml(winnerPrize)}</div>
+              <div class="past-draw-meta">Campaign ID: ${escapeHtml(drawCampaignId(campaign))}<br>${campaign.winnerAnnouncedAt ? `Announced on: ${escapeHtml(campaign.winnerAnnouncedAt)}` : escapeHtml(formatDrawDate(campaign.drawDate))}</div>
+            </div>`;
+          pastDrawsList.appendChild(card);
+        });
+      }
+
+      upcomingDrawsList.innerHTML = "";
+      if (!upcoming.length) {
+        upcomingDrawsList.innerHTML = `<p class="empty-draws">No upcoming draws are scheduled yet.</p>`;
+      } else {
+        upcoming.forEach((campaign, index) => {
+          const card = document.createElement("article");
+          card.className = "upcoming-draw-card";
+          card.style.animationDelay = `${index * 55}ms`;
+          const title = campaign.prizeTitle || campaign.winTitle || campaign.name || "A surprise prize";
+          card.innerHTML = `
+            <div class="upcoming-draw-image"></div>
+            <div class="upcoming-draw-copy">
+              <div class="draw-win-label">Win</div>
+              <div class="upcoming-draw-title">${escapeHtml(title)}</div>
+              <div class="upcoming-draw-meta">Draw Date: <strong>${escapeHtml(formatDrawDate(campaign.drawDate))}</strong><br>Campaign ID: ${escapeHtml(drawCampaignId(campaign))}</div>
+            </div>`;
+          card.querySelector(".upcoming-draw-image").style.backgroundImage =
+            `url("${campaign.bannerUrl || campaign.imageUrl || DEFAULT_BANNER}")`;
+          upcomingDrawsList.appendChild(card);
+        });
+      }
+
+      pastDrawsList.hidden = activeDrawTab !== "past";
+      upcomingDrawsList.hidden = activeDrawTab !== "upcoming";
+      pastDrawsTab.classList.toggle("active", activeDrawTab === "past");
+      upcomingDrawsTab.classList.toggle("active", activeDrawTab === "upcoming");
+    }
+
+    window.renderDraws = renderDraws;
+    pastDrawsTab.addEventListener("click", () => {
+      activeDrawTab = "past";
+      renderDraws();
+    });
+    upcomingDrawsTab.addEventListener("click", () => {
+      activeDrawTab = "upcoming";
+      renderDraws();
+    });
+
+    function renderCategories(){
+      categoryRow.innerHTML = "";
+      categoryRow.classList.toggle("hidden", categories.length === 0);
+
+      const entries = [];
+      if (categories.length) entries.push({ id: "ALL", name: "ALL CAMPAIGNS" });
+      categories.forEach((c) => entries.push({ id: c.id, name: c.name }));
+
+      if (!entries.some((e) => e.id === selectedId)) {
+        selectedId = entries.length ? entries[0].id : "ALL";
+      }
+
+      entries.forEach((e) => {
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "category-chip" + (e.id === selectedId ? " active" : "");
+        chip.textContent = e.name;
+        chip.addEventListener("click", () => {
+          selectedId = e.id;
+          renderCategories();
+          renderCampaigns();
+        });
+        categoryRow.appendChild(chip);
+      });
+    }
+
+    function campaignProducts(campaignId){
+      const campaign = visibleCampaigns().find((item) => item.id === campaignId);
+      return products.filter((p) => (
+        p.campaignId === campaignId ||
+        (campaign?.legacy && !p.campaignId && p.categoryId === campaign.categoryId)
+      ));
+    }
+
+    function firestoreTime(value){
+      if (value?.toMillis) return value.toMillis();
+      if (value?.seconds) return value.seconds * 1000;
+      const parsed = Date.parse(value || "");
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function newestFirst(items){
+      return items.sort((a, b) => firestoreTime(b.createdAt) - firestoreTime(a.createdAt));
+    }
+
+    function ticketProgressMarkup(campaign){
+      const goal = Number.parseInt(campaign.ticketsNeeded, 10) || 0;
+      if (!goal) return "";
+      const sold = Math.max(0, Number.parseInt(campaign.ticketsSold, 10) || 0);
+      const percent = Math.min(100, Math.round((sold / goal) * 100));
+      return `
+        <div class="campaign-ticket-progress">
+          <div class="progress-label"><span>${sold.toLocaleString()} tickets collected</span><span>${goal.toLocaleString()} needed</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:${percent}%"></div></div>
+        </div>`;
+    }
+
+    function renderCampaigns(){
+      const visible = visibleCampaigns().filter((campaign) => (
+        selectedId === "ALL" || campaign.categoryId === selectedId
+      ));
+
+      campaignGrid.innerHTML = "";
+      productsEmpty.textContent = productsLoadFailed
+        ? "Products could not be loaded. Please refresh and try again."
+        : visible.length ? "" : "No campaigns available yet.";
+      productsEmpty.style.display = visible.length && !productsLoadFailed ? "none" : "block";
+
+      visible.forEach((campaign) => {
+        const title = campaign.prizeTitle || campaign.winTitle || campaign.name || "A surprise prize";
+        const shopFrom = campaign.shopFrom || campaign.minimumSpend || "10";
+        const drawDate = formatDrawDate(campaign.drawDate);
+        const campaignId = campaign.campaignId || campaign.code || "SW-00000";
+        const countdown = closingCountdown(campaign.drawDate);
+        const countdownMarkup = countdown
+          ? `<div class="campaign-countdown">CLOSING IN ${countdown}</div>`
+          : "";
+        const card = document.createElement("div");
+        card.className = "campaign-card";
+        card.innerHTML = `
+          <div class="campaign-visual${countdown ? " has-countdown" : ""}" style="background-image:url('${escapeHtml(campaign.bannerUrl || campaign.imageUrl || DEFAULT_BANNER)}')">
+            ${countdownMarkup}
+            <span class="campaign-win">WIN</span>
+          </div>
+          <div class="campaign-info">
+            <div class="campaign-title">${escapeHtml(title)}</div>
+            <button class="campaign-shop" type="button">SHOP FROM ${escapeHtml(money(shopFrom).replace(".00",""))}</button>
+            <div class="campaign-meta">
+              <strong>Draw Date: ${escapeHtml(drawDate)}.</strong> • <strong>Campaign ID: ${escapeHtml(campaignId)}</strong>
+            </div>
+            ${ticketProgressMarkup(campaign)}
+          </div>`;
+        card.querySelector(".campaign-shop").addEventListener("click", () => openProductSheet(campaign));
+        card.querySelector(".campaign-visual").addEventListener("click", () => openProductSheet(campaign));
+        campaignGrid.appendChild(card);
+      });
+    }
+
+    function renderQuantity(){
+      quantityRow.innerHTML = "";
+      [1, 2, 3, 4, 5].forEach((value) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "quantity-btn" + (value === quantity ? " selected" : "");
+        button.textContent = value;
+        button.addEventListener("click", () => {
+          quantity = value;
+          renderQuantity();
+          renderSheetTotals();
+        });
+        quantityRow.appendChild(button);
+      });
+    }
+
+    setInterval(() => {
+      if (campaignGrid.childElementCount) renderCampaigns();
+    }, 1000);
+
+    function selectedProduct(){
+      return activeProducts[activeProductIndex] || null;
+    }
+
+    function renderSheetTotals(){
+      const product = selectedProduct();
+      if (!product) return;
+      const price = Number.parseFloat(product.price) || 0;
+      const tickets = (Number.parseInt(product.tickets, 10) || 1) * quantity;
+      sheetTotals.innerHTML = `
+        <div>Quantity: ${quantity}</div>
+        <div>Tickets: ${tickets}</div>
+        <div class="total">Total: ${money(price * quantity)}</div>`;
+    }
+
+    function renderSheetProducts(){
+      sheetProductTrack.innerHTML = "";
+      activeProducts.forEach((product, index) => {
+        const tickets = Number.parseInt(product.tickets, 10) || 1;
+        const card = document.createElement("article");
+        card.className = "sheet-product" + (index === activeProductIndex ? " selected" : "");
+        card.innerHTML = `
+          <div class="sheet-product-copy">
+            <div class="sheet-product-name">${escapeHtml(product.name || "Untitled product")}</div>
+            <div class="sheet-product-price">${money(product.price)}</div>
+            <div class="sheet-product-tickets">Get ${tickets} ticket${tickets === 1 ? "" : "s"}</div>
+          </div>
+          <img src="${escapeHtml(product.url || DEFAULT_BANNER)}" alt="${escapeHtml(product.name || "Product")}">`;
+        card.addEventListener("click", () => {
+          activeProductIndex = index;
+          quantity = 1;
+          renderSheetProducts();
+          renderQuantity();
+          renderSheetTotals();
+        });
+        sheetProductTrack.appendChild(card);
+      });
+      sheetEmpty.style.display = activeProducts.length ? "none" : "block";
+      quantityArea.style.display = activeProducts.length ? "block" : "none";
+    }
+
+    function openProductSheet(campaign){
+      activeCampaign = campaign;
+      activeProducts = campaignProducts(campaign.id);
+      activeProductIndex = 0;
+      quantity = 1;
+      sheetTitle.textContent = "Shop these products to participate";
+      const goal = Number.parseInt(campaign.ticketsNeeded, 10) || 0;
+      if (goal) {
+        const sold = Math.max(0, Number.parseInt(campaign.ticketsSold, 10) || 0);
+        const percent = Math.min(100, Math.round((sold / goal) * 100));
+        sheetCampaignProgress.hidden = false;
+        sheetCampaignProgress.innerHTML = `
+          <div class="progress-label"><span>${sold.toLocaleString()} collected</span><span>${goal.toLocaleString()} tickets needed</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:${percent}%"></div></div>`;
+      } else {
+        sheetCampaignProgress.hidden = true;
+        sheetCampaignProgress.innerHTML = "";
+      }
+      renderSheetProducts();
+      renderQuantity();
+      if (activeProducts.length) renderSheetTotals();
+      sheetBackdrop.classList.add("open");
+      sheetBackdrop.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeProductSheet(){
+      sheetBackdrop.classList.remove("open");
+      sheetBackdrop.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    addCartBtn.addEventListener("click", async () => {
+      const product = selectedProduct();
+      if (!product || !activeCampaign) return;
+      const key = `${activeCampaign.id}:${product.id}`;
+      const existing = cartItems.find((item) => item.key === key);
+      if (existing) {
+        existing.quantity = (Number(existing.quantity) || 0) + quantity;
+      } else {
+        cartItems.push({
+          key,
+          productId: product.id,
+          productName: product.name || "Untitled product",
+          imageUrl: product.url || DEFAULT_BANNER,
+          price: product.price || "0",
+          tickets: Number.parseInt(product.tickets, 10) || 1,
+          campaignId: activeCampaign.id,
+          campaignName: activeCampaign.prizeTitle || activeCampaign.name || "Winning campaign",
+          campaignCode: drawCampaignId(activeCampaign),
+          quantity
+        });
+      }
+      await persistCart();
+      addCartBtn.textContent = "ADDED TO CART";
+      setTimeout(() => { addCartBtn.textContent = "ADD TO CART"; }, 1200);
+    });
+    sheetClose.addEventListener("click", closeProductSheet);
+    sheetBackdrop.addEventListener("click", (event) => {
+      if (event.target === sheetBackdrop) closeProductSheet();
+    });
+
+    onSnapshot(categoriesCol, (snap) => {
+      categories = newestFirst(snap.docs.map((d) => ({ id: d.id, ...d.data() }))).reverse();
+      renderCategories();
+      renderCampaigns();
+      renderDraws();
+    }, (err) => console.warn("Categories unavailable:", err));
+
+    onSnapshot(campaignsCol, (snap) => {
+      campaigns = newestFirst(snap.docs.map((d) => ({ id: d.id, ...d.data() }))).reverse();
+      renderCampaigns();
+      renderDraws();
+    }, (err) => console.warn("Campaigns unavailable:", err));
+
+    onSnapshot(productsCol, (snap) => {
+      productsLoadFailed = false;
+      products = newestFirst(snap.docs.map((d) => {
+        const data = d.data();
+        return {
+          id: d.id,
+          ...data,
+          url: data.url || data.imageUrl || data.image || ""
+        };
+      }));
+      renderCampaigns();
+      if (activeCampaign) {
+        activeProducts = campaignProducts(activeCampaign.id);
+        renderSheetProducts();
+        if (activeProducts.length) renderSheetTotals();
+      }
+    }, (err) => {
+      productsLoadFailed = true;
+      productsEmpty.textContent = err.message || "Products could not be loaded. Please refresh and try again.";
+      productsEmpty.style.display = "block";
+      console.warn("Products unavailable:", err);
     });
   </script>
 </body>
