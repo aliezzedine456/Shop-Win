@@ -892,6 +892,9 @@
   .body-content{
     min-height:40vh;
   }
+  #homeView{
+    padding-bottom:30vh;
+  }
   .app-view[hidden]{ display:none !important; }
   .draws-view,
   .account-view{
@@ -1014,7 +1017,7 @@
     background:#fff;
     box-shadow:0 3px 12px rgba(0,0,0,0.12);
   }
-  .winner-info .winner-photo{
+  .past-draw-card .past-draw-campaign-photo{
     float:right;
     width:82px;
     height:68px;
@@ -1223,6 +1226,9 @@
     scrollbar-width:none;
   }
   .home-horizontal-row::-webkit-scrollbar{ display:none; }
+  .home-horizontal-row .past-draw-card{
+    flex:0 0 min(84vw,330px);
+  }
   .sold-out-card{
     position:relative;
     flex:0 0 min(84vw,330px);
@@ -1302,13 +1308,32 @@
     color:#fff;
     text-align:center;
   }
-  .home-winner-card .winner-photo{
-    width:74px;
-    height:74px;
-    margin:0 auto 10px;
-    border:3px solid rgba(255,255,255,.9);
-    border-radius:50%;
+  .home-winner-campaign-photo{
+    position:absolute;
+    z-index:2;
+    top:14px;
+    right:14px;
+    width:88px;
+    height:88px;
+    padding:4px;
+    border:1px solid rgba(255,255,255,.9);
+    border-radius:18px;
+    background:#fff;
     object-fit:cover;
+    box-shadow:0 6px 18px rgba(0,0,0,.22);
+  }
+  .home-winner-campaign-label{
+    position:absolute;
+    z-index:3;
+    top:78px;
+    right:20px;
+    padding:3px 7px;
+    border-radius:999px;
+    color:#fff;
+    background:rgba(0,0,0,.72);
+    font-size:.52rem;
+    font-weight:900;
+    letter-spacing:.2px;
   }
   .home-winner-card .winner-congrats{
     color:#ffd7e8;
@@ -1928,14 +1953,14 @@ height: clamp(58px, 18vw, 80px);
 
   <main id="homeView" class="body-content app-view">
     <div id="categoryRow" class="category-row"></div>
+    <div id="campaignGrid" class="campaign-grid"></div>
+    <div id="productGrid" class="legacy-product-grid" aria-hidden="true"></div>
+    <p id="productsEmpty" class="products-empty" style="display:none;">No products in this category yet.</p>
     <section id="soldOutSection" class="home-feature-section" hidden>
       <div class="home-feature-heading sold-out-heading">SOLD OUT</div>
       <div id="soldOutCampaignRow" class="home-horizontal-row"></div>
       <p id="soldOutEmpty" class="home-empty-note">Sold-out campaigns will appear here.</p>
     </section>
-    <div id="campaignGrid" class="campaign-grid"></div>
-    <div id="productGrid" class="legacy-product-grid" aria-hidden="true"></div>
-    <p id="productsEmpty" class="products-empty" style="display:none;">No products in this category yet.</p>
     <section id="pastWinnersHomeSection" class="home-feature-section" hidden>
       <div class="home-feature-heading past-winners-heading">PAST WINNERS</div>
       <div id="pastWinnersHomeRow" class="home-horizontal-row"></div>
@@ -3411,15 +3436,15 @@ height: clamp(58px, 18vw, 80px);
         past.forEach((campaign, index) => {
           const card = document.createElement("article");
           card.className = "past-draw-card";
-          card.style.backgroundImage = `url("${campaign.bannerUrl || campaign.imageUrl || DEFAULT_BANNER}")`;
           card.style.animationDelay = `${index * 55}ms`;
           const winnerPhoto = campaign.winnerPhotoUrl || campaign.winnerImageUrl || campaign.bannerUrl || DEFAULT_BANNER;
+          card.style.backgroundImage = `url("${winnerPhoto}")`;
           const title = campaign.prizeTitle || campaign.winTitle || campaign.name || "Prize";
           const winnerName = campaign.winnerName || "Winner details coming soon";
           const winnerPrize = campaign.winnerPrizeTitle || title;
           card.innerHTML = `
             <div class="winner-info">
-              <img class="winner-photo" src="${escapeHtml(winnerPhoto)}" alt="${escapeHtml(winnerName)}">
+              <img class="past-draw-campaign-photo" src="${escapeHtml(campaign.bannerUrl || campaign.imageUrl || DEFAULT_BANNER)}" alt="${escapeHtml(title)}">
               <div class="winner-congrats">CONGRATS!</div>
               <div class="winner-name">${escapeHtml(winnerName)}</div>
               ${campaign.winnerTicket ? `<div class="winner-ticket">Ticket No.: ${escapeHtml(campaign.winnerTicket)}</div>` : ""}
@@ -3562,18 +3587,19 @@ height: clamp(58px, 18vw, 80px);
       winners.forEach((campaign, index) => {
         const winnerPhoto = campaign.winnerPhotoUrl || campaign.winnerImageUrl || campaign.bannerUrl || DEFAULT_BANNER;
         const winnerName = campaign.winnerName || "Winner details coming soon";
-        const title = campaign.winnerPrizeTitle || campaign.prizeTitle || campaign.winTitle || campaign.name || "Prize";
+        const title = campaign.prizeTitle || campaign.winTitle || campaign.name || "Prize";
+        const winnerPrize = campaign.winnerPrizeTitle || title;
         const card = document.createElement("article");
-        card.className = "home-winner-card";
-        card.style.backgroundImage = `url("${campaign.bannerUrl || campaign.imageUrl || DEFAULT_BANNER}")`;
+        card.className = "past-draw-card";
+        card.style.backgroundImage = `url("${winnerPhoto}")`;
         card.style.animationDelay = `${index * 55}ms`;
         card.innerHTML = `
           <div class="winner-info">
-            <img class="winner-photo" src="${escapeHtml(winnerPhoto)}" alt="${escapeHtml(winnerName)}">
+            <img class="past-draw-campaign-photo" src="${escapeHtml(campaign.bannerUrl || campaign.imageUrl || DEFAULT_BANNER)}" alt="${escapeHtml(title)}">
             <div class="winner-congrats">CONGRATS!</div>
             <div class="winner-name">${escapeHtml(winnerName)}</div>
             ${campaign.winnerTicket ? `<div class="winner-ticket">Ticket No.: ${escapeHtml(campaign.winnerTicket)}</div>` : ""}
-            <div class="winner-prize">${escapeHtml(title)}</div>
+            <div class="winner-prize">${escapeHtml(winnerPrize)}</div>
             <div class="past-draw-meta">Campaign ID: ${escapeHtml(drawCampaignId(campaign))}<br>${campaign.winnerAnnouncedAt ? `Announced on: ${escapeHtml(campaign.winnerAnnouncedAt)}` : escapeHtml(formatDrawDate(campaign.drawDate))}</div>
           </div>`;
         pastWinnersHomeRow.appendChild(card);
