@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Shop &amp; Win</title>
+<meta name="description" content="Shop everyday products and earn tickets into live prize draws. Add to cart, checkout, and track your entries with Shop &amp; Win.">
+<meta name="theme-color" content="#15151a">
+<meta name="color-scheme" content="light">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta property="og:title" content="Shop & Win">
+<meta property="og:description" content="Shop everyday products and earn tickets into live prize draws.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff2d55'/%3E%3Cstop offset='1' stop-color='%23e9009f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='24' fill='url(%23g)'/%3E%3Ctext x='50' y='66' font-size='54' font-family='Arial,sans-serif' font-weight='900' fill='white' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -288,17 +298,6 @@
     color:#fff;
     background:linear-gradient(135deg,#ff252d 0%,#f91545 55%,#e9009f 100%);
   }
-  .auth-promo::after{
-    content:"";
-    position:absolute;
-    right:-30px;
-    bottom:-38px;
-    width:190px;
-    height:190px;
-    border:22px dotted rgba(255,255,255,0.78);
-    border-radius:50%;
-    transform:rotate(18deg);
-  }
   .auth-promo-copy{
     position:relative;
     z-index:1;
@@ -432,6 +431,17 @@
     visibility:visible !important;
     opacity:1 !important;
     box-shadow:0 7px 20px rgba(21,21,26,.16);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .menu-back:hover{
+    transform:translateX(-2px) scale(1.04);
+    box-shadow:0 9px 22px rgba(21,21,26,.2);
+  }
+  .menu-back svg{
+    width:22px;
+    height:22px;
+    display:block;
+    margin:auto;
   }
   .account-sheet{
     position:relative;
@@ -558,6 +568,11 @@
     background:#f0f0f2;
     font-size:1.35rem;
   }
+  .menu-icon svg{
+    width:21px;
+    height:21px;
+    color:var(--ink);
+  }
   .about-card{
     margin-top:18px;
     padding:22px 16px;
@@ -644,6 +659,14 @@
     .sticky-topnav,
     .menu-list button,
     .info-sheet .menu-content-card{ animation:none; transition:none; }
+    .reveal{ opacity:1 !important; transform:none !important; transition:none !important; }
+    .app-view{ animation:none !important; }
+    .ripple-wave{ display:none !important; }
+    .campaign-card, .sold-out-card, .past-draw-card, .upcoming-draw-card,
+    .legacy-product-card, .cart-badge.bump, .order-success-check path{
+      transition:none !important; animation:none !important;
+    }
+    .toast, .order-success-backdrop, .order-success-card{ transition:none !important; }
   }
   @keyframes menuItemIn{
     from{ opacity:0; transform:translateY(12px); }
@@ -1071,6 +1094,69 @@
     margin-top:9px;
     color:var(--muted);
     font-size:0.82rem;
+  }
+  .tickets-list{
+    display:grid;
+    gap:14px;
+    margin-top:22px;
+    text-align:left;
+  }
+  .ticket-campaign-card{
+    padding:18px;
+    border:1px solid #ececf2;
+    border-radius:22px;
+    background:linear-gradient(145deg,#fff 0%,#faf9ff 100%);
+    box-shadow:0 5px 16px rgba(31,25,76,.06);
+  }
+  .ticket-campaign-label{
+    color:#6b5aeb;
+    font-size:.68rem;
+    font-weight:900;
+    letter-spacing:.5px;
+  }
+  .ticket-campaign-name{
+    margin-top:5px;
+    color:var(--ink);
+    font-size:1rem;
+    line-height:1.25;
+    font-weight:900;
+  }
+  .ticket-campaign-code,
+  .ticket-campaign-products{
+    margin-top:7px;
+    color:#777780;
+    font-size:.72rem;
+    line-height:1.4;
+  }
+  .ticket-count{
+    display:flex;
+    align-items:baseline;
+    gap:6px;
+    margin-top:14px;
+    color:#d61b69;
+    font-size:.78rem;
+    font-weight:900;
+  }
+  .ticket-count strong{
+    font-size:1.55rem;
+    line-height:1;
+  }
+  .tickets-empty-message{
+    margin-top:22px !important;
+    color:#777780 !important;
+    font-weight:800;
+    line-height:1.55;
+  }
+  .tickets-empty-message strong{
+    display:block;
+    color:var(--ink);
+    font-size:1rem;
+    font-weight:900;
+  }
+  .tickets-empty-message span{
+    display:block;
+    margin-top:4px;
+    font-size:.74rem;
   }
   .wallet-card{
     text-align:left;
@@ -1681,13 +1767,34 @@
   .cart-item .cart-price{ color:#4433a8; font-size:0.78rem; font-weight:900; white-space:nowrap; }
   .cart-remove{
     grid-column:2 / 4;
-    justify-self:start;
-    padding:5px 0;
-    border:0;
+    justify-self:end;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    min-height:32px;
+    min-width:88px;
+    padding:7px 12px;
+    border:1px solid #ffd3df;
+    border-radius:10px;
     color:#d51e52;
-    background:transparent;
-    font:700 0.7rem/1 inherit;
+    background:#fff7f9;
+    font:900 0.68rem/1 inherit;
     cursor:pointer;
+    transition:transform .2s ease, background .2s ease, box-shadow .2s ease;
+  }
+  .cart-remove:focus-visible{
+    outline:3px solid rgba(213,30,82,.2);
+    outline-offset:2px;
+  }
+  .cart-remove:hover{
+    transform:translateY(-1px);
+    background:#ffedf2;
+    box-shadow:0 5px 12px rgba(213,30,82,.12);
+  }
+  .cart-remove svg{
+    width:14px;
+    height:14px;
+    flex:0 0 14px;
   }
   .cart-total{
     display:flex;
@@ -1746,7 +1853,13 @@
     .cart-item{ grid-template-columns:60px minmax(0,1fr); gap:9px; }
     .cart-item img{ width:60px; height:60px; }
     .cart-item .cart-price{ grid-column:2; grid-row:1; justify-self:end; }
-    .cart-remove{ grid-column:2; }
+    .cart-remove{
+      grid-column:2;
+      justify-self:end;
+      min-width:86px;
+      padding:7px 10px;
+      font-size:.64rem;
+    }
     .account-sheet{ width:100%; max-height:88vh; border-radius:26px 26px 0 0; padding:18px 14px calc(20px + env(safe-area-inset-bottom)); }
     .menu-back{ left:12px; }
   }
@@ -1889,6 +2002,241 @@ height: clamp(58px, 18vw, 80px);
     text-align:center;
   }
 
+  /* ===================== SCROLL-REVEAL ===================== */
+  .reveal{
+    opacity:0;
+    transform:translateY(18px);
+    transition:opacity .55s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1);
+  }
+  .reveal.in-view{ opacity:1; transform:translateY(0); }
+  .reveal:nth-child(1){ transition-delay:0ms; }
+  .reveal:nth-child(2){ transition-delay:55ms; }
+  .reveal:nth-child(3){ transition-delay:110ms; }
+  .reveal:nth-child(4){ transition-delay:165ms; }
+  .reveal:nth-child(5){ transition-delay:220ms; }
+  .reveal:nth-child(6){ transition-delay:275ms; }
+  .reveal:nth-child(n+7){ transition-delay:320ms; }
+
+  /* ===================== RIPPLE FEEDBACK ===================== */
+  .ripple-host{ position:relative; overflow:hidden; }
+  .ripple-wave{
+    position:absolute;
+    z-index:0;
+    width:14px;
+    height:14px;
+    margin:-7px 0 0 -7px;
+    border-radius:50%;
+    background:currentColor;
+    opacity:.24;
+    pointer-events:none;
+    transform:scale(0);
+    animation:rippleOut .55s ease-out forwards;
+  }
+  @keyframes rippleOut{ to{ transform:scale(24); opacity:0; } }
+
+  /* ===================== CARD HOVER / PRESS FEEDBACK ===================== */
+  .campaign-card,
+  .sold-out-card,
+  .past-draw-card,
+  .upcoming-draw-card,
+  .legacy-product-card,
+  .wallet-card{
+    transition:transform .32s cubic-bezier(.22,1,.36,1), box-shadow .32s ease;
+  }
+  @media (hover:hover){
+    .campaign-card:hover{ transform:translateY(-5px); box-shadow:0 16px 32px rgba(21,21,26,.1); }
+    .sold-out-card:hover,
+    .past-draw-card:hover,
+    .upcoming-draw-card:hover{ transform:translateY(-5px); box-shadow:0 16px 30px rgba(21,21,26,.16); }
+    .legacy-product-card:hover{ transform:translateY(-5px); box-shadow:0 16px 28px rgba(21,21,26,.14); }
+    .menu-list button:hover .menu-icon{ transform:scale(1.08); }
+  }
+  .campaign-card:active,
+  .sold-out-card:active,
+  .past-draw-card:active,
+  .upcoming-draw-card:active,
+  .legacy-product-card:active{ transform:scale(.985); }
+  .menu-icon{ transition:transform .25s cubic-bezier(.22,1,.36,1); }
+
+  .category-chip,
+  .draw-tab,
+  .quantity-btn,
+  .campaign-shop{
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
+  }
+  .category-chip:active,
+  .draw-tab:active,
+  .quantity-btn:active,
+  .campaign-shop:active{ transform:scale(.94); }
+  .nav-item .icon-circle{
+    transition:transform .24s cubic-bezier(.22,1,.36,1), background .22s ease, box-shadow .22s ease;
+  }
+  .nav-item:active .icon-circle{ transform:scale(.88); }
+  .nav-item.active .icon-circle{ transform:translateY(-3px); }
+  .nav-item.cart.active .icon-circle,
+  .nav-item.cart:active .icon-circle{ transform:translateY(-3px) scale(.96); }
+
+  /* ===================== CART BADGE BUMP ===================== */
+  @keyframes badgeBump{
+    0%{ transform:scale(1); }
+    40%{ transform:scale(1.5); }
+    70%{ transform:scale(.88); }
+    100%{ transform:scale(1); }
+  }
+  .cart-badge.bump{ animation:badgeBump .45s cubic-bezier(.22,1,.36,1); }
+
+  /* ===================== VIEW TRANSITIONS ===================== */
+  .app-view{ animation:viewFadeIn .4s cubic-bezier(.22,1,.36,1) both; }
+  @keyframes viewFadeIn{
+    from{ opacity:0; transform:translateY(12px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  /* ===================== TOASTS ===================== */
+  .toast-stack{
+    position:fixed;
+    left:0; right:0;
+    bottom:calc(104px + env(safe-area-inset-bottom));
+    z-index:90;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    padding:0 18px;
+    pointer-events:none;
+  }
+  .toast{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    max-width:420px;
+    width:100%;
+    padding:13px 16px;
+    border-radius:18px;
+    color:#fff;
+    background:#1c1c22;
+    box-shadow:0 14px 32px rgba(0,0,0,.3);
+    font-size:.8rem;
+    font-weight:700;
+    line-height:1.3;
+    transform:translateY(24px) scale(.96);
+    opacity:0;
+    pointer-events:auto;
+    transition:transform .38s cubic-bezier(.22,1,.36,1), opacity .32s ease;
+  }
+  .toast.show{ transform:translateY(0) scale(1); opacity:1; }
+  .toast.leaving{ transform:translateY(10px) scale(.96); opacity:0; }
+  .toast-icon{
+    display:grid;
+    place-items:center;
+    flex:0 0 22px;
+    width:22px; height:22px;
+    border-radius:50%;
+    font-size:.7rem;
+  }
+  .toast.success .toast-icon{ background:#2fbf71; }
+  .toast.error .toast-icon{ background:var(--accent-red); }
+  .toast.info .toast-icon{ background:#5b4bff; }
+
+  /* ===================== ORDER SUCCESS OVERLAY ===================== */
+  .order-success-backdrop{
+    position:fixed; inset:0; z-index:95;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+    background:rgba(10,10,12,.72);
+    backdrop-filter:blur(6px);
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity .3s ease, visibility 0s linear .3s;
+  }
+  .order-success-backdrop.open{
+    opacity:1; visibility:visible; pointer-events:auto;
+    transition:opacity .3s ease, visibility 0s linear 0s;
+  }
+  .order-success-card{
+    position:relative;
+    overflow:hidden;
+    width:min(100%, 360px);
+    padding:34px 26px 28px;
+    border-radius:28px;
+    background:#fff;
+    text-align:center;
+    transform:translateY(30px) scale(.92);
+    opacity:0;
+    transition:transform .42s cubic-bezier(.22,1,.36,1), opacity .3s ease;
+  }
+  .order-success-backdrop.open .order-success-card{
+    transform:translateY(0) scale(1);
+    opacity:1;
+  }
+  .order-success-check{
+    position:relative;
+    z-index:1;
+    width:78px; height:78px;
+    margin:0 auto 18px;
+    border-radius:50%;
+    display:grid; place-items:center;
+    background:linear-gradient(135deg,#2fbf71,#1f9d5b);
+    box-shadow:0 12px 26px rgba(47,191,113,.35);
+  }
+  .order-success-check svg{ width:38px; height:38px; }
+  .order-success-check path{
+    fill:none;
+    stroke:#fff;
+    stroke-width:3.4;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    stroke-dasharray:48;
+    stroke-dashoffset:48;
+  }
+  .order-success-backdrop.open .order-success-check path{
+    animation:checkDraw .5s .15s cubic-bezier(.65,0,.35,1) forwards;
+  }
+  @keyframes checkDraw{ to{ stroke-dashoffset:0; } }
+  .order-success-title{ position:relative; z-index:1; font-size:1.2rem; font-weight:900; margin-bottom:8px; }
+  .order-success-copy{ position:relative; z-index:1; color:var(--muted); font-size:.82rem; line-height:1.5; margin-bottom:22px; }
+  .order-success-copy strong{ color:var(--ink); }
+  .order-success-card .primary-action{ position:relative; z-index:1; margin-bottom:10px; }
+  .order-success-secondary{
+    position:relative;
+    z-index:1;
+    width:100%;
+    min-height:48px;
+    border:0;
+    border-radius:999px;
+    background:transparent;
+    color:var(--muted);
+    font:800 .8rem/1 inherit;
+    cursor:pointer;
+  }
+  .confetti-piece{
+    position:absolute;
+    top:-10%;
+    width:8px; height:14px;
+    opacity:.9;
+    animation:confettiFall linear forwards;
+  }
+  @keyframes confettiFall{
+    to{ transform:translateY(420px) rotate(600deg); opacity:0; }
+  }
+
+  /* ===================== IMAGE FADE-IN ===================== */
+  img.lazy-fade{ opacity:0; transition:opacity .4s ease; }
+  img.lazy-fade.loaded{ opacity:1; }
+
+  /* ===================== ACCESSIBILITY / FOCUS ===================== */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible{
+    outline:2.5px solid #5b4bff;
+    outline-offset:2px;
+  }
+
+  /* ===================== SCROLLBAR POLISH ===================== */
+  ::-webkit-scrollbar{ width:8px; height:8px; }
+  ::-webkit-scrollbar-thumb{ background:rgba(21,21,26,.18); border-radius:999px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
 
 </style>
 </head>
@@ -1988,7 +2336,11 @@ height: clamp(58px, 18vw, 80px);
   <section id="ticketsView" class="account-view app-view" hidden>
     <div class="account-card">
       <h1 class="screen-title">TICKETS</h1>
-      <p id="ticketsMessage">Your tickets will appear here after you participate in a draw.</p>
+      <p id="ticketsMessage" class="tickets-empty-message">
+        <strong>NO ACTIVE TICKETS</strong>
+        <span>MAKE A PURCHASE TO SEE YOUR TICKETS HERE</span>
+      </p>
+      <div id="ticketsList" class="tickets-list"></div>
     </div>
   </section>
 
@@ -2092,22 +2444,25 @@ height: clamp(58px, 18vw, 80px);
   <div id="menuBackdrop" class="modal-backdrop" aria-hidden="true">
     <section class="menu-sheet" role="dialog" aria-modal="true" aria-labelledby="menuTitle">
       <div class="sheet-modal-header">
-        <button id="menuBack" class="menu-back" type="button" aria-label="Return to the app">&lt;</button>
+        <button id="menuBack" class="menu-back" type="button" aria-label="Return to the app">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 5L8 12L15 19" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
       </div>
       <div class="menu-profile">
         <img id="menuAvatar" class="menu-avatar" alt="Default profile picture">
         <h2 id="menuUserName">WELCOME</h2>
         <p id="menuUserEmail">Sign in to manage your account.</p>
         <p id="menuUserPhone"></p>
-        <div id="menuBalance" class="wallet-balance">Wallet Balance $0.00</div>
       </div>
       <div class="menu-list">
-        <button type="button" data-menu-action="profile"><span class="menu-icon">♙</span>PERSONAL DETAILS</button>
+        <button type="button" data-menu-action="profile"><span class="menu-icon"><svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M445.21,438.315c-10.7-20.671-27.49-34.113-43.889-43.241c-16.399-9.146-32.825-14.33-43.578-18.379c-8.505-3.16-17.456-7.263-23.466-11.498c-3.01-2.087-5.212-4.192-6.349-5.754c-1.172-1.625-1.234-2.344-1.252-2.752c0-8.08,0-18.149,0-31.245c5.345-5.984,11.765-13.487,17.776-23.121c6.269-10.033,11.853-22.516,15.298-37.495c1.963-0.959,3.916-2.06,5.825-3.4c5.869-4.04,10.832-9.945,14.863-17.625c4.084-7.716,7.601-17.376,11.338-30.437c2.37-8.319,3.48-15.067,3.49-21.025c0.009-5.522-1.012-10.538-3.365-14.818c-1.74-3.197-4.2-5.781-6.677-7.512c-2.495-1.74-4.831-2.716-6.757-3.357c-0.008-0.248-0.017-0.461-0.017-0.736c-0.028-6.472,1.261-17.358,2.726-27.32c0.879-6.091,1.42-12.563,1.42-19.25c0-10.228-1.26-21.007-4.546-31.644c-4.874-15.938-14.65-31.618-30.934-43.427c-16.168-11.765-38.312-19.596-67.56-21.949c-32.621-3.978-51.906-7.734-67.488-11.347c-15.565-3.596-27.844-7.201-45.744-10.69v0.009C165.276,0.107,164.246,0,163.296,0c-2.344-0.018-4.857,0.595-6.907,1.678c-3.925,2.078-5.949,5.034-7.255,7.467c-2.202,4.35-2.912,8.293-3.614,12.457c-0.932,6.172-1.296,12.724-1.811,18.148c-0.248,2.7-0.542,5.106-0.852,6.784c-0.151,0.835-0.32,1.483-0.426,1.829l-0.08,0.257c-15.706,27.552-19.596,56.337-19.596,78.623c0,17.74,2.478,31.582,3.694,37.656c0.444,2.264,0.621,3.818,0.719,5.06c-1.252,0.888-2.566,1.936-3.933,3.277c-2.442,2.406-4.883,5.655-6.66,9.776c-1.776,4.102-2.849,9.021-2.841,14.49c0,4.262,0.622,8.835,1.954,13.772c4.83,17.935,10.832,30.392,18.308,39.377c5.575,6.793,12.03,11.241,18.255,14.215c3.462,14.961,9.038,27.436,15.298,37.46c6.01,9.634,12.43,17.136,17.776,23.121c0,13.096,0,23.164,0,31.245c0.008,0.151-0.063,0.985-1.376,2.752c-1.891,2.584-6.428,6.224-11.942,9.323c-5.504,3.135-11.942,5.878-17.553,7.858c-7.29,2.575-17.092,5.744-27.631,10.264c-15.805,6.766-33.553,16.604-47.617,32.888c-14.117,16.23-23.885,39.049-23.796,68.864c0,4.102,0.177,8.364,0.542,12.75L56.838,512h10.646h387.679l0.888-10.61c0.364-4.378,0.542-8.622,0.542-12.715C456.61,468.805,452.348,452.05,445.21,438.315z M433.454,488.862H78.547c0-0.071-0.008-0.142-0.008-0.222c0.017-16.656,3.445-29.469,8.763-39.839c7.991-15.503,20.626-25.998,34.557-33.802c13.922-7.778,28.759-12.52,40.284-16.559c8.932-3.17,19.276-7.716,28.217-13.914c4.466-3.116,8.621-6.659,12.022-11.107c3.338-4.395,6.064-10.096,6.073-16.728c0-9.003,0-20.244,0-35.658v-4.448l-2.966-3.294c-5.815-6.437-12.43-13.781-18.308-23.192c-5.861-9.429-10.983-20.848-13.602-35.658l-1.172-6.614l-6.331-2.273c-5.594-2.051-9.723-4.298-14.322-9.696c-4.529-5.434-9.448-14.677-13.736-30.597c-0.87-3.231-1.163-5.789-1.163-7.76c0.009-2.548,0.453-4.146,0.95-5.31c0.746-1.705,1.74-2.646,2.601-3.294l0.968-0.586l0.045-0.026l1.154-0.382l1.297-0.862c1.98-1.278,3.898-3.605,4.963-6.259c1.101-2.682,1.563-5.62,1.571-9.136c0-3.126-0.381-6.748-1.278-11.259c-1.057-5.3-3.24-17.518-3.24-33.145c-0.009-19.72,3.516-44.545,16.692-67.426c1.563-2.788,2.157-5.106,2.699-7.467c0.879-4.067,1.269-8.248,1.651-12.555c0.48-5.656,0.933-11.4,1.608-15.431c13.478,2.859,24.222,5.877,38.312,9.145c16.292,3.791,36.678,7.724,69.921,11.782l0.231,0.035l0.274,0.026c17.589,1.368,31.414,4.866,42.184,9.625c16.151,7.201,25.625,16.941,31.671,28.004c6.003,11.072,8.338,23.831,8.338,36.368c0,5.434-0.444,10.832-1.181,15.938c-1.5,10.416-2.938,21.638-2.966,30.632c0.009,2.841,0.124,5.47,0.622,8.222c0.257,1.376,0.604,2.806,1.278,4.43c0.675,1.607,1.669,3.525,3.739,5.461l0.017,0.009c2.264,1.997,4.067,2.627,5.336,3.125c2.256,0.764,3.499,0.976,4.386,1.27l0.995,0.373c0.124,0.328,0.444,1.34,0.444,3.533c0.009,2.921-0.621,7.769-2.601,14.677c-4.626,16.328-8.772,25.625-12.262,30.419c-1.749,2.433-3.241,3.836-4.901,4.999c-1.67,1.163-3.65,2.113-6.446,3.117l-6.331,2.264l-1.172,6.624c-2.619,14.81-7.742,26.228-13.602,35.658c-5.877,9.411-12.492,16.755-18.308,23.192l-2.957,3.294v4.448c0,15.414,0,26.655,0,35.658c-0.018,6.384,2.486,12.075,5.744,16.462c4.937,6.614,11.525,11.258,18.557,15.298c7.041,3.995,14.651,7.227,21.789,9.908c7.751,2.904,16.888,5.949,26.309,10.033c14.143,6.083,28.634,14.375,39.297,26.708c10.638,12.386,18.122,28.617,18.211,53.576C433.463,488.729,433.454,488.809,433.454,488.862z"/></svg></span>PERSONAL DETAILS</button>
         <button type="button" data-menu-action="how"><span class="menu-icon">?</span>HOW IT WORKS</button>
-        <button type="button" data-menu-action="cards"><span class="menu-icon">▣</span>SAVED CARDS</button>
-        <button type="button" data-menu-action="orders"><span class="menu-icon">♧</span>ORDERS</button>
-        <button type="button" data-menu-action="addresses"><span class="menu-icon">⌾</span>ADDRESSES</button>
-        <button type="button" data-menu-action="about"><span class="menu-icon">D</span>ABOUT US</button>
+        <button type="button" data-menu-action="cards"><span class="menu-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 12C2 8.22876 2 6.34315 3.17157 5.17157C4.34315 4 6.22876 4 10 4H14C17.7712 4 19.6569 4 20.8284 5.17157C22 6.34315 22 8.22876 22 12C22 15.7712 22 17.6569 20.8284 18.8284C19.6569 20 17.7712 20 14 20H10C6.22876 20 4.34315 20 3.17157 18.8284C2 17.6569 2 15.7712 2 12Z" stroke="currentColor" stroke-width="1.5"/><path d="M10 16H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 16H12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M2 10L22 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>SAVED CARDS</button>
+        <button type="button" data-menu-action="orders"><span class="menu-icon"><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M959.018 208.158c0.23-2.721 0.34-5.45 0.34-8.172 0-74.93-60.96-135.89-135.89-135.89-1.54 0-3.036 0.06-6.522 0.213l-611.757-0.043c-1.768-0.085-3.563-0.17-5.424-0.17-74.812 0-135.67 60.84-135.67 135.712l0.188 10.952h-0.306l0.391 594.972-0.162 20.382c0 74.03 60.22 134.25 134.24 134.25 1.668 0 7.007-0.239 7.1-0.239l608.934 0.085c2.985 0.357 6.216 0.468 9.55 0.468 35.815 0 69.514-13.954 94.879-39.302 25.373-25.34 39.344-58.987 39.344-94.794l-0.145-12.015h0.918l-0.008-606.41z m-757.655 693.82l-2.585-0.203c-42.524 0-76.146-34.863-76.537-79.309V332.671H900.79l0.46 485.186-0.885 2.865c-0.535 1.837-0.8 3.58-0.8 5.17 0 40.382-31.555 73.766-71.852 76.002l-10.816 0.621v-0.527l-615.533-0.01zM900.78 274.424H122.3l-0.375-65.934 0.85-2.924c0.52-1.82 0.782-3.63 0.782-5.247 0-42.236 34.727-76.665 78.179-76.809l0.45-0.068 618.177 0.018 2.662 0.203c42.329 0 76.767 34.439 76.767 76.768 0 1.326 0.196 2.687 0.655 4.532l0.332 0.884v68.577z"/><path fill="currentColor" d="M697.67 471.435c-7.882 0-15.314 3.078-20.918 8.682l-223.43 223.439L346.599 596.84c-5.544-5.603-12.95-8.69-20.842-8.69s-15.323 3.078-20.918 8.665c-5.578 5.518-8.674 12.9-8.7 20.79-0.017 7.908 3.07 15.357 8.69 20.994l127.55 127.558c5.57 5.56 13.01 8.622 20.943 8.622 7.925 0 15.364-3.06 20.934-8.63l244.247-244.247c5.578-5.511 8.674-12.883 8.7-20.783 0.017-7.942-3.079-15.408-8.682-20.986-5.552-5.612-12.958-8.698-20.85-8.698z"/></svg></span>ORDERS</button>
+        <button type="button" data-menu-action="addresses"><span class="menu-icon"><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M512 1012.8c-253.6 0-511.2-54.4-511.2-158.4 0-92.8 198.4-131.2 283.2-143.2h3.2c12 0 22.4 8.8 24 20.8 0.8 6.4-0.8 12.8-4.8 17.6-4 4.8-9.6 8.8-16 9.6-176.8 25.6-242.4 72-242.4 96 0 44.8 180.8 110.4 463.2 110.4s463.2-65.6 463.2-110.4c0-24-66.4-70.4-244.8-96-6.4-0.8-12-4-16-9.6-4-4.8-5.6-11.2-4.8-17.6 1.6-12 12-20.8 24-20.8h3.2c85.6 12 285.6 50.4 285.6 143.2 0.8 103.2-256 158.4-509.6 158.4z m-16.8-169.6c-12-11.2-288.8-272.8-288.8-529.6 0-168 136.8-304.8 304.8-304.8S816 145.6 816 313.6c0 249.6-276.8 517.6-288.8 528.8l-16 16-16-15.2zM512 56.8c-141.6 0-256.8 115.2-256.8 256.8 0 200.8 196 416 256.8 477.6 61.6-63.2 257.6-282.4 257.6-477.6C768.8 172.8 653.6 56.8 512 56.8z m0 392.8c-80 0-144.8-64.8-144.8-144.8S432 160 512 160c80 0 144.8 64.8 144.8 144.8 0 80-64.8 144.8-144.8 144.8zM512 208c-53.6 0-96.8 43.2-96.8 96.8S458.4 401.6 512 401.6c53.6 0 96.8-43.2 96.8-96.8S564.8 208 512 208z"/></svg></span>ADDRESSES</button>
+        <button type="button" data-menu-action="about"><span class="menu-icon"><svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" transform="translate(42.666667, 42.666667)" d="M213.333333,3.55271368e-14 C95.51296,3.55271368e-14 3.55271368e-14,95.51168 3.55271368e-14,213.333333 C3.55271368e-14,331.153707 95.51296,426.666667 213.333333,426.666667 C331.154987,426.666667 426.666667,331.153707 426.666667,213.333333 C426.666667,95.51168 331.154987,3.55271368e-14 213.333333,3.55271368e-14 Z M213.333333,384 C119.227947,384 42.6666667,307.43872 42.6666667,213.333333 C42.6666667,119.227947 119.227947,42.6666667 213.333333,42.6666667 C307.44,42.6666667 384,119.227947 384,213.333333 C384,307.43872 307.44,384 213.333333,384 Z M240.04672,128 C240.04672,143.46752 228.785067,154.666667 213.55008,154.666667 C197.698773,154.666667 186.713387,143.46752 186.713387,127.704107 C186.713387,112.5536 197.99616,101.333333 213.55008,101.333333 C228.785067,101.333333 240.04672,112.5536 240.04672,128 Z M192.04672,192 L234.713387,192 L234.713387,320 L192.04672,320 L192.04672,192 Z"/></svg></span>ABOUT US</button>
         <button id="menuLogoutBtn" class="menu-logout" type="button"><span class="menu-icon">↪</span>LOG OUT</button>
       </div>
     </section>
@@ -2215,6 +2570,22 @@ height: clamp(58px, 18vw, 80px);
     </div>
   </nav>
 
+  <div id="toastStack" class="toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+  <div id="orderSuccessBackdrop" class="order-success-backdrop" aria-hidden="true">
+    <div class="order-success-card">
+      <div class="order-success-check">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 13l4.5 4.5L19 7.5" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="order-success-title">Order confirmed!</div>
+      <div class="order-success-copy">Order <strong id="orderSuccessNumber">SW-00000000</strong> is on its way. Track it any time under <strong>My Orders</strong>.</div>
+      <button id="orderSuccessPrimary" class="primary-action" type="button">VIEW MY ORDERS</button>
+      <button id="orderSuccessClose" class="order-success-secondary" type="button">Keep shopping</button>
+    </div>
+  </div>
+
   <script>
     // Compact navigation, account flow, and the mobile menu.
     const navItems = Array.from(document.querySelectorAll(".bottom-nav .nav-item"));
@@ -2242,6 +2613,7 @@ height: clamp(58px, 18vw, 80px);
     const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='60' fill='%23e6e6ed'/%3E%3Ccircle cx='60' cy='43' r='22' fill='%2390909b'/%3E%3Cpath d='M22 105c4-25 18-37 38-37s34 12 38 37' fill='%2390909b'/%3E%3C/svg%3E";
     const DEFAULT_PHONE = "12345677";
     const PROFILE_KEY = "sw_user_profile";
+    const PHONE_KEY = "sw_user_phone";
     const WALLET_PAYMENT_KEY = "sw_wallet_payment";
     let activeSection = "home";
     let pendingSection = null;
@@ -2261,8 +2633,9 @@ height: clamp(58px, 18vw, 80px);
     function formatPhoneDisplay(value){
       const digits = String(value || "").replace(/\D/g, "");
       const local = digits.startsWith("961") ? digits.slice(3) : digits;
-      if (local.length === 8) {
-        return `+961 ${local.slice(0,2)} ${local.slice(2,5)} ${local.slice(5)}`;
+      if (local.length >= 8) {
+        const localNumber = local.slice(-8);
+        return `+961 ${localNumber.slice(0,2)} ${localNumber.slice(2,5)} ${localNumber.slice(5)}`;
       }
       return "";
     }
@@ -2353,6 +2726,7 @@ height: clamp(58px, 18vw, 80px);
         showView(section === "tickets" ? ticketsView : section === "wallet" ? walletView : cartView);
         window.scrollTo({ top:0, behavior:"smooth" });
         if (section === "cart" && window.renderCart) window.renderCart();
+        if (section === "tickets" && window.renderTickets) window.renderTickets();
       }
     }
 
@@ -2365,6 +2739,7 @@ height: clamp(58px, 18vw, 80px);
       setModal(authBackdrop, true);
     }
     window.openAuthPanel = openAuthPanel;
+    window.openInfoPanel = openInfoPanel;
 
     function openProfilePanel(){
       const profile = readProfile() || {};
@@ -2379,16 +2754,18 @@ height: clamp(58px, 18vw, 80px);
     }
 
     function updateMenuProfile(){
-      const profile = window.firebaseProfile || readProfile() || {};
+      const profile = { ...(readProfile() || {}), ...(window.firebaseProfile || {}) };
       menuAvatar.src = profile?.photoURL || DEFAULT_AVATAR;
       if (window.firebaseUser) {
         menuUserName.textContent = `${profile.firstName || ""} ${profile.lastName || ""}`.trim() || "SHOP & WIN MEMBER";
         menuUserEmail.textContent = profile.email || "Email not added";
         const phone = [
           profile.phone,
+          profile.phoneNumber,
           profile.mobile,
           profile.address?.mobile,
-          window.firebaseUser.phoneNumber
+          window.firebaseUser.phoneNumber,
+          localStorage.getItem(PHONE_KEY)
         ].map(formatPhoneDisplay).find(Boolean);
         menuUserPhone.textContent = phone || "Mobile number not added";
       } else {
@@ -2569,7 +2946,9 @@ height: clamp(58px, 18vw, 80px);
       }
       setButtonLoading(phoneContinue, true);
       try {
-        await window.startPhoneLogin(`+961${phoneNumber.value}`);
+        const enteredPhone = `+961${phoneNumber.value}`;
+        localStorage.setItem(PHONE_KEY, enteredPhone);
+        await window.startPhoneLogin(enteredPhone);
       } catch {}
       setButtonLoading(phoneContinue, false);
     });
@@ -2620,7 +2999,7 @@ height: clamp(58px, 18vw, 80px);
           }
           openInfoPanel("ordersPanel", "MY ORDERS");
         } else if (action === "cards") {
-          window.alert("Saved cards will be available when card payments are enabled.");
+          window.showToast?.("Saved cards will be available when card payments are enabled.", "info");
         } else if (action === "about") {
           openInfoPanel("aboutPanel", "ABOUT US");
         }
@@ -2667,7 +3046,7 @@ height: clamp(58px, 18vw, 80px);
     document.body.classList.add("is-app-loading");
     window.addEventListener("load", () => {
       appPageLoaded = true;
-      window.hideAppLoader?.();
+      maybeHideAppLoader();
     }, { once:true });
     // Firebase data can be slow or unavailable, but it should never block
     // the customer page behind the loader. The live sections fill in as
@@ -2833,6 +3212,8 @@ height: clamp(58px, 18vw, 80px);
     const cartList = document.getElementById("cartList");
     const cartTotal = document.getElementById("cartTotal");
     const cartMessage = document.getElementById("cartMessage");
+    const ticketsList = document.getElementById("ticketsList");
+    const ticketsMessage = document.getElementById("ticketsMessage");
     const sheetCampaignProgress = document.getElementById("sheetCampaignProgress");
     const soldOutSection = document.getElementById("soldOutSection");
     const soldOutCampaignRow = document.getElementById("soldOutCampaignRow");
@@ -2866,9 +3247,16 @@ height: clamp(58px, 18vw, 80px);
 
     function renderCart(){
       cartList.innerHTML = "";
-      document.getElementById("cartBadge").textContent = String(
-        cartItems.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0)
-      );
+      const cartBadgeEl = document.getElementById("cartBadge");
+      const nextCount = cartItems.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
+      if (String(nextCount) !== cartBadgeEl.textContent) {
+        cartBadgeEl.textContent = String(nextCount);
+        if (nextCount > 0) {
+          cartBadgeEl.classList.remove("bump");
+          void cartBadgeEl.offsetWidth;
+          cartBadgeEl.classList.add("bump");
+        }
+      }
       if (!cartItems.length) {
         cartMessage.textContent = "Your cart is empty. Add a product to participate in a draw.";
         cartTotal.hidden = true;
@@ -2894,7 +3282,12 @@ height: clamp(58px, 18vw, 80px);
             <p>${escapeHtml(item.campaignName || "Winning campaign")}<br>Quantity: ${qty} • ${tickets * qty} ticket${tickets * qty === 1 ? "" : "s"}</p>
           </div>
           <div class="cart-price">${money(price * qty)}</div>
-          <button class="cart-remove" type="button">REMOVE</button>`;
+          <button class="cart-remove" type="button">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 7H18M10 7V5H14V7M8 7L9 19H15L16 7M10 11V16M14 11V16" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            REMOVE
+          </button>`;
       card.querySelector(".cart-remove").addEventListener("click", async (event) => {
         const button = event.currentTarget;
         window.setButtonLoading?.(button, true);
@@ -3009,6 +3402,59 @@ height: clamp(58px, 18vw, 80px);
         : `<p class="auth-note" style="margin:0;text-align:left;">No orders yet. Your confirmed purchases will appear here.</p>`;
     };
 
+    window.renderTickets = () => {
+      if (!ticketsList || !ticketsMessage) return;
+      const ticketCampaigns = new Map();
+      const ignoredStatuses = new Set(["cancelled", "canceled", "failed", "refunded"]);
+
+      userOrders.forEach((order) => {
+        const status = String(order.status || "").trim().toLowerCase();
+        if (ignoredStatuses.has(status)) return;
+        const items = Array.isArray(order.items) ? order.items : [];
+        if (items.length) {
+          items.forEach((item) => {
+            const quantity = Number(item.quantity) || 1;
+            const ticketsPerItem = Number.parseInt(item.tickets, 10) || 0;
+            const ticketTotal = ticketsPerItem * quantity;
+            if (ticketTotal <= 0) return;
+            const key = String(item.campaignId || item.campaignCode || item.campaignName || order.id);
+            const existing = ticketCampaigns.get(key) || {
+              name: item.campaignName || item.campaignTitle || "Winning campaign",
+              code: item.campaignCode || item.campaignId || "",
+              tickets: 0,
+              products: new Set()
+            };
+            existing.tickets += ticketTotal;
+            if (item.productName) existing.products.add(item.productName);
+            ticketCampaigns.set(key, existing);
+          });
+        } else {
+          const ticketTotal = Number(order.totalTickets) || 0;
+          if (ticketTotal <= 0) return;
+          const key = String(order.campaignId || order.campaignCode || order.campaignName || order.id);
+          const existing = ticketCampaigns.get(key) || {
+            name: order.campaignName || order.campaignTitle || "Winning campaign",
+            code: order.campaignCode || order.campaignId || "",
+            tickets: 0,
+            products: new Set()
+          };
+          existing.tickets += ticketTotal;
+          ticketCampaigns.set(key, existing);
+        }
+      });
+
+      const entries = [...ticketCampaigns.values()].filter((item) => item.tickets > 0);
+      ticketsMessage.hidden = Boolean(entries.length);
+      ticketsList.innerHTML = entries.map((item) => `
+        <article class="ticket-campaign-card">
+          <div class="ticket-campaign-label">WINNING CAMPAIGN</div>
+          <div class="ticket-campaign-name">${escapeHtml(item.name)}</div>
+          ${item.code ? `<div class="ticket-campaign-code">Campaign: ${escapeHtml(item.code)}</div>` : ""}
+          <div class="ticket-count"><strong>${item.tickets.toLocaleString()}</strong> TICKETS</div>
+          ${item.products.size ? `<div class="ticket-campaign-products">Purchased: ${escapeHtml([...item.products].join(", "))}</div>` : ""}
+        </article>`).join("");
+    };
+
     async function syncCartForUser(user){
       if (unsubscribeCart) unsubscribeCart();
       unsubscribeCart = onSnapshot(doc(db, "carts", user.uid), async (snap) => {
@@ -3043,6 +3489,20 @@ height: clamp(58px, 18vw, 80px);
     async function loadFirebaseProfile(user){
       const profileSnap = await getDoc(doc(db, "users", user.uid));
       firebaseProfile = profileSnap.exists() ? { id:user.uid, ...profileSnap.data() } : null;
+      if (!firebaseProfile) {
+        const cached = readCachedProfile() || {};
+        const cachedPhone = cached.phone || localStorage.getItem(PHONE_KEY) || "";
+        if (normalizePhone(cachedPhone).length >= 8) {
+          try {
+            const accountSnap = await getDoc(doc(db, "phoneAccounts", normalizePhone(cachedPhone)));
+            if (accountSnap.exists()) {
+              firebaseProfile = { id:accountSnap.id, ...accountSnap.data() };
+            }
+          } catch (err) {
+            console.warn("Phone account profile lookup unavailable:", err);
+          }
+        }
+      }
       canonicalUserId = firebaseProfile?.userId || firebaseProfile?.uid || user.uid;
       window.firebaseProfile = firebaseProfile;
       if (firebaseProfile) {
@@ -3058,8 +3518,12 @@ height: clamp(58px, 18vw, 80px);
         document.getElementById("authBackdrop").classList.add("open");
         document.getElementById("authBackdrop").setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
-        let cached = {};
-        try { cached = JSON.parse(localStorage.getItem("sw_user_profile")) || {}; } catch {}
+        const cached = readCachedProfile() || {};
+        const cachedPhone = cached.phone || localStorage.getItem(PHONE_KEY) || "";
+        const cachedDigits = normalizePhone(cachedPhone);
+        phoneNumber.value = cachedDigits.startsWith("961")
+          ? cachedDigits.slice(3, 11)
+          : cachedDigits.slice(-8);
         document.getElementById("profileFirstName").value = cached.firstName || "";
         document.getElementById("profileLastName").value = cached.lastName || "";
         document.getElementById("profileGender").value = cached.gender || "";
@@ -3074,6 +3538,7 @@ height: clamp(58px, 18vw, 80px);
     window.startPhoneLogin = async (phone) => {
       document.getElementById("authError").style.display = "none";
       try {
+        localStorage.setItem(PHONE_KEY, phone);
         await ensureAnonymousUser();
         let existing = null;
         try {
@@ -3116,10 +3581,11 @@ height: clamp(58px, 18vw, 80px);
 
     window.saveProfileToFirebase = async (profile) => {
       await ensureAnonymousUser();
+      const savedPhone = profile.phone || localStorage.getItem(PHONE_KEY) || readProfile()?.phone || "";
       const saved = {
         ...profile,
         uid: firebaseUser.uid,
-        phone: firebaseUser.phoneNumber || profile.phone,
+        phone: firebaseUser.phoneNumber || savedPhone,
         photoURL: firebaseProfile?.photoURL || "",
         updatedAt: serverTimestamp()
       };
@@ -3153,6 +3619,7 @@ height: clamp(58px, 18vw, 80px);
       }
       firebaseProfile = { ...firebaseProfile, ...profile, uid:userDocId, phone:saved.phone };
       window.firebaseProfile = firebaseProfile;
+      localStorage.setItem(PHONE_KEY, saved.phone);
       await syncCartForUser(firebaseUser);
       await syncFavorites();
       subscribeToOrders();
@@ -3193,6 +3660,7 @@ height: clamp(58px, 18vw, 80px);
             .map((orderSnap) => ({ id:orderSnap.id, ...orderSnap.data() }))
             .sort((a, b) => firestoreTime(b.createdAt) - firestoreTime(a.createdAt));
           window.renderOrders?.();
+          window.renderTickets?.();
         },
         (err) => console.warn("Orders unavailable:", err)
       );
@@ -3251,10 +3719,10 @@ height: clamp(58px, 18vw, 80px);
       }
       cartItems = [];
       await persistCart();
-      userOrders = [];
       window.renderOrders?.();
+      window.renderTickets?.();
       window.renderCart?.();
-      alert("Order confirmed. It is now visible in My Orders.");
+      window.showOrderSuccess?.(orderNumber);
     };
 
     onAuthStateChanged(auth, async (user) => {
@@ -3278,6 +3746,7 @@ height: clamp(58px, 18vw, 80px);
         window.firebaseProfile = null;
         cartItems = cachedCart();
         renderCart();
+        window.renderTickets?.();
         window.dispatchEvent(new Event("sw-profile-updated"));
       }
       markAppDataLoaded("auth");
@@ -3632,6 +4101,7 @@ height: clamp(58px, 18vw, 80px);
       });
     }
 
+    let campaignGridRenderKey = null;
     function renderCampaigns(){
       const visible = visibleCampaigns().filter((campaign) => (
         !campaignIsSoldOut(campaign) &&
@@ -3640,40 +4110,81 @@ height: clamp(58px, 18vw, 80px);
 
       renderSoldOutCampaigns();
       renderHomePastWinners();
-      campaignGrid.innerHTML = "";
       productsEmpty.textContent = productsLoadFailed
         ? "Products could not be loaded. Please refresh and try again."
         : visible.length ? "" : "No campaigns available yet.";
       productsEmpty.style.display = visible.length && !productsLoadFailed ? "none" : "block";
 
-      visible.forEach((campaign) => {
-        const title = campaign.prizeTitle || campaign.winTitle || campaign.name || "A surprise prize";
-        const shopFrom = campaign.shopFrom || campaign.minimumSpend || "10";
-        const drawDate = formatDrawDate(campaign.drawDate);
-        const campaignId = campaign.campaignId || campaign.code || "SW-00000";
-        const countdown = closingCountdown(campaign.drawDate);
-        const countdownMarkup = countdown
-          ? `<div class="campaign-countdown">CLOSING IN ${countdown}</div>`
-          : "";
-        const card = document.createElement("div");
-        card.className = "campaign-card";
-        card.innerHTML = `
-          <div class="campaign-visual${countdown ? " has-countdown" : ""}" style="background-image:url('${escapeHtml(campaign.bannerUrl || campaign.imageUrl || DEFAULT_BANNER)}')">
-            ${countdownMarkup}
-            <span class="campaign-win">WIN</span>
-          </div>
-          <div class="campaign-info">
-            <div class="campaign-title">${escapeHtml(title)}</div>
-            <button class="campaign-shop" type="button">SHOP FROM ${escapeHtml(money(shopFrom).replace(".00",""))}</button>
-            <div class="campaign-meta">
-              <strong>Draw Date: ${escapeHtml(drawDate)}.</strong> • <strong>Campaign ID: ${escapeHtml(campaignId)}</strong>
+      // Only the countdown text changes second-to-second. Rebuilding the whole
+      // grid on every tick caused a visible flicker/reflow, so we only do a
+      // full rebuild when the underlying campaign set actually changes, and
+      // otherwise just refresh the live countdown labels in place.
+      const structuralKey = visible.map((campaign) => [
+        campaign.id,
+        campaign.prizeTitle || campaign.winTitle || campaign.name || "",
+        campaign.bannerUrl || campaign.imageUrl || "",
+        campaign.drawDate?.seconds || campaign.drawDate || "",
+        campaign.shopFrom || campaign.minimumSpend || "",
+        campaign.ticketsSold || 0,
+        campaign.ticketsNeeded || 0
+      ].join("~")).join("|");
+
+      if (structuralKey !== campaignGridRenderKey) {
+        campaignGridRenderKey = structuralKey;
+        campaignGrid.innerHTML = "";
+        visible.forEach((campaign) => {
+          const title = campaign.prizeTitle || campaign.winTitle || campaign.name || "A surprise prize";
+          const shopFrom = campaign.shopFrom || campaign.minimumSpend || "10";
+          const drawDate = formatDrawDate(campaign.drawDate);
+          const campaignId = campaign.campaignId || campaign.code || "SW-00000";
+          const countdown = closingCountdown(campaign.drawDate);
+          const countdownMarkup = countdown
+            ? `<div class="campaign-countdown">CLOSING IN <span class="countdown-value">${countdown}</span></div>`
+            : "";
+          const card = document.createElement("div");
+          card.className = "campaign-card";
+          card.dataset.campaignRef = campaign.id;
+          card.innerHTML = `
+            <div class="campaign-visual${countdown ? " has-countdown" : ""}" style="background-image:url('${escapeHtml(campaign.bannerUrl || campaign.imageUrl || DEFAULT_BANNER)}')">
+              ${countdownMarkup}
+              <span class="campaign-win">WIN</span>
             </div>
-            ${ticketProgressMarkup(campaign)}
-          </div>`;
-        card.querySelector(".campaign-shop").addEventListener("click", () => openProductSheet(campaign));
-        card.querySelector(".campaign-visual").addEventListener("click", () => openProductSheet(campaign));
-        campaignGrid.appendChild(card);
-      });
+            <div class="campaign-info">
+              <div class="campaign-title">${escapeHtml(title)}</div>
+              <button class="campaign-shop" type="button">SHOP FROM ${escapeHtml(money(shopFrom).replace(".00",""))}</button>
+              <div class="campaign-meta">
+                <strong>Draw Date: ${escapeHtml(drawDate)}.</strong> • <strong>Campaign ID: ${escapeHtml(campaignId)}</strong>
+              </div>
+              ${ticketProgressMarkup(campaign)}
+            </div>`;
+          card.querySelector(".campaign-shop").addEventListener("click", () => openProductSheet(campaign));
+          card.querySelector(".campaign-visual").addEventListener("click", () => openProductSheet(campaign));
+          campaignGrid.appendChild(card);
+        });
+      } else {
+        const cards = Array.from(campaignGrid.children);
+        visible.forEach((campaign) => {
+          const card = cards.find((item) => item.dataset.campaignRef === campaign.id);
+          if (!card) return;
+          const visual = card.querySelector(".campaign-visual");
+          const countdown = closingCountdown(campaign.drawDate);
+          let countdownEl = card.querySelector(".campaign-countdown");
+          if (countdown) {
+            if (!countdownEl) {
+              countdownEl = document.createElement("div");
+              countdownEl.className = "campaign-countdown";
+              countdownEl.innerHTML = `CLOSING IN <span class="countdown-value"></span>`;
+              visual?.prepend(countdownEl);
+              visual?.classList.add("has-countdown");
+            }
+            const valueEl = countdownEl.querySelector(".countdown-value");
+            if (valueEl) valueEl.textContent = countdown;
+          } else if (countdownEl) {
+            countdownEl.remove();
+            visual?.classList.remove("has-countdown");
+          }
+        });
+      }
     }
 
     function renderQuantity(){
@@ -3795,6 +4306,7 @@ height: clamp(58px, 18vw, 80px);
         await persistCart();
         addCartBtn.textContent = "ADDED TO CART";
         closeProductSheet();
+        window.showToast?.(`${product.name || "Item"} added to cart`, "success");
         setTimeout(() => { addCartBtn.textContent = "ADD TO CART"; }, 1200);
       } finally {
         window.setButtonLoading?.(addCartBtn, false);
@@ -3850,6 +4362,150 @@ height: clamp(58px, 18vw, 80px);
       markAppDataLoaded("products");
       console.warn("Products unavailable:", err);
     });
+  </script>
+
+  <script>
+  (function(){
+    "use strict";
+    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    /* ---------- TOASTS ---------- */
+    var toastStack = document.getElementById("toastStack");
+    var ICONS = { success:"✓", error:"!", info:"i" };
+    function showToast(message, type){
+      if (!toastStack || !message) return;
+      type = type === "error" || type === "info" ? type : "success";
+      var toast = document.createElement("div");
+      toast.className = "toast " + type;
+      toast.innerHTML = '<span class="toast-icon">' + (ICONS[type] || "✓") + '</span><span class="toast-text"></span>';
+      toast.querySelector(".toast-text").textContent = message;
+      toastStack.appendChild(toast);
+      requestAnimationFrame(function(){ toast.classList.add("show"); });
+      var remove = function(){
+        toast.classList.add("leaving");
+        toast.classList.remove("show");
+        setTimeout(function(){ toast.remove(); }, 320);
+      };
+      var timer = setTimeout(remove, 3200);
+      toast.addEventListener("click", function(){
+        clearTimeout(timer);
+        remove();
+      });
+    }
+    window.showToast = showToast;
+
+    /* ---------- ORDER SUCCESS OVERLAY ---------- */
+    var successBackdrop = document.getElementById("orderSuccessBackdrop");
+    var successNumberEl = document.getElementById("orderSuccessNumber");
+    var confettiColors = ["#ff2d55", "#f3b93b", "#5b4bff", "#c8ff5c", "#00c2ff"];
+    function spawnConfetti(container){
+      if (reduceMotion || !container) return;
+      for (var i = 0; i < 26; i++) {
+        var piece = document.createElement("span");
+        piece.className = "confetti-piece";
+        piece.style.left = Math.random() * 100 + "%";
+        piece.style.background = confettiColors[i % confettiColors.length];
+        piece.style.animationDuration = (1.1 + Math.random() * 0.9) + "s";
+        piece.style.animationDelay = (Math.random() * 0.35) + "s";
+        piece.style.borderRadius = Math.random() > 0.5 ? "50%" : "2px";
+        container.appendChild(piece);
+        (function(el){
+          el.addEventListener("animationend", function(){ el.remove(); });
+        })(piece);
+      }
+    }
+    function closeOrderSuccess(){
+      if (!successBackdrop) return;
+      successBackdrop.classList.remove("open");
+      successBackdrop.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+    function showOrderSuccess(orderNumber){
+      if (!successBackdrop) return;
+      if (successNumberEl) successNumberEl.textContent = orderNumber || "your order";
+      successBackdrop.classList.add("open");
+      successBackdrop.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      spawnConfetti(successBackdrop.querySelector(".order-success-card"));
+    }
+    window.showOrderSuccess = showOrderSuccess;
+    document.getElementById("orderSuccessClose")?.addEventListener("click", closeOrderSuccess);
+    document.getElementById("orderSuccessPrimary")?.addEventListener("click", function(){
+      closeOrderSuccess();
+      window.openInfoPanel?.("ordersPanel", "MY ORDERS");
+    });
+    successBackdrop?.addEventListener("click", function(event){
+      if (event.target === successBackdrop) closeOrderSuccess();
+    });
+
+    /* ---------- RIPPLE FEEDBACK ---------- */
+    var RIPPLE_SELECTOR = [
+      ".add-cart-btn", ".primary-action", ".auth-submit", ".menu-list button",
+      ".draw-tab", ".category-chip", ".cart-remove",
+      ".modal-close", ".menu-back", ".login-btn", ".campaign-shop",
+      ".quantity-btn", ".order-success-secondary"
+    ].join(",");
+    function spawnRipple(el, x, y){
+      // Some targets (e.g. the fixed-position back button) must keep their
+      // existing `position`, so only force `relative` on elements that are
+      // still statically positioned; otherwise just clip via overflow.
+      var computedPosition = window.getComputedStyle(el).position;
+      if (computedPosition === "static") {
+        el.classList.add("ripple-host");
+      } else if (el.style.overflow !== "hidden") {
+        el.style.overflow = "hidden";
+      }
+      var rect = el.getBoundingClientRect();
+      var wave = document.createElement("span");
+      wave.className = "ripple-wave";
+      wave.style.left = (x - rect.left) + "px";
+      wave.style.top = (y - rect.top) + "px";
+      el.appendChild(wave);
+      wave.addEventListener("animationend", function(){ wave.remove(); });
+    }
+    if (!reduceMotion) {
+      document.addEventListener("pointerdown", function(event){
+        if (event.button !== undefined && event.button > 0) return;
+        var el = event.target.closest ? event.target.closest(RIPPLE_SELECTOR) : null;
+        if (!el || el.disabled) return;
+        spawnRipple(el, event.clientX, event.clientY);
+      }, { passive:true });
+    }
+
+    /* ---------- SCROLL REVEAL ---------- */
+    if (!reduceMotion && "IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold:0.12, rootMargin:"0px 0px -30px 0px" });
+
+      var seen = new WeakSet();
+      function watchChildren(container){
+        if (!container) return;
+        Array.prototype.forEach.call(container.children, function(child){
+          if (seen.has(child) || child.tagName === "P") return;
+          seen.add(child);
+          child.classList.add("reveal");
+          io.observe(child);
+        });
+      }
+      var revealSelectors = [
+        "#soldOutCampaignRow", "#pastWinnersHomeRow", "#pastDrawsList",
+        "#upcomingDrawsList", "#campaignGrid", "#cartList", "#ticketsList",
+        "#favoritesList", "#ordersList"
+      ];
+      revealSelectors.forEach(function(sel){
+        var el = document.querySelector(sel);
+        if (!el) return;
+        watchChildren(el);
+        new MutationObserver(function(){ watchChildren(el); }).observe(el, { childList:true });
+      });
+    }
+  })();
   </script>
 </body>
 </html>
