@@ -36,6 +36,20 @@
 
   *{box-sizing:border-box; margin:0; padding:0;}
   html,body{height:100%;}
+  /* Kill the default blue/gray highlight box mobile browsers flash over
+     buttons and links on tap, and the default focus outline on click —
+     keyboard/screen-reader focus still gets a visible outline further
+     down via :focus-visible. */
+  *{ -webkit-tap-highlight-color:transparent; }
+  a, button, input, textarea, select, summary,
+  [role="button"], [tabindex]{
+    -webkit-tap-highlight-color:transparent;
+    -webkit-touch-callout:none;
+  }
+  a:focus, button:focus, input:focus, textarea:focus, select:focus,
+  [role="button"]:focus, [tabindex]:focus{
+    outline:none;
+  }
   body.is-app-loading{overflow:hidden;}
   .app-loader{
     position:fixed;
@@ -50,37 +64,13 @@
     transition:opacity .3s ease, visibility .3s ease;
   }
   .app-loader.hidden{ opacity:0; visibility:hidden; pointer-events:none; }
-  .app-loader-title{
-    font-size:1.15rem;
-    font-weight:800;
-    letter-spacing:.8px;
-    color:#fff;
-  }
-  .app-loader-percent{
-    margin-top:10px;
-    font-size:1.6rem;
-    font-weight:900;
-    letter-spacing:.5px;
-    color:#fff;
-    font-variant-numeric:tabular-nums;
-  }
-  .app-loader-progress{
-    position:absolute;
-    left:50%;
-    bottom:64px;
-    transform:translateX(-50%);
-    width:160px;
-    height:4px;
-    border-radius:999px;
-    background:rgba(255,255,255,.16);
-    overflow:hidden;
-  }
-  .app-loader-fill{
-    height:100%;
-    width:0%;
-    border-radius:999px;
-    background:#fff;
-    transition:width .35s ease;
+  .app-loader-spinner{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    border:3px solid rgba(255,255,255,.25);
+    border-top-color:#fff;
+    animation:appSpin .7s linear infinite;
   }
   @keyframes appSpin{ to{ transform:rotate(360deg); } }
   button.is-loading{
@@ -697,7 +687,7 @@
       transition:none !important; animation:none !important;
     }
     .toast, .order-success-backdrop, .order-success-card{ transition:none !important; }
-    .app-loader-fill{ transition:none !important; }
+    .app-loader-spinner{ animation:none !important; }
   }
   @keyframes menuItemIn{
     from{ opacity:0; transform:translateY(12px); }
@@ -2288,11 +2278,7 @@ height: clamp(58px, 18vw, 80px);
 </head>
 <body>
   <div id="appLoader" class="app-loader" aria-live="polite">
-    <p class="app-loader-title">Shop &amp; Win</p>
-    <p id="appLoaderPercent" class="app-loader-percent">0%</p>
-    <div class="app-loader-progress" aria-hidden="true">
-      <div id="appLoaderFill" class="app-loader-fill"></div>
-    </div>
+    <div class="app-loader-spinner" aria-hidden="true"></div>
   </div>
 
   <div id="stickyTopNav" class="sticky-topnav" aria-label="Shop &amp; Win navigation">
@@ -2630,6 +2616,64 @@ height: clamp(58px, 18vw, 80px);
       <button id="orderSuccessClose" class="order-success-secondary" type="button">Keep shopping</button>
     </div>
   </div>
+
+  <script>
+    // ---- device/browser "back" closes open panels instead of leaving ----
+    // Works for every sheet/modal (menu, login, address, info, product
+    // sheet, etc.) without touching each one's open/close code: it just
+    // watches for any of them gaining/losing the shared "open" class, and
+    // keeps one extra history entry pushed while a panel is open. Pressing
+    // back (hardware back button, edge-swipe, or browser back) then closes
+    // the panel and stays on the site instead of exiting or navigating away.
+    (function(){
+      let historyPanelPushed = false;
+      let reconcileScheduled = false;
+
+      function anyPanelOpen(){
+        return Boolean(document.querySelector(".modal-backdrop.open, .sheet-backdrop.open"));
+      }
+
+      function closeAllPanelsNow(){
+        document.querySelectorAll(".modal-backdrop.open, .sheet-backdrop.open").forEach((el) => {
+          el.classList.remove("open");
+          el.setAttribute("aria-hidden", "true");
+        });
+        document.body.style.overflow = "";
+      }
+
+      function scheduleReconcile(){
+        if (reconcileScheduled) return;
+        reconcileScheduled = true;
+        queueMicrotask(() => {
+          reconcileScheduled = false;
+          const isOpen = anyPanelOpen();
+          if (isOpen && !historyPanelPushed) {
+            historyPanelPushed = true;
+            history.pushState({ swPanel:true }, "", location.href);
+          } else if (!isOpen && historyPanelPushed) {
+            historyPanelPushed = false;
+            history.back();
+          }
+        });
+      }
+
+      window.addEventListener("popstate", () => {
+        if (historyPanelPushed || anyPanelOpen()) {
+          historyPanelPushed = false;
+          closeAllPanelsNow();
+        }
+      });
+
+      const observer = new MutationObserver((mutations) => {
+        for (const m of mutations) {
+          if (m.attributeName === "class") { scheduleReconcile(); break; }
+        }
+      });
+      document.querySelectorAll(".modal-backdrop, .sheet-backdrop").forEach((el) => {
+        observer.observe(el, { attributes:true, attributeFilter:["class"] });
+      });
+    })();
+  </script>
 
   <script>
     // Compact navigation, account flow, and the mobile menu.
@@ -3101,39 +3145,22 @@ height: clamp(58px, 18vw, 80px);
       if (appPageLoaded && appDataReady) window.hideAppLoader?.();
     };
     window.hideAppLoader = () => {
-      window.setAppLoaderPercent?.(100);
-      window.setTimeout(() => {
-        document.body.classList.remove("is-app-loading");
-        document.getElementById("appLoader")?.classList.add("hidden");
-      }, 150); // brief pause so 100% is visible before the loader fades out
+      document.body.classList.remove("is-app-loading");
+      document.getElementById("appLoader")?.classList.add("hidden");
     };
     window.markAppDataReady = () => {
       appDataReady = true;
       maybeHideAppLoader();
     };
 
-    // ---- real loading percentage ----
-    // The percentage reflects actual progress (page load + each live data
-    // source: auth, settings, banners, categories, campaigns, products),
-    // not a fake timer, so the loader only reaches 100% once the winning
-    // campaigns have genuinely arrived and rendered.
+    // Kept as a simple internal counter (used only to decide when loading
+    // is actually finished) — the loader itself just shows a small spinner
+    // now, with no visible percentage or progress bar.
     const APP_LOAD_STEP_COUNT = 7; // page load + 6 data sources below
     let appLoadStepsDone = 0;
-    function setAppLoaderPercent(explicitPercent){
-      const percent = explicitPercent != null
-        ? explicitPercent
-        : Math.min(99, Math.round((appLoadStepsDone / APP_LOAD_STEP_COUNT) * 100));
-      const percentEl = document.getElementById("appLoaderPercent");
-      const fillEl = document.getElementById("appLoaderFill");
-      if (percentEl) percentEl.textContent = percent + "%";
-      if (fillEl) fillEl.style.width = percent + "%";
-    }
-    window.setAppLoaderPercent = setAppLoaderPercent;
     window.markAppLoadStep = () => {
       appLoadStepsDone = Math.min(APP_LOAD_STEP_COUNT, appLoadStepsDone + 1);
-      setAppLoaderPercent();
     };
-    setAppLoaderPercent(0);
 
     // ---- force-repaint helper ----
     // On some mobile browsers/WebViews, content inserted by JS (like the
