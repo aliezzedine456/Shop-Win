@@ -347,6 +347,11 @@
     gap:10px;
     margin-bottom:16px;
   }
+  .auth-fields{
+    display:grid;
+    gap:11px;
+    margin-bottom:16px;
+  }
   .country-code,
   .phone-input,
   .profile-input,
@@ -2459,13 +2464,13 @@ height: clamp(58px, 18vw, 80px);
         <div class="auth-promo">
           <div class="auth-promo-copy">GET<br>INSTANT<br>REWARDS<small>Shop, collect tickets, and win big.</small></div>
         </div>
-        <h2 id="authTitle" class="auth-title">ENTER YOUR MOBILE NO.</h2>
-        <div class="phone-row">
-          <input class="country-code" type="text" value="+961" aria-label="Country code" readonly>
-           <input id="phoneNumber" class="phone-input" type="tel" inputmode="numeric" maxlength="8" placeholder="Mobile Number" value="" aria-label="Mobile number">
+        <h2 id="authTitle" class="auth-title">LOGIN OR SIGN UP</h2>
+        <div class="auth-fields">
+          <input id="authEmail" class="profile-input" type="email" placeholder="Email address" autocomplete="email" aria-label="Email address">
+          <input id="authPassword" class="profile-input" type="password" placeholder="Password" autocomplete="current-password" minlength="6" aria-label="Password">
         </div>
         <button id="phoneContinue" class="auth-submit ready" type="button">LOGIN / SIGN-UP</button>
-        <p id="authError" class="auth-note" style="display:none;color:#8c6913;">Enter an 8-digit Lebanese mobile number.</p>
+        <p id="authError" class="auth-note" style="display:none;color:#8c6913;">Enter a valid email and a password (min. 6 characters).</p>
        
       </div>
       <div id="profileStep" hidden>
@@ -2480,7 +2485,11 @@ height: clamp(58px, 18vw, 80px);
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
-          <input id="profileEmail" class="profile-input" type="email" placeholder="Email address" autocomplete="email" required>
+          <input id="profileEmail" class="profile-input" type="email" placeholder="Email address" autocomplete="email" readonly>
+          <div class="phone-row" style="margin-bottom:0;">
+            <input class="country-code" type="text" value="+961" aria-label="Country code" readonly>
+            <input id="profilePhone" class="phone-input" type="tel" inputmode="numeric" maxlength="8" placeholder="Mobile Number" aria-label="Mobile number" required>
+          </div>
           <button class="primary-action" type="submit">FINISH</button>
         </form>
       </div>
@@ -2706,7 +2715,9 @@ height: clamp(58px, 18vw, 80px);
     const stickyTopNav = document.getElementById("stickyTopNav");
     const phoneStep = document.getElementById("phoneStep");
     const profileStep = document.getElementById("profileStep");
-    const phoneNumber = document.getElementById("phoneNumber");
+    const authEmail = document.getElementById("authEmail");
+    const authPassword = document.getElementById("authPassword");
+    const profilePhone = document.getElementById("profilePhone");
     const phoneContinue = document.getElementById("phoneContinue");
     const authError = document.getElementById("authError");
     const profileForm = document.getElementById("profileForm");
@@ -2838,7 +2849,8 @@ height: clamp(58px, 18vw, 80px);
       const profile = readProfile();
       phoneStep.hidden = false;
       profileStep.hidden = true;
-      phoneNumber.value = profile?.phone?.replace("+961", "") || "";
+      authEmail.value = profile?.email || "";
+      authPassword.value = "";
       authError.style.display = "none";
       setModal(authBackdrop, true);
     }
@@ -2849,11 +2861,11 @@ height: clamp(58px, 18vw, 80px);
       const profile = readProfile() || {};
       phoneStep.hidden = true;
       profileStep.hidden = false;
-      phoneNumber.value = String(profile.phone || window.firebaseUser?.phoneNumber || "").replace("+961", "").replace(/\D/g, "").slice(-8);
+      profilePhone.value = String(profile.phone || "").replace("+961", "").replace(/\D/g, "").slice(-8);
       document.getElementById("profileFirstName").value = profile.firstName || "";
       document.getElementById("profileLastName").value = profile.lastName || "";
       document.getElementById("profileGender").value = profile.gender || "";
-      document.getElementById("profileEmail").value = profile.email || "";
+      document.getElementById("profileEmail").value = window.firebaseUser?.email || profile.email || "";
       setModal(authBackdrop, true);
     }
 
@@ -2865,11 +2877,8 @@ height: clamp(58px, 18vw, 80px);
         menuUserEmail.textContent = profile.email || "Email not added";
         const phone = [
           profile.phone,
-          profile.phoneNumber,
           profile.mobile,
-          profile.address?.mobile,
-          window.firebaseUser.phoneNumber,
-          localStorage.getItem(PHONE_KEY)
+          profile.address?.mobile
         ].map(formatPhoneDisplay).find(Boolean);
         menuUserPhone.textContent = phone || "Mobile number not added";
       } else {
@@ -3040,38 +3049,52 @@ height: clamp(58px, 18vw, 80px);
       }
     });
 
-    phoneNumber.addEventListener("input", () => {
-      phoneNumber.value = phoneNumber.value.replace(/\D/g, "").slice(0, 8);
-      const valid = /^\d{8}$/.test(phoneNumber.value);
-      phoneContinue.classList.toggle("ready", valid);
+    profilePhone.addEventListener("input", () => {
+      profilePhone.value = profilePhone.value.replace(/\D/g, "").slice(0, 8);
+      authError.style.display = "none";
+    });
+    function emailPasswordReady(){
+      return /^\S+@\S+\.\S+$/.test(authEmail.value.trim()) && authPassword.value.length >= 6;
+    }
+    authEmail.addEventListener("input", () => {
+      phoneContinue.classList.toggle("ready", emailPasswordReady());
+      authError.style.display = "none";
+    });
+    authPassword.addEventListener("input", () => {
+      phoneContinue.classList.toggle("ready", emailPasswordReady());
       authError.style.display = "none";
     });
     phoneContinue.addEventListener("click", async () => {
-      if (!/^\d{8}$/.test(phoneNumber.value)) {
+      if (!emailPasswordReady()) {
+        authError.textContent = "Enter a valid email and a password (min. 6 characters).";
         authError.style.display = "block";
         return;
       }
-      if (typeof window.startPhoneLogin !== "function") {
-        authError.textContent = "Phone login is still loading. Please try again.";
+      if (typeof window.startEmailLogin !== "function") {
+        authError.textContent = "Login is still loading. Please try again.";
         authError.style.display = "block";
         return;
       }
       setButtonLoading(phoneContinue, true);
       try {
-        const enteredPhone = `+961${phoneNumber.value}`;
-        localStorage.setItem(PHONE_KEY, enteredPhone);
-        await window.startPhoneLogin(enteredPhone);
+        await window.startEmailLogin(authEmail.value.trim(), authPassword.value);
       } catch {}
       setButtonLoading(phoneContinue, false);
     });
     profileForm.addEventListener("submit", async (event) => {
       event.preventDefault();
+      const phoneDigits = profilePhone.value.replace(/\D/g, "").slice(0, 8);
+      if (!/^\d{8}$/.test(phoneDigits)) {
+        authError.textContent = "Enter an 8-digit mobile number.";
+        authError.style.display = "block";
+        return;
+      }
       const profile = {
-        phone:`+961${phoneNumber.value}`,
+        phone:`+961${phoneDigits}`,
         firstName:document.getElementById("profileFirstName").value.trim(),
         lastName:document.getElementById("profileLastName").value.trim(),
         gender:document.getElementById("profileGender").value,
-        email:document.getElementById("profileEmail").value.trim()
+        email:window.firebaseUser?.email || document.getElementById("profileEmail").value.trim()
       };
       if (typeof window.saveProfileToFirebase !== "function") return;
       const submitButton = profileForm.querySelector("button[type=submit]");
@@ -3346,7 +3369,8 @@ height: clamp(58px, 18vw, 80px);
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import {
-      getAuth, onAuthStateChanged, signOut, signInAnonymously
+      getAuth, onAuthStateChanged, signOut,
+      signInWithEmailAndPassword, createUserWithEmailAndPassword, fetchSignInMethodsForEmail
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import {
       getFirestore, collection, onSnapshot, orderBy, query, where, doc, getDoc, setDoc, addDoc, increment, serverTimestamp
@@ -3479,10 +3503,6 @@ height: clamp(58px, 18vw, 80px);
     async function removeCartItem(index){
       cartItems.splice(index, 1);
       await persistCart();
-    }
-
-    function currentPhone(){
-      return normalizePhone(firebaseProfile?.phone || firebaseUser?.phoneNumber || "");
     }
 
     function favoriteDocId(){
@@ -3623,40 +3643,32 @@ height: clamp(58px, 18vw, 80px);
       }, (err) => console.warn("Cart sync unavailable:", err));
     }
 
-    function normalizePhone(value){
-      return String(value || "").replace(/\D/g, "");
-    }
-
     function readCachedProfile(){
       try { return JSON.parse(localStorage.getItem("sw_user_profile")) || null; }
       catch { return null; }
     }
 
-    async function ensureAnonymousUser(){
-      if (firebaseUser) return firebaseUser;
-      const credential = await signInAnonymously(auth);
-      firebaseUser = credential.user;
-      window.firebaseUser = firebaseUser;
-      return firebaseUser;
+    function humanizeAuthError(err){
+      switch (err?.code) {
+        case "auth/wrong-password":
+        case "auth/invalid-credential":
+          return "Incorrect email or password.";
+        case "auth/email-already-in-use":
+          return "That email is already registered. Check your password and try again.";
+        case "auth/weak-password":
+          return "Password must be at least 6 characters.";
+        case "auth/invalid-email":
+          return "Enter a valid email address.";
+        case "auth/too-many-requests":
+          return "Too many attempts. Please try again shortly.";
+        default:
+          return err?.message || "Could not sign you in.";
+      }
     }
 
     async function loadFirebaseProfile(user){
       const profileSnap = await getDoc(doc(db, "users", user.uid));
       firebaseProfile = profileSnap.exists() ? { id:user.uid, ...profileSnap.data() } : null;
-      if (!firebaseProfile) {
-        const cached = readCachedProfile() || {};
-        const cachedPhone = cached.phone || localStorage.getItem(PHONE_KEY) || "";
-        if (normalizePhone(cachedPhone).length >= 8) {
-          try {
-            const accountSnap = await getDoc(doc(db, "phoneAccounts", normalizePhone(cachedPhone)));
-            if (accountSnap.exists()) {
-              firebaseProfile = { id:accountSnap.id, ...accountSnap.data() };
-            }
-          } catch (err) {
-            console.warn("Phone account profile lookup unavailable:", err);
-          }
-        }
-      }
       canonicalUserId = firebaseProfile?.userId || firebaseProfile?.uid || user.uid;
       window.firebaseProfile = firebaseProfile;
       if (firebaseProfile) {
@@ -3673,15 +3685,11 @@ height: clamp(58px, 18vw, 80px);
         document.getElementById("authBackdrop").setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
         const cached = readCachedProfile() || {};
-        const cachedPhone = cached.phone || localStorage.getItem(PHONE_KEY) || "";
-        const cachedDigits = normalizePhone(cachedPhone);
-        phoneNumber.value = cachedDigits.startsWith("961")
-          ? cachedDigits.slice(3, 11)
-          : cachedDigits.slice(-8);
         document.getElementById("profileFirstName").value = cached.firstName || "";
         document.getElementById("profileLastName").value = cached.lastName || "";
         document.getElementById("profileGender").value = cached.gender || "";
-        document.getElementById("profileEmail").value = cached.email || "";
+        document.getElementById("profileEmail").value = user.email || cached.email || "";
+        document.getElementById("profilePhone").value = String(cached.phone || "").replace("+961", "").replace(/\D/g, "").slice(-8);
       }
       if (window.updateMenuProfile) window.updateMenuProfile();
       await syncFavorites();
@@ -3689,91 +3697,43 @@ height: clamp(58px, 18vw, 80px);
       window.dispatchEvent(new Event("sw-profile-updated"));
     }
 
-    window.startPhoneLogin = async (phone) => {
+    window.startEmailLogin = async (email, password) => {
       document.getElementById("authError").style.display = "none";
       try {
-        localStorage.setItem(PHONE_KEY, phone);
-        await ensureAnonymousUser();
-        let existing = null;
-        try {
-          const accountSnap = await getDoc(doc(db, "phoneAccounts", normalizePhone(phone)));
-          if (accountSnap.exists()) existing = accountSnap.data();
-        } catch (err) {
-          console.warn("Phone account lookup unavailable:", err);
-        }
-        const cached = readCachedProfile();
-        if (!existing && cached && normalizePhone(cached.phone) === normalizePhone(phone)) {
-          existing = cached;
-        }
-        if (existing) {
-          canonicalUserId = existing.userId || existing.uid || cached?.uid || null;
-          firebaseProfile = { ...existing, phone, id:canonicalUserId };
-          window.firebaseProfile = firebaseProfile;
-          localStorage.setItem("sw_user_profile", JSON.stringify(firebaseProfile));
-          document.body.classList.add("is-authenticated");
-          document.getElementById("authBackdrop").classList.remove("open");
-          document.getElementById("authBackdrop").setAttribute("aria-hidden", "true");
-          document.body.style.overflow = "";
-          if (window.updateMenuProfile) window.updateMenuProfile();
-          await syncCartForUser(firebaseUser);
-          await syncFavorites();
-          subscribeToOrders();
-          window.dispatchEvent(new Event("sw-profile-updated"));
-          return;
-        }
-        document.getElementById("phoneStep").hidden = true;
-        document.getElementById("profileStep").hidden = false;
-        document.getElementById("profileFirstName").focus();
-        document.getElementById("profileStep").dataset.phone = phone;
+        const methods = await fetchSignInMethodsForEmail(auth, email);
+        const credential = methods.length
+          ? await signInWithEmailAndPassword(auth, email, password)
+          : await createUserWithEmailAndPassword(auth, email, password);
+        firebaseUser = credential.user;
+        window.firebaseUser = firebaseUser;
+        await loadFirebaseProfile(firebaseUser);
+        await syncCartForUser(firebaseUser);
       } catch (err) {
-        document.getElementById("authError").textContent =
-          err.message || "Could not start your account.";
+        document.getElementById("authError").textContent = humanizeAuthError(err);
         document.getElementById("authError").style.display = "block";
         throw err;
       }
     };
 
     window.saveProfileToFirebase = async (profile) => {
-      await ensureAnonymousUser();
-      const savedPhone = profile.phone || localStorage.getItem(PHONE_KEY) || readProfile()?.phone || "";
+      if (!firebaseUser) throw new Error("You must be signed in to save your profile.");
+      const userDocId = canonicalUserId || firebaseUser.uid;
       const saved = {
         ...profile,
         uid: firebaseUser.uid,
-        phone: firebaseUser.phoneNumber || savedPhone,
+        email: firebaseUser.email || profile.email || "",
         photoURL: firebaseProfile?.photoURL || "",
         updatedAt: serverTimestamp()
       };
-      const phoneId = normalizePhone(saved.phone);
-      const userDocId = canonicalUserId || firebaseUser.uid;
-      const shouldWriteUser = !firebaseProfile?.phone || Boolean(canonicalUserId);
-      try {
-        const phoneAccountData = {
-          firstName: saved.firstName || "",
-          lastName: saved.lastName || "",
-          gender: saved.gender || "",
-          email: saved.email || "",
-          phone: saved.phone,
-          photoURL: saved.photoURL || "",
-          updatedAt: serverTimestamp()
-        };
-        if (shouldWriteUser || canonicalUserId) phoneAccountData.userId = userDocId;
-        await setDoc(doc(db, "phoneAccounts", phoneId), phoneAccountData, { merge:true });
-      } catch (err) {
-        console.warn("Phone account index could not be saved:", err);
-      }
-      if (shouldWriteUser) {
-        await setDoc(doc(db, "users", userDocId), {
-          ...saved,
-          uid: firebaseProfile?.uid || firebaseUser.uid,
-          userId: userDocId,
-          phoneAccountId: phoneId,
-          createdAt: firebaseProfile?.createdAt || serverTimestamp()
-        }, { merge:true });
-        canonicalUserId = userDocId;
-      }
-      firebaseProfile = { ...firebaseProfile, ...profile, uid:userDocId, phone:saved.phone };
+      await setDoc(doc(db, "users", userDocId), {
+        ...saved,
+        userId: userDocId,
+        createdAt: firebaseProfile?.createdAt || serverTimestamp()
+      }, { merge:true });
+      canonicalUserId = userDocId;
+      firebaseProfile = { ...firebaseProfile, ...saved, uid:userDocId };
       window.firebaseProfile = firebaseProfile;
-      localStorage.setItem(PHONE_KEY, saved.phone);
+      localStorage.setItem(PHONE_KEY, saved.phone || "");
       await syncCartForUser(firebaseUser);
       await syncFavorites();
       subscribeToOrders();
@@ -3781,23 +3741,13 @@ height: clamp(58px, 18vw, 80px);
     };
 
     window.saveAddressToFirebase = async (address) => {
-      await ensureAnonymousUser();
-      const phoneId = normalizePhone(firebaseProfile?.phone || firebaseUser.phoneNumber);
+      if (!firebaseUser) throw new Error("You must be signed in to save an address.");
+      const userDocId = canonicalUserId || firebaseUser.uid;
       const updated = { ...(firebaseProfile || {}), address };
-      const phoneAccountData = {
-        phone: firebaseProfile?.phone || firebaseUser.phoneNumber || "",
+      await setDoc(doc(db, "users", userDocId), {
         address,
         updatedAt: serverTimestamp()
-      };
-      if (canonicalUserId) phoneAccountData.userId = canonicalUserId;
-      await setDoc(doc(db, "phoneAccounts", phoneId), phoneAccountData, { merge:true });
-      if (canonicalUserId) {
-        await setDoc(doc(db, "users", canonicalUserId), {
-          address,
-          phoneAccountId: phoneId,
-          updatedAt: serverTimestamp()
-        }, { merge:true });
-      }
+      }, { merge:true });
       firebaseProfile = updated;
       window.firebaseProfile = firebaseProfile;
       window.dispatchEvent(new Event("sw-profile-updated"));
@@ -3806,9 +3756,10 @@ height: clamp(58px, 18vw, 80px);
 
     function subscribeToOrders(){
       if (unsubscribeOrders) unsubscribeOrders();
-      if (!firebaseUser || !currentPhone()) return;
+      const userDocId = canonicalUserId || firebaseUser?.uid;
+      if (!firebaseUser || !userDocId) return;
       unsubscribeOrders = onSnapshot(
-        query(ordersCol, where("userPhone", "==", currentPhone())),
+        query(ordersCol, where("userId", "==", userDocId)),
         (snap) => {
           userOrders = snap.docs
             .map((orderSnap) => ({ id:orderSnap.id, ...orderSnap.data() }))
@@ -3831,11 +3782,12 @@ height: clamp(58px, 18vw, 80px);
       const totalTickets = cartItems.reduce((sum, item) =>
         sum + (Number.parseInt(item.tickets, 10) || 1) * (Number(item.quantity) || 1), 0);
       const orderNumber = `SW-${Date.now().toString().slice(-8)}`;
+      const userDocId = canonicalUserId || firebaseUser.uid;
       await addDoc(ordersCol, {
         orderNumber,
-        userId: canonicalUserId || firebaseUser.uid,
+        userId: userDocId,
         uid: firebaseUser.uid,
-        userPhone: currentPhone(),
+        userPhone: firebaseProfile?.phone || "",
         customer: {
           firstName: firebaseProfile?.firstName || "",
           lastName: firebaseProfile?.lastName || "",
@@ -3855,19 +3807,11 @@ height: clamp(58px, 18vw, 80px);
         createdAt: serverTimestamp()
       });
       try {
-        await setDoc(doc(db, "phoneAccounts", currentPhone()), {
+        await setDoc(doc(db, "users", userDocId), {
           orderCount: increment(1),
           totalTickets: increment(totalTickets),
-          updatedAt: serverTimestamp()
+          lastOrderAt: serverTimestamp()
         }, { merge:true });
-        if (canonicalUserId) {
-          await setDoc(doc(db, "users", canonicalUserId), {
-            orderCount: increment(1),
-            totalTickets: increment(totalTickets),
-            lastOrderAt: serverTimestamp(),
-            phoneAccountId: currentPhone()
-          }, { merge:true });
-        }
       } catch (err) {
         console.warn("User order totals could not be updated:", err);
       }
