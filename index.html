@@ -2307,6 +2307,154 @@ height: clamp(58px, 18vw, 80px);
   ::-webkit-scrollbar-thumb{ background:rgba(21,21,26,.18); border-radius:999px; }
   ::-webkit-scrollbar-track{ background:transparent; }
 
+  /* ===================== DESKTOP / LARGE-SCREEN LAYER =====================
+     Everything above is written mobile-first. This block re-flows the same
+     markup for tablets and desktop browsers — it never changes anything
+     below the breakpoint, so the phone experience is untouched. */
+  @media (min-width:860px){
+
+    /* ---- top bars float as centered pills instead of edge-to-edge ---- */
+    .sticky-topnav{
+      left:50%;
+      right:auto;
+      width:min(94%, 1100px);
+      border-radius:22px;
+      transform:translate(-50%, -160%);
+    }
+    .sticky-topnav.visible{
+      transform:translate(-50%, 0);
+    }
+    .nav-row{
+      max-width:1180px;
+      margin:0 auto;
+      padding-left:clamp(20px, 3vw, 40px);
+      padding-right:clamp(20px, 3vw, 40px);
+    }
+    .topnav{
+      height:clamp(340px, 34vh, 460px);
+      min-height:340px;
+    }
+    .home-feature-heading{
+      display:inline-flex;
+      width:auto;
+      max-width:none;
+      min-height:auto;
+      margin:0 0 20px 4px;
+      padding:16px 36px;
+      border-radius:999px;
+      font-size:1.35rem;
+    }
+    .home-horizontal-row,
+    .home-horizontal-row.single-card,
+    #pastWinnersHomeRow{
+      justify-content:flex-start;
+    }
+
+    /* ---- main content sits in a readable, centered column ---- */
+    .body-content{
+      max-width:1200px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    #homeView{ padding-bottom:90px; }
+    .draws-view,
+    .account-view{
+      max-width:960px;
+      margin-left:auto;
+      margin-right:auto;
+      padding-left:32px;
+      padding-right:32px;
+    }
+
+    /* ---- grids use the extra width instead of stacking in one column ---- */
+    .campaign-grid{ gap:22px; }
+    .legacy-product-grid{
+      grid-template-columns:repeat(4, 1fr);
+      gap:18px;
+    }
+    .category-row{
+      flex-wrap:wrap;
+      overflow-x:visible;
+    }
+    .home-horizontal-row{
+      flex-wrap:wrap;
+      overflow-x:visible;
+      padding-left:12px;
+      padding-right:12px;
+    }
+    .home-horizontal-row .past-draw-card,
+    .sold-out-card,
+    .home-winner-card{
+      flex:0 0 300px;
+    }
+    .draw-list{
+      grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));
+      align-items:start;
+    }
+    .tickets-list{
+      grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    /* ---- bottom tab bar becomes a floating, centered dock ---- */
+    body{ padding-bottom:130px; }
+    .bottom-nav{
+      left:50%;
+      right:auto;
+      bottom:22px;
+      width:auto;
+      transform:translateX(-50%);
+      justify-content:center;
+      gap:26px;
+      border-radius:999px;
+      box-shadow:0 14px 34px rgba(21,21,26,.18);
+    }
+    .nav-item.cart{ margin-left:-4px; }
+
+    /* ---- sheets/modals present as centered dialogs, not bottom sheets ---- */
+    .modal-backdrop{
+      align-items:center;
+      padding:32px;
+    }
+    .auth-sheet,
+    .menu-sheet,
+    .account-sheet{
+      border-radius:30px;
+    }
+    .menu-sheet{
+      height:auto;
+      min-height:auto;
+      max-height:min(86vh, 760px);
+    }
+    .menu-back{
+      position:absolute;
+      top:16px;
+      left:16px;
+    }
+    .product-sheet{
+      left:50%;
+      right:auto;
+      bottom:auto;
+      top:50%;
+      width:min(calc(100% - 64px), 620px);
+      max-height:min(82vh, 720px);
+      border-radius:28px;
+      transform:translate(-50%, -46%);
+      opacity:0;
+      transition:transform .38s cubic-bezier(.22,1,.36,1), opacity .3s ease;
+    }
+    .sheet-backdrop.open .product-sheet{
+      transform:translate(-50%, -50%);
+      opacity:1;
+    }
+  }
+
+  @media (min-width:1100px){
+    .campaign-grid{ grid-template-columns:repeat(3, minmax(0,1fr)); }
+  }
+  @media (min-width:1500px){
+    .campaign-grid{ grid-template-columns:repeat(4, minmax(0,1fr)); }
+  }
+
 </style>
 </head>
 <body>
@@ -3700,10 +3848,27 @@ height: clamp(58px, 18vw, 80px);
     window.startEmailLogin = async (email, password) => {
       document.getElementById("authError").style.display = "none";
       try {
-        const methods = await fetchSignInMethodsForEmail(auth, email);
-        const credential = methods.length
-          ? await signInWithEmailAndPassword(auth, email, password)
-          : await createUserWithEmailAndPassword(auth, email, password);
+        // We used to ask fetchSignInMethodsForEmail() whether this email
+        // already had an account, then chose sign-in vs sign-up based on
+        // the answer. Firebase's email-enumeration protection (on by
+        // default for newer projects) makes that lookup always report
+        // "no account found", even when one exists — so a returning user
+        // typing their correct password would get routed into
+        // createUserWithEmailAndPassword and rejected with
+        // "email-already-in-use". Instead, we just attempt the action and
+        // fall back based on the real result: try to create the account,
+        // and if Firebase says that email is already registered, retry as
+        // a normal sign-in with the same credentials.
+        let credential;
+        try {
+          credential = await createUserWithEmailAndPassword(auth, email, password);
+        } catch (err) {
+          if (err?.code === "auth/email-already-in-use") {
+            credential = await signInWithEmailAndPassword(auth, email, password);
+          } else {
+            throw err;
+          }
+        }
         firebaseUser = credential.user;
         window.firebaseUser = firebaseUser;
         await loadFirebaseProfile(firebaseUser);
