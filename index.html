@@ -414,12 +414,22 @@
     position:relative;
     width:100%;
     max-height:none;
-    min-height:100vh;
-    height:100vh;
+    /* 100vh on mobile browsers includes the address-bar area, which is
+       often not actually visible on load, cutting off content near the
+       bottom (the back button and part of the profile section) until
+       the browser chrome collapses on scroll. --app-vh is kept in sync
+       with the real visible height via JS (see the viewport-height
+       script near the end of body) so the sheet never exceeds what's
+       actually visible on screen. */
+    min-height:calc(var(--app-vh, 1vh) * 100);
+    height:calc(var(--app-vh, 1vh) * 100);
     overflow-y:auto;
     border-radius:0;
     padding:18px 18px calc(30px + env(safe-area-inset-bottom));
     transform:translateY(100%);
+  }
+  @supports (height:100dvh){
+    .menu-sheet{ height:100dvh; min-height:100dvh; }
   }
   .menu-sheet .sheet-modal-header{
     min-height:48px;
@@ -3058,6 +3068,18 @@ height: clamp(58px, 18vw, 80px);
     updateMenuProfile();
     renderWalletPayment();
     window.updateMenuProfile = updateMenuProfile;
+
+    // ---- keep --app-vh synced to the REAL visible viewport height ----
+    // Fixes content (back button, bottom of profile) getting cut off in
+    // full-screen sheets on phones, since raw `100vh` counts space the
+    // browser's address bar is still covering.
+    function setAppVh(){
+      document.documentElement.style.setProperty("--app-vh", `${window.innerHeight * 0.01}px`);
+    }
+    setAppVh();
+    window.addEventListener("resize", setAppVh, { passive:true });
+    window.addEventListener("orientationchange", setAppVh);
+
     window.addEventListener("scroll", updateStickyTopNav, { passive:true });
     updateStickyTopNav();
     window.applyAppSettings({});
@@ -3074,10 +3096,30 @@ height: clamp(58px, 18vw, 80px);
       appDataReady = true;
       maybeHideAppLoader();
     };
+
+    // ---- force-repaint helper ----
+    // On some mobile browsers/WebViews, content inserted by JS (like the
+    // campaign cards, which arrive asynchronously from Firebase) is added
+    // to the DOM correctly but the screen isn't repainted until the user
+    // scrolls or taps — a known rendering-engine quirk, not a data bug.
+    // This nudges the layout/paint itself, right after new content is
+    // inserted, so cards show up immediately without needing a manual
+    // scroll or tap.
+    function forceRepaint(){
+      requestAnimationFrame(() => {
+        void document.body.offsetHeight;
+        if (window.scrollY === 0) {
+          window.scrollBy(0, 1);
+          requestAnimationFrame(() => window.scrollBy(0, -1));
+        }
+      });
+    }
+    window.forceRepaint = forceRepaint;
     document.body.classList.add("is-app-loading");
     window.addEventListener("load", () => {
       appPageLoaded = true;
       maybeHideAppLoader();
+      forceRepaint();
     }, { once:true });
     // Firebase data can be slow or unavailable, but it should never block
     // the customer page behind the loader. The live sections fill in as
@@ -4164,6 +4206,7 @@ height: clamp(58px, 18vw, 80px);
           </div>`;
         pastWinnersHomeRow.appendChild(card);
       });
+      forceRepaint();
     }
 
     const CAMPAIGN_PAGE_SIZE = 5;
@@ -4276,6 +4319,7 @@ height: clamp(58px, 18vw, 80px);
           campaignSentinelObserver.disconnect();
           campaignSentinelObserver = null;
         }
+        forceRepaint();
       } else {
         const cards = Array.from(campaignGrid.children);
         visible.forEach((campaign) => {
