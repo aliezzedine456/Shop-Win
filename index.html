@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Shop &amp; Win</title>
 <meta name="description" content="Shop everyday products and earn tickets into live prize draws. Add to cart, checkout, and track your entries with Shop &amp; Win.">
-<meta name="theme-color" content="#15151a">
+<meta name="theme-color" content="#2158aa">
 <meta name="color-scheme" content="light">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -20,12 +20,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-dark-1:#232326;
-    --bg-dark-2:#0a0a0c;
-    --accent-red:#ff2d55;
-    --accent-red-soft:#ff5c7c;
-    --accent-gold:#f3b93b;
-    --accent-lime:#c8ff5c;
+    /* Brand palette — sampled directly from the Shop & Win logo (blue + gold only) */
+    --brand-blue:#2158aa;
+    --brand-blue-dark:#163f80;
+    --brand-blue-light:#4a7ecb;
+    --brand-blue-pale:#eaf1fb;
+    --brand-gold:#c99a1f;
+    --brand-gold-dark:#8c6913;
+    --brand-gold-light:#e0b23e;
+    --brand-gold-hilite:#efcc54;
+    --brand-gold-pale:#fdf1d6;
+
+    --bg-dark-1:#0f2c5c;
+    --bg-dark-2:#081226;
+    --accent-red:#c99a1f;
+    --accent-red-soft:#e0b23e;
+    --accent-gold:#c99a1f;
+    --accent-lime:#efcc54;
     --white:#ffffff;
     --ink:#15151a;
     --muted:#8b8b93;
@@ -307,7 +318,7 @@
     padding:22px;
     border-radius:25px;
     color:#fff;
-    background:linear-gradient(135deg,#ff252d 0%,#f91545 55%,#e9009f 100%);
+    background:linear-gradient(135deg,#c99a1f 0%,#c99a1f 55%,#8c6913 100%);
   }
   .auth-promo-copy{
     position:relative;
@@ -375,7 +386,7 @@
   }
   .auth-submit.ready,
   .primary-action{
-    background:linear-gradient(100deg,#6551ee,#4432dc);
+    background:linear-gradient(100deg,#4a7ecb,#163f80);
   }
   .auth-submit:active,
   .primary-action:active{ transform:scale(0.98); }
@@ -538,7 +549,7 @@
     padding:11px 24px;
     border-radius:999px;
     color:#fff;
-    background:linear-gradient(100deg,#ff1e38,#e800a6);
+    background:linear-gradient(100deg,#c99a1f,#8c6913);
     font-size:0.76rem;
     font-weight:800;
   }
@@ -574,8 +585,8 @@
   .menu-list button:hover{ transform:translateY(-2px); box-shadow:0 8px 18px rgba(21,21,26,.07); }
   .menu-list button.menu-logout{
     color:#fff;
-    background:linear-gradient(135deg,#ff5c7c 0%,#ff2d55 55%,#d90f60 100%);
-    box-shadow:0 8px 20px rgba(255,45,120,.35);
+    background:linear-gradient(135deg,#e0b23e 0%,#c99a1f 55%,#8c6913 100%);
+    box-shadow:0 8px 20px rgba(201,154,31,.35);
   }
   .menu-list button.menu-logout .menu-icon{
     background:rgba(255,255,255,.22);
@@ -586,7 +597,7 @@
   }
   .menu-list button.menu-logout:hover{
     transform:translateY(-2px);
-    box-shadow:0 12px 26px rgba(255,45,120,.45);
+    box-shadow:0 12px 26px rgba(201,154,31,.45);
   }
   .menu-list button.menu-logout:active{ transform:scale(.98); }
   body:not(.is-authenticated) .menu-list button.menu-logout{
@@ -648,11 +659,11 @@
     padding:13px 16px;
     border-radius:999px;
     color:#fff;
-    background:linear-gradient(100deg,#6551ee,#4432dc);
+    background:linear-gradient(100deg,#4a7ecb,#163f80);
     font:900 .8rem/1 inherit;
     cursor:pointer;
   }
-  .menu-content-card .menu-status{color:#4c8132; font-size:.72rem; font-weight:700;}
+  .menu-content-card .menu-status{color:#8c6913; font-size:.72rem; font-weight:700;}
   .menu-order-item,
   .menu-favorite-item{padding:13px 0; border-bottom:1px solid #ededf0; font-size:.78rem;}
   .menu-order-item:last-child,
@@ -807,21 +818,21 @@
   }
   .win-badge{
     display:inline-block;
-    background:linear-gradient(135deg, #ff5c7c 0%, #ff2d55 55%, #d90f60 100%);
+    background:linear-gradient(135deg, #e0b23e 0%, #c99a1f 55%, #8c6913 100%);
     color:#fff;
     font-weight:900;
     font-size:clamp(1.1rem, 5vw, 1.5rem);
     letter-spacing:1px;
     padding:9px 30px;
     border-radius:999px;
-    box-shadow:0 6px 18px rgba(255,45,120,0.45);
+    box-shadow:0 6px 18px rgba(201,154,31,0.45);
   }
   .prize-line{
     font-weight:900;
     font-size:clamp(2rem, 10.5vw, 3.2rem);
     letter-spacing:0.5px;
     line-height:1.05;
-    background:linear-gradient(180deg, #fff6cf 0%, #f7d774 25%, #d99a26 55%, #a86a12 80%, #f7d774 100%);
+    background:linear-gradient(180deg, #fdf1d6 0%, #efcc54 25%, #c99a1f 55%, #8c6913 80%, #efcc54 100%);
     -webkit-background-clip:text;
     background-clip:text;
     color:transparent;
@@ -854,22 +865,22 @@
     font-size:clamp(1.9rem, 8vw, 2.6rem);
     letter-spacing:1px;
     line-height:1;
-    background:linear-gradient(180deg, #e8ffb0 0%, var(--accent-lime) 55%, #9ee62c 100%);
+    background:linear-gradient(180deg, #fdf1d6 0%, var(--accent-lime) 55%, #c99a1f 100%);
     -webkit-background-clip:text;
     background-clip:text;
     color:transparent;
-    filter:drop-shadow(0 0 14px rgba(200,255,92,0.45));
+    filter:drop-shadow(0 0 14px rgba(239,204,84,0.45));
   }
   .spin-copy .spin-line2{
     font-weight:900;
     font-size:clamp(1.9rem, 8vw, 2.6rem);
     letter-spacing:1px;
     line-height:1;
-    background:linear-gradient(180deg, #e8ffb0 0%, var(--accent-lime) 55%, #9ee62c 100%);
+    background:linear-gradient(180deg, #fdf1d6 0%, var(--accent-lime) 55%, #c99a1f 100%);
     -webkit-background-clip:text;
     background-clip:text;
     color:transparent;
-    filter:drop-shadow(0 0 14px rgba(200,255,92,0.45));
+    filter:drop-shadow(0 0 14px rgba(239,204,84,0.45));
   }
   .spin-copy .spin-live{
     margin-top:6px;
@@ -919,11 +930,11 @@
   }
 
   .fbox{ width:clamp(46px, 14.5vw, 58px); height:clamp(46px, 14.5vw, 58px); font-size:0.66rem; }
-  .fbox.b1{ left:3%;  bottom:6%;  background:linear-gradient(150deg, #ff84ad 0%, #e83e8c 100%); animation-duration:4s; animation-delay:0s;   animation-play-state:running; }
-  .fbox.b2{ left:22%; bottom:16%; background:linear-gradient(150deg, #46548f 0%, #262f5c 100%); animation-duration:4s; animation-delay:0.8s; animation-play-state:running; }
-  .fbox.b3{ left:38%; bottom:2%;  background:linear-gradient(150deg, #ffca66 0%, #f3a733 100%); color:var(--ink); animation-duration:4s; animation-delay:1.6s; animation-play-state:running; }
-  .fbox.b4{ left:57%; bottom:12%; width:clamp(56px, 17.5vw, 70px); height:clamp(56px, 17.5vw, 70px); font-size:0.74rem; background:linear-gradient(150deg, #63d68e 0%, #2fa864 100%); animation-duration:4s; animation-delay:0.4s; animation-play-state:running; }
-  .fbox.b5{ left:79%; bottom:4%;  width:clamp(56px, 17.5vw, 70px); height:clamp(56px, 17.5vw, 70px); font-size:0.74rem; background:linear-gradient(150deg, #ff7a7a 0%, #ef3d3d 100%); animation-duration:4s; animation-delay:1.2s; animation-play-state:running; }
+  .fbox.b1{ left:3%;  bottom:6%;  background:linear-gradient(150deg, #e0b23e 0%, #8c6913 100%); animation-duration:4s; animation-delay:0s;   animation-play-state:running; }
+  .fbox.b2{ left:22%; bottom:16%; background:linear-gradient(150deg, #4a7ecb 0%, #163f80 100%); animation-duration:4s; animation-delay:0.8s; animation-play-state:running; }
+  .fbox.b3{ left:38%; bottom:2%;  background:linear-gradient(150deg, #e0b23e 0%, #e0b23e 100%); color:var(--ink); animation-duration:4s; animation-delay:1.6s; animation-play-state:running; }
+  .fbox.b4{ left:57%; bottom:12%; width:clamp(56px, 17.5vw, 70px); height:clamp(56px, 17.5vw, 70px); font-size:0.74rem; background:linear-gradient(150deg, #efcc54 0%, #8c6913 100%); animation-duration:4s; animation-delay:0.4s; animation-play-state:running; }
+  .fbox.b5{ left:79%; bottom:4%;  width:clamp(56px, 17.5vw, 70px); height:clamp(56px, 17.5vw, 70px); font-size:0.74rem; background:linear-gradient(150deg, #e0b23e 0%, #8c6913 100%); animation-duration:4s; animation-delay:1.2s; animation-play-state:running; }
 
   /* ---- dots ---- */
   .dots-row{
@@ -1027,7 +1038,7 @@
     padding:4px 14px;
     border-radius:999px;
     color:#fff;
-    background:linear-gradient(100deg,#f22e57,#df17ab);
+    background:linear-gradient(100deg,#c99a1f,#8c6913);
     font-size:1.35rem;
     line-height:1;
     font-weight:900;
@@ -1047,7 +1058,7 @@
     font-size:0.69rem;
     line-height:1.4;
   }
-  .upcoming-draw-meta strong{ color:#df275f; }
+  .upcoming-draw-meta strong{ color:#8c6913; }
   .past-draw-card{
     position:relative;
     min-height:390px;
@@ -1091,7 +1102,7 @@
   }
   .winner-name{
     margin-top:4px;
-    color:#d61b69;
+    color:#8c6913;
     font-size:1.18rem;
     line-height:1.1;
     font-weight:900;
@@ -1140,11 +1151,11 @@
     padding:18px;
     border:1px solid #ececf2;
     border-radius:22px;
-    background:linear-gradient(145deg,#fff 0%,#faf9ff 100%);
+    background:linear-gradient(145deg,#fff 0%,#eaf1fb 100%);
     box-shadow:0 5px 16px rgba(31,25,76,.06);
   }
   .ticket-campaign-label{
-    color:#6b5aeb;
+    color:#2158aa;
     font-size:.68rem;
     font-weight:900;
     letter-spacing:.5px;
@@ -1168,7 +1179,7 @@
     align-items:baseline;
     gap:6px;
     margin-top:14px;
-    color:#d61b69;
+    color:#8c6913;
     font-size:.78rem;
     font-weight:900;
   }
@@ -1208,8 +1219,8 @@
     padding:18px;
     border-radius:22px;
     color:#fff;
-    background:linear-gradient(135deg,#1e88e5,#0d47a1);
-    box-shadow:0 10px 22px rgba(13,71,161,.22);
+    background:linear-gradient(135deg,#2158aa,#163f80);
+    box-shadow:0 10px 22px rgba(22,63,128,.22);
   }
   .wallet-balance-large span{
     display:block;
@@ -1260,13 +1271,13 @@
     border:0;
     border-radius:999px;
     color:#fff;
-    background:linear-gradient(100deg,#1e88e5,#0d47a1);
+    background:linear-gradient(100deg,#2158aa,#163f80);
     font:900 .8rem/1 inherit;
     cursor:pointer;
   }
   .wallet-status{
     min-height:18px;
-    color:#31824a;
+    color:#8c6913;
     font-size:.72rem;
     font-weight:800;
   }
@@ -1274,8 +1285,8 @@
     margin-top:16px;
     padding:12px 14px;
     border-radius:15px;
-    color:#315f89;
-    background:#eef7ff;
+    color:#163f80;
+    background:#eaf1fb;
     font-size:.72rem;
     font-weight:700;
   }
@@ -1327,10 +1338,10 @@
     letter-spacing:-1px;
   }
   .sold-out-heading{
-    background:linear-gradient(110deg,#6758f7 0%,#7055ff 100%);
+    background:linear-gradient(110deg,#4a7ecb 0%,#4a7ecb 100%);
   }
   .past-winners-heading{
-    background:linear-gradient(105deg,#ff241f 0%,#ff0b62 52%,#ed19e7 100%);
+    background:linear-gradient(105deg,#c99a1f 0%,#8c6913 52%,#8c6913 100%);
   }
   .home-horizontal-row{
     display:flex;
@@ -1403,7 +1414,7 @@
   .sold-out-card-meta strong{
     display:block;
     margin-top:5px;
-    color:#3b3b9c;
+    color:#163f80;
     font-size:.76rem;
   }
   .home-winner-card{
@@ -1458,7 +1469,7 @@
     letter-spacing:.2px;
   }
   .home-winner-card .winner-congrats{
-    color:#ffd7e8;
+    color:#fdf1d6;
     font-size:.76rem;
     font-weight:900;
   }
@@ -1536,7 +1547,7 @@
     align-items:center;
     justify-content:center;
     color:#fff;
-    background:#ff1e2d;
+    background:#c99a1f;
     border-radius:28px 28px 0 0;
     font-size:clamp(1rem,4.8vw,1.4rem);
     font-weight:900;
@@ -1558,11 +1569,11 @@
     padding:10px 28px;
     border-radius:999px;
     color:#fff;
-    background:linear-gradient(100deg,#ff273d 0%,#f40050 52%,#d71bdb 100%);
+    background:linear-gradient(100deg,#c99a1f 0%,#8c6913 52%,#8c6913 100%);
     font-size:2rem;
     line-height:1;
     font-weight:900;
-    box-shadow:0 7px 16px rgba(221,26,116,0.25);
+    box-shadow:0 7px 16px rgba(140,105,19,0.25);
   }
   .campaign-info{
     padding:52px 22px 20px;
@@ -1581,12 +1592,12 @@
     padding:17px 20px;
     border-radius:999px;
     color:#fff;
-    background:linear-gradient(100deg,#6551ee,#4432dc);
+    background:linear-gradient(100deg,#4a7ecb,#163f80);
     font-family:inherit;
     font-size:clamp(1rem,4.7vw,1.35rem);
     font-weight:900;
     cursor:pointer;
-    box-shadow:0 5px 12px rgba(76,58,224,0.18);
+    box-shadow:0 5px 12px rgba(74,126,203,0.18);
   }
   .campaign-meta{
     margin-top:17px;
@@ -1618,7 +1629,7 @@
     height:100%;
     min-width:0;
     border-radius:inherit;
-    background:linear-gradient(100deg,#6551ee,#e31a8c);
+    background:linear-gradient(100deg,#4a7ecb,#163f80);
   }
 
   /* ---- product picker bottom sheet ---- */
@@ -1706,7 +1717,7 @@
     border-radius:17px;
     background:#fff;
   }
-  .sheet-product.selected{ border-color:#7060c8; }
+  .sheet-product.selected{ border-color:#2158aa; }
   .sheet-product-copy{ flex:1; min-width:0; }
   .sheet-product-name{
     font-size:1.02rem;
@@ -1715,13 +1726,13 @@
   }
   .sheet-product-price{
     margin-top:6px;
-    color:#4533a8;
+    color:#163f80;
     font-size:0.98rem;
     font-weight:800;
   }
   .sheet-product-tickets{
     margin-top:22px;
-    color:#4c8132;
+    color:#8c6913;
     font-size:0.8rem;
     font-weight:700;
   }
@@ -1753,8 +1764,8 @@
     cursor:pointer;
   }
   .quantity-btn.selected{
-    border:3px solid #7060c8;
-    color:#4333a8;
+    border:3px solid #2158aa;
+    color:#163f80;
     font-weight:800;
   }
   .sheet-checkout{
@@ -1769,7 +1780,7 @@
     line-height:1.45;
     font-weight:700;
   }
-  .sheet-totals .total{ color:#4433a8; }
+  .sheet-totals .total{ color:#163f80; }
   .add-cart-btn{
     flex:0 0 48%;
     border:0;
@@ -1777,7 +1788,7 @@
     padding:13px 14px;
     border-radius:999px;
     color:#fff;
-    background:linear-gradient(100deg,#6551ee,#4432dc);
+    background:linear-gradient(100deg,#4a7ecb,#163f80);
     font-family:inherit;
     font-size:0.92rem;
     font-weight:900;
@@ -1812,7 +1823,7 @@
   }
   .cart-item h3{ font-size:0.88rem; line-height:1.2; font-weight:900; }
   .cart-item p{ margin-top:4px; color:#777780; font-size:0.68rem; line-height:1.4; }
-  .cart-item .cart-price{ color:#4433a8; font-size:0.78rem; font-weight:900; white-space:nowrap; }
+  .cart-item .cart-price{ color:#163f80; font-size:0.78rem; font-weight:900; white-space:nowrap; }
   .cart-remove{
     grid-column:2 / 4;
     justify-self:end;
@@ -1822,22 +1833,22 @@
     min-height:32px;
     min-width:88px;
     padding:7px 12px;
-    border:1px solid #ffd3df;
+    border:1px solid #fdf1d6;
     border-radius:10px;
-    color:#d51e52;
-    background:#fff7f9;
+    color:#8c6913;
+    background:#fdf1d6;
     font:900 0.68rem/1 inherit;
     cursor:pointer;
     transition:transform .2s ease, background .2s ease, box-shadow .2s ease;
   }
   .cart-remove:focus-visible{
-    outline:3px solid rgba(213,30,82,.2);
+    outline:3px solid rgba(140,105,19,.2);
     outline-offset:2px;
   }
   .cart-remove:hover{
     transform:translateY(-1px);
-    background:#ffedf2;
-    box-shadow:0 5px 12px rgba(213,30,82,.12);
+    background:#fdf1d6;
+    box-shadow:0 5px 12px rgba(140,105,19,.12);
   }
   .cart-remove svg{
     width:14px;
@@ -1861,7 +1872,7 @@
     font-size:.76rem;
   }
   .cart-remove.is-loading::after{
-    border-color:#d51e52;
+    border-color:#8c6913;
     border-right-color:transparent;
   }
   .menu-logout.is-loading::after{
@@ -2027,11 +2038,11 @@ height: clamp(58px, 18vw, 80px);
     background:transparent;
     margin-top:1px;
   }
-  .nav-item.active .nav-dash{ background:#5b4bff; }
+  .nav-item.active .nav-dash{ background:#2158aa; }
 
   .nav-item.cart .icon-circle{
-    background:linear-gradient(150deg, #62c6ff 0%, #1267c4 100%);
-    box-shadow:0 8px 20px rgba(18,103,196,.38), 0 0 0 4px #eeeef0;
+    background:linear-gradient(150deg, #4a7ecb 0%, #2158aa 100%);
+    box-shadow:0 8px 20px rgba(33,88,170,.38), 0 0 0 4px #eeeef0;
   }
   .nav-item.cart .nav-icon{
     filter:brightness(0) invert(1);
@@ -2046,7 +2057,7 @@ height: clamp(58px, 18vw, 80px);
     padding:4px 6px;
     border-radius:999px;
     color:#fff;
-    background:#ff2d55;
+    background:#c99a1f;
     font-size:0.62rem;
     line-height:1;
     font-weight:900;
@@ -2187,9 +2198,9 @@ height: clamp(58px, 18vw, 80px);
     border-radius:50%;
     font-size:.7rem;
   }
-  .toast.success .toast-icon{ background:#2fbf71; }
+  .toast.success .toast-icon{ background:#c99a1f; }
   .toast.error .toast-icon{ background:var(--accent-red); }
-  .toast.info .toast-icon{ background:#5b4bff; }
+  .toast.info .toast-icon{ background:#2158aa; }
 
   /* ===================== ORDER SUCCESS OVERLAY ===================== */
   .order-success-backdrop{
@@ -2228,8 +2239,8 @@ height: clamp(58px, 18vw, 80px);
     margin:0 auto 18px;
     border-radius:50%;
     display:grid; place-items:center;
-    background:linear-gradient(135deg,#2fbf71,#1f9d5b);
-    box-shadow:0 12px 26px rgba(47,191,113,.35);
+    background:linear-gradient(135deg,#c99a1f,#8c6913);
+    box-shadow:0 12px 26px rgba(201,154,31,.35);
   }
   .order-success-check svg{ width:38px; height:38px; }
   .order-success-check path{
@@ -2282,7 +2293,7 @@ height: clamp(58px, 18vw, 80px);
   input:focus-visible,
   textarea:focus-visible,
   select:focus-visible{
-    outline:2.5px solid #5b4bff;
+    outline:2.5px solid #2158aa;
     outline-offset:2px;
   }
 
@@ -2335,19 +2346,6 @@ height: clamp(58px, 18vw, 80px);
         </div>
       </div>
 
-      <div class="slide slide-spin">
-        <div class="float-stage">
-          <div class="fbox b1">15%<br>OFF</div>
-          <div class="fbox b2">10%<br>OFF</div>
-          <div class="fbox b3">30% OFF</div>
-          <div class="fbox b4">5X<br>TICKETS</div>
-          <div class="fbox b5">3x<br>TICKETS</div>
-        </div>
-        <div class="spin-copy">
-          <span class="spin-line1">SPIN TO WIN</span>
-          <span class="spin-live">IS LIVE</span>
-        </div>
-      </div>
       <!-- Admin-uploaded banners get injected here at runtime -->
     </div>
 
@@ -2467,7 +2465,7 @@ height: clamp(58px, 18vw, 80px);
            <input id="phoneNumber" class="phone-input" type="tel" inputmode="numeric" maxlength="8" placeholder="Mobile Number" value="" aria-label="Mobile number">
         </div>
         <button id="phoneContinue" class="auth-submit ready" type="button">LOGIN / SIGN-UP</button>
-        <p id="authError" class="auth-note" style="display:none;color:#d51e52;">Enter an 8-digit Lebanese mobile number.</p>
+        <p id="authError" class="auth-note" style="display:none;color:#8c6913;">Enter an 8-digit Lebanese mobile number.</p>
        
       </div>
       <div id="profileStep" hidden>
@@ -2608,7 +2606,7 @@ height: clamp(58px, 18vw, 80px);
     <button class="nav-item cart" data-section="cart">
       <span class="icon-circle">
         <svg class="nav-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path fill="#1C274C" fill-rule="evenodd" clip-rule="evenodd" d="M8.4179 3.25077C8.69861 2.65912 9.30146 2.25 9.99986 2.25H13.9999C14.6983 2.25 15.3011 2.65912 15.5818 3.25077C16.2654 3.25574 16.7981 3.28712 17.2737 3.47298C17.8418 3.69505 18.3361 4.07255 18.6998 4.5623C19.0667 5.05639 19.2389 5.68968 19.476 6.56133C19.4882 6.60604 19.5005 6.65137 19.513 6.69735L20.1039 8.86428C20.4914 9.06271 20.8304 9.32993 21.1133 9.6922C21.7353 10.4888 21.8454 11.4377 21.7348 12.5261C21.6274 13.5822 21.2949 14.9122 20.8787 16.577L20.8523 16.6824C20.5891 17.7352 20.3755 18.59 20.1213 19.2572C19.8563 19.9527 19.5199 20.5227 18.9653 20.9558C18.4107 21.3888 17.7761 21.5769 17.0371 21.6653C16.3281 21.75 15.4472 21.75 14.362 21.75H9.63771C8.55255 21.75 7.67147 21.75 6.96266 21.6653C6.22365 21.5769 5.58901 21.3888 5.03439 20.9558C4.47977 20.5227 4.14337 19.9527 3.8784 19.2572C3.62426 18.5901 3.41058 17.7353 3.1474 16.6825L3.121 16.5769C2.70479 14.9121 2.37229 13.5822 2.26492 12.5261C2.15427 11.4377 2.26442 10.4888 2.88642 9.6922C3.16927 9.32993 3.50834 9.06271 3.89582 8.86428L4.48667 6.69735C4.49921 6.65137 4.51154 6.60604 4.5237 6.56134C4.76077 5.68968 4.93302 5.05639 5.29995 4.5623C5.66367 4.07255 6.15788 3.69505 6.72607 3.47298C7.20162 3.28712 7.73436 3.25574 8.4179 3.25077ZM8.41931 4.75219C7.75748 4.75888 7.4919 4.78416 7.2721 4.87007C6.96615 4.98964 6.70003 5.19291 6.50419 5.45662C6.32808 5.69376 6.22474 6.02508 5.93384 7.09195L5.58026 8.38869C6.61806 8.24996 7.95786 8.24998 9.62247 8.25H14.3772C16.0419 8.24998 17.3817 8.24996 18.4195 8.38869L18.0659 7.09194C17.775 6.02508 17.6716 5.69377 17.4955 5.45663C17.2997 5.19291 17.0336 4.98964 16.7276 4.87007C16.5078 4.78416 16.2422 4.75888 15.5804 4.75219C15.2991 5.34225 14.6971 5.75 13.9999 5.75H9.99986C9.30262 5.75 8.70062 5.34225 8.41931 4.75219ZM9.99986 3.75C9.86179 3.75 9.74986 3.86193 9.74986 4C9.74986 4.13807 9.86179 4.25 9.99986 4.25H13.9999C14.1379 4.25 14.2499 4.13807 14.2499 4C14.2499 3.86193 14.1379 3.75 13.9999 3.75H9.99986ZM5.69971 9.88649C4.78854 10.0183 4.34756 10.2582 4.06873 10.6153C3.78989 10.9725 3.66411 11.4584 3.75723 12.3744C3.85233 13.3099 4.15656 14.5345 4.59127 16.2733C4.86853 17.3824 5.06163 18.1496 5.28013 18.7231C5.49144 19.2778 5.69835 19.5711 5.95751 19.7735C6.21667 19.9758 6.5514 20.1054 7.14076 20.1759C7.75015 20.2488 8.54133 20.25 9.68452 20.25H14.3152C15.4584 20.25 16.2496 20.2488 16.859 20.1759C17.4483 20.1058 17.783 19.9758 18.0422 19.7735C18.3014 19.5711 18.5083 19.2778 18.7196 18.7231C18.9381 18.1496 19.1312 17.3824 19.4084 16.2733C19.8432 14.5345 20.1474 13.3099 20.2425 12.3744C20.3356 11.4584 20.2098 10.9725 19.931 10.6153C19.6522 10.2582 19.2112 10.0183 18.3 9.88649C17.3694 9.75187 16.1075 9.75 14.3152 9.75H9.68452C7.89217 9.75 6.63034 9.75187 5.69971 9.88649Z"/>
+          <path fill="#163f80" fill-rule="evenodd" clip-rule="evenodd" d="M8.4179 3.25077C8.69861 2.65912 9.30146 2.25 9.99986 2.25H13.9999C14.6983 2.25 15.3011 2.65912 15.5818 3.25077C16.2654 3.25574 16.7981 3.28712 17.2737 3.47298C17.8418 3.69505 18.3361 4.07255 18.6998 4.5623C19.0667 5.05639 19.2389 5.68968 19.476 6.56133C19.4882 6.60604 19.5005 6.65137 19.513 6.69735L20.1039 8.86428C20.4914 9.06271 20.8304 9.32993 21.1133 9.6922C21.7353 10.4888 21.8454 11.4377 21.7348 12.5261C21.6274 13.5822 21.2949 14.9122 20.8787 16.577L20.8523 16.6824C20.5891 17.7352 20.3755 18.59 20.1213 19.2572C19.8563 19.9527 19.5199 20.5227 18.9653 20.9558C18.4107 21.3888 17.7761 21.5769 17.0371 21.6653C16.3281 21.75 15.4472 21.75 14.362 21.75H9.63771C8.55255 21.75 7.67147 21.75 6.96266 21.6653C6.22365 21.5769 5.58901 21.3888 5.03439 20.9558C4.47977 20.5227 4.14337 19.9527 3.8784 19.2572C3.62426 18.5901 3.41058 17.7353 3.1474 16.6825L3.121 16.5769C2.70479 14.9121 2.37229 13.5822 2.26492 12.5261C2.15427 11.4377 2.26442 10.4888 2.88642 9.6922C3.16927 9.32993 3.50834 9.06271 3.89582 8.86428L4.48667 6.69735C4.49921 6.65137 4.51154 6.60604 4.5237 6.56134C4.76077 5.68968 4.93302 5.05639 5.29995 4.5623C5.66367 4.07255 6.15788 3.69505 6.72607 3.47298C7.20162 3.28712 7.73436 3.25574 8.4179 3.25077ZM8.41931 4.75219C7.75748 4.75888 7.4919 4.78416 7.2721 4.87007C6.96615 4.98964 6.70003 5.19291 6.50419 5.45662C6.32808 5.69376 6.22474 6.02508 5.93384 7.09195L5.58026 8.38869C6.61806 8.24996 7.95786 8.24998 9.62247 8.25H14.3772C16.0419 8.24998 17.3817 8.24996 18.4195 8.38869L18.0659 7.09194C17.775 6.02508 17.6716 5.69377 17.4955 5.45663C17.2997 5.19291 17.0336 4.98964 16.7276 4.87007C16.5078 4.78416 16.2422 4.75888 15.5804 4.75219C15.2991 5.34225 14.6971 5.75 13.9999 5.75H9.99986C9.30262 5.75 8.70062 5.34225 8.41931 4.75219ZM9.99986 3.75C9.86179 3.75 9.74986 3.86193 9.74986 4C9.74986 4.13807 9.86179 4.25 9.99986 4.25H13.9999C14.1379 4.25 14.2499 4.13807 14.2499 4C14.2499 3.86193 14.1379 3.75 13.9999 3.75H9.99986ZM5.69971 9.88649C4.78854 10.0183 4.34756 10.2582 4.06873 10.6153C3.78989 10.9725 3.66411 11.4584 3.75723 12.3744C3.85233 13.3099 4.15656 14.5345 4.59127 16.2733C4.86853 17.3824 5.06163 18.1496 5.28013 18.7231C5.49144 19.2778 5.69835 19.5711 5.95751 19.7735C6.21667 19.9758 6.5514 20.1054 7.14076 20.1759C7.75015 20.2488 8.54133 20.25 9.68452 20.25H14.3152C15.4584 20.25 16.2496 20.2488 16.859 20.1759C17.4483 20.1058 17.783 19.9758 18.0422 19.7735C18.3014 19.5711 18.5083 19.2778 18.7196 18.7231C18.9381 18.1496 19.1312 17.3824 19.4084 16.2733C19.8432 14.5345 20.1474 13.3099 20.2425 12.3744C20.3356 11.4584 20.2098 10.9725 19.931 10.6153C19.6522 10.2582 19.2112 10.0183 18.3 9.88649C17.3694 9.75187 16.1075 9.75 14.3152 9.75H9.68452C7.89217 9.75 6.63034 9.75187 5.69971 9.88649Z"/>
         </svg>
          <span id="cartBadge" class="cart-badge">0</span>
         <span class="nav-label">Cart</span>
@@ -3222,11 +3220,8 @@ height: clamp(58px, 18vw, 80px);
     }
 
     // ---- inject any admin-uploaded banners as extra slides ----
-    // The photo banner is always slide 1 and "Spin to Win" is always kept as
-    // the fixed 2nd slide — admin banners are appended AFTER it instead of
-    // being inserted between the two.
+    // The photo banner is always slide 1 — admin banners are appended after it.
     const slider = document.getElementById('bannerSlider');
-    const spinSlide = slider.querySelector('.slide-spin');
     getAdminBanners().forEach((b) => {
       const slide = document.createElement('div');
       slide.className = 'slide slide-image';
@@ -4643,7 +4638,7 @@ height: clamp(58px, 18vw, 80px);
     /* ---------- ORDER SUCCESS OVERLAY ---------- */
     var successBackdrop = document.getElementById("orderSuccessBackdrop");
     var successNumberEl = document.getElementById("orderSuccessNumber");
-    var confettiColors = ["#ff2d55", "#f3b93b", "#5b4bff", "#c8ff5c", "#00c2ff"];
+    var confettiColors = ["#c99a1f", "#2158aa", "#efcc54", "#4a7ecb", "#8c6913"];
     function spawnConfetti(container){
       if (reduceMotion || !container) return;
       for (var i = 0; i < 26; i++) {
