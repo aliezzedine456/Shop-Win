@@ -13,7 +13,8 @@
 <meta property="og:title" content="Shop & Win">
 <meta property="og:description" content="Shop everyday products and earn tickets into live prize draws.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff2d55'/%3E%3Cstop offset='1' stop-color='%23e9009f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='24' fill='url(%23g)'/%3E%3Ctext x='50' y='66' font-size='54' font-family='Arial,sans-serif' font-weight='900' fill='white' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="https://i.ibb.co/rRH62LcC/photo-2026-09-01-17-01-22.png">
+<link rel="apple-touch-icon" href="https://i.ibb.co/rRH62LcC/photo-2026-09-01-17-01-22.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -57,8 +58,8 @@
     z-index:100;
     display:grid;
     place-items:center;
-    color:#fff;
-    background:linear-gradient(145deg,#232326 0%,#0a0a0c 100%);
+    color:var(--ink);
+    background:#ffffff;
     opacity:1;
     visibility:visible;
     transition:opacity .3s ease, visibility .3s ease;
@@ -68,8 +69,8 @@
     width:34px;
     height:34px;
     border-radius:50%;
-    border:3px solid rgba(255,255,255,.25);
-    border-top-color:#fff;
+    border:3px solid rgba(21,21,26,.15);
+    border-top-color:#000000;
     animation:appSpin .7s linear infinite;
   }
   @keyframes appSpin{ to{ transform:rotate(360deg); } }
@@ -572,9 +573,19 @@
   .menu-list button:nth-child(7){ animation-delay:.21s; }
   .menu-list button:hover{ transform:translateY(-2px); box-shadow:0 8px 18px rgba(21,21,26,.07); }
   .menu-list button.menu-logout{
-    color:#d51e52;
-    background:#fff0f3;
+    color:#fff;
+    background:linear-gradient(135deg,#ff5c7c 0%,#ff2d55 55%,#d90f60 100%);
+    box-shadow:0 8px 20px rgba(255,45,120,.35);
   }
+  .menu-list button.menu-logout .menu-icon{
+    background:rgba(255,255,255,.22);
+    color:#fff;
+  }
+  .menu-list button.menu-logout:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 26px rgba(255,45,120,.45);
+  }
+  .menu-list button.menu-logout:active{ transform:scale(.98); }
   body:not(.is-authenticated) .menu-list button.menu-logout{
     display:none;
   }
@@ -1846,9 +1857,12 @@
     padding:10px 16px;
     font-size:.76rem;
   }
-  .cart-remove.is-loading::after,
-  .menu-logout.is-loading::after{
+  .cart-remove.is-loading::after{
     border-color:#d51e52;
+    border-right-color:transparent;
+  }
+  .menu-logout.is-loading::after{
+    border-color:#fff;
     border-right-color:transparent;
   }
 
