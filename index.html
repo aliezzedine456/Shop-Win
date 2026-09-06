@@ -693,6 +693,118 @@
   }
   .address-form textarea{min-height:78px; resize:vertical;}
   .address-form .menu-primary{width:100%; min-height:48px;}
+
+  /* ---- fulfillment method (pickup / delivery) ---- */
+  .fulfillment-options{
+    display:grid;
+    gap:12px;
+    margin-top:6px;
+  }
+  .fulfillment-option{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    width:100%;
+    padding:16px;
+    border:2px solid #ececf0;
+    border-radius:18px;
+    background:#fafafd;
+    text-align:left;
+    cursor:pointer;
+    transition:border-color .2s ease, background .2s ease, transform .2s ease, box-shadow .2s ease;
+  }
+  .fulfillment-option:hover{
+    border-color:var(--brand-blue-light);
+    background:var(--brand-blue-pale);
+    transform:translateY(-1px);
+    box-shadow:0 6px 16px rgba(21,88,170,.1);
+  }
+  .fulfillment-option:active{ transform:translateY(0) scale(.99); }
+  .fulfillment-option-icon{
+    flex:0 0 44px;
+    width:44px;
+    height:44px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:var(--brand-blue-pale);
+    color:var(--brand-blue);
+  }
+  .fulfillment-option-icon svg{ width:22px; height:22px; }
+  .fulfillment-option-body{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+  .fulfillment-option-body strong{ font-size:.86rem; font-weight:900; color:var(--ink); }
+  .fulfillment-option-body span{ font-size:.72rem; color:#777780; line-height:1.4; }
+  .fulfillment-option-body .fee-tag{
+    display:inline-block;
+    margin-top:4px;
+    padding:2px 9px;
+    border-radius:999px;
+    background:var(--brand-gold-pale);
+    color:var(--brand-gold-dark);
+    font-size:.66rem;
+    font-weight:800;
+    width:fit-content;
+  }
+
+  /* ---- pickup / store location panel ---- */
+  .pickup-location-card{
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+    margin-top:6px;
+    padding:16px;
+    border-radius:18px;
+    background:var(--brand-blue-pale);
+  }
+  .pickup-location-icon{
+    flex:0 0 40px;
+    width:40px;
+    height:40px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#fff;
+    color:var(--brand-blue);
+  }
+  .pickup-location-icon svg{ width:20px; height:20px; }
+  .pickup-location-info{ min-width:0; }
+  .pickup-location-info strong{ display:block; font-size:.9rem; font-weight:900; color:var(--ink); }
+  .pickup-location-info span{ display:block; margin-top:4px; font-size:.76rem; color:#4d5a72; line-height:1.5; }
+  .pickup-maps-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    width:100%;
+    margin-top:14px;
+    padding:13px 16px;
+    border:0;
+    border-radius:999px;
+    color:#fff;
+    background:linear-gradient(100deg,#4a7ecb,#163f80);
+    font:900 .8rem/1 inherit;
+    text-decoration:none;
+    cursor:pointer;
+  }
+  .pickup-maps-btn svg{ width:16px; height:16px; flex:0 0 16px; }
+  .pickup-maps-btn[aria-disabled="true"]{
+    opacity:.55;
+    pointer-events:none;
+  }
+  .delivery-fee-note{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin:2px 0 4px;
+    padding:10px 14px;
+    border-radius:14px;
+    background:var(--brand-gold-pale);
+    color:var(--brand-gold-dark);
+    font-size:.74rem;
+    font-weight:800;
+  }
   @media (max-width:480px){
     .menu-form-grid{grid-template-columns:1fr;}
   }
@@ -1811,54 +1923,64 @@
     text-align:left;
   }
   .cart-item{
-    display:grid;
-    grid-template-columns:76px 1fr auto;
-    align-items:center;
+    position:relative;
+    display:flex;
+    align-items:flex-start;
     gap:12px;
-    padding:12px;
+    padding:12px 56px 12px 12px;
     border-radius:18px;
     background:#fff;
+    transition:box-shadow .2s ease;
   }
   .cart-item img{
     width:76px;
     height:76px;
+    flex:0 0 76px;
     object-fit:contain;
     border-radius:14px;
     background:#f3f3f5;
   }
+  .cart-item-body{ min-width:0; flex:1 1 auto; }
   .cart-item h3{ font-size:0.88rem; line-height:1.2; font-weight:900; }
   .cart-item p{ margin-top:4px; color:#777780; font-size:0.68rem; line-height:1.4; }
-  .cart-item .cart-price{ color:#163f80; font-size:0.78rem; font-weight:900; white-space:nowrap; }
+  .cart-item-foot{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:8px; }
+  .cart-item .cart-price{ color:#163f80; font-size:0.82rem; font-weight:900; white-space:nowrap; }
   .cart-remove{
-    grid-column:2 / 4;
-    justify-self:end;
+    position:absolute;
+    top:12px;
+    right:12px;
     display:inline-flex;
     align-items:center;
-    gap:6px;
-    min-height:32px;
-    min-width:88px;
-    padding:7px 12px;
-    border:1px solid #fdf1d6;
-    border-radius:10px;
-    color:#8c6913;
-    background:#fdf1d6;
-    font:900 0.68rem/1 inherit;
+    justify-content:center;
+    width:36px;
+    height:36px;
+    padding:0;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,45,45,.1);
+    color:#ff2d2d;
     cursor:pointer;
-    transition:transform .2s ease, background .2s ease, box-shadow .2s ease;
+    box-shadow:0 2px 8px rgba(216,31,31,.12);
+    transition:transform .18s ease, color .18s ease, background .18s ease, box-shadow .18s ease;
   }
   .cart-remove:focus-visible{
-    outline:3px solid rgba(140,105,19,.2);
+    outline:3px solid rgba(216,31,31,.28);
     outline-offset:2px;
+    border-radius:50%;
   }
   .cart-remove:hover{
-    transform:translateY(-1px);
-    background:#fdf1d6;
-    box-shadow:0 5px 12px rgba(140,105,19,.12);
+    transform:scale(1.1);
+    color:#fff;
+    background:#ff2d2d;
+    box-shadow:0 6px 14px rgba(216,31,31,.35);
   }
+  .cart-remove:active{ transform:scale(.92); }
   .cart-remove svg{
-    width:14px;
-    height:14px;
-    flex:0 0 14px;
+    width:20px;
+    height:20px;
+    flex:0 0 20px;
+    fill:currentColor;
+    pointer-events:none;
   }
   .cart-total{
     display:flex;
@@ -1877,7 +1999,7 @@
     font-size:.76rem;
   }
   .cart-remove.is-loading::after{
-    border-color:#8c6913;
+    border-color:#ff2d2d;
     border-right-color:transparent;
   }
   .menu-logout.is-loading::after{
@@ -1917,16 +2039,10 @@
     .sheet-product-tickets{ margin-top:13px; }
     .sheet-checkout{ align-items:stretch; flex-direction:column; }
     .add-cart-btn{ width:100%; flex-basis:auto; }
-    .cart-item{ grid-template-columns:60px minmax(0,1fr); gap:9px; }
-    .cart-item img{ width:60px; height:60px; }
-    .cart-item .cart-price{ grid-column:2; grid-row:1; justify-self:end; }
-    .cart-remove{
-      grid-column:2;
-      justify-self:end;
-      min-width:86px;
-      padding:7px 10px;
-      font-size:.64rem;
-    }
+    .cart-item{ gap:9px; padding:10px 44px 10px 10px; }
+    .cart-item img{ width:60px; height:60px; flex-basis:60px; }
+    .cart-remove{ top:9px; right:9px; width:30px; height:30px; }
+    .cart-remove svg{ width:17px; height:17px; }
     .account-sheet{ width:100%; max-height:88vh; border-radius:26px 26px 0 0; padding:18px 14px calc(20px + env(safe-area-inset-bottom)); }
     .menu-back{ left:12px; }
   }
@@ -2383,9 +2499,19 @@ height: clamp(58px, 18vw, 80px);
       padding-right:12px;
     }
     .home-horizontal-row .past-draw-card,
-    .sold-out-card,
-    .home-winner-card{
+    .sold-out-card{
       flex:0 0 300px;
+    }
+    /* Past winners row: 5 champions across on desktop instead of 3 */
+    #pastWinnersHomeRow{
+      display:grid;
+      grid-template-columns:repeat(5, minmax(0,1fr));
+      gap:14px;
+    }
+    #pastWinnersHomeRow .home-winner-card{
+      flex:none;
+      width:auto;
+      min-width:0;
     }
     .draw-list{
       grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));
@@ -2453,6 +2579,10 @@ height: clamp(58px, 18vw, 80px);
   }
   @media (min-width:1500px){
     .campaign-grid{ grid-template-columns:repeat(4, minmax(0,1fr)); }
+  }
+  @media (min-width:1700px){
+    .body-content{ max-width:1640px; }
+    .campaign-grid{ grid-template-columns:repeat(5, minmax(0,1fr)); gap:18px; }
   }
 
 </style>
@@ -2679,6 +2809,7 @@ height: clamp(58px, 18vw, 80px);
       </div>
       <div class="menu-content-card">
         <p class="auth-note" style="margin:0;text-align:left;">Add your delivery details before confirming an order.</p>
+        <div class="delivery-fee-note"><span>Delivery fee</span><span>+$5.00</span></div>
         <form id="addressForm" class="address-form">
           <input id="addressStreet" type="text" placeholder="Street" required>
           <div class="menu-form-grid">
@@ -2693,6 +2824,66 @@ height: clamp(58px, 18vw, 80px);
           <button class="menu-primary" type="submit">SAVE ADDRESS &amp; CONTINUE</button>
           <div id="addressStatus" class="menu-status"></div>
         </form>
+      </div>
+    </section>
+  </div>
+
+  <div id="fulfillmentBackdrop" class="modal-backdrop" aria-hidden="true">
+    <section class="account-sheet" role="dialog" aria-modal="true" aria-labelledby="fulfillmentTitle">
+      <div class="sheet-modal-header">
+        <h2 id="fulfillmentTitle">HOW WOULD YOU LIKE YOUR ORDER?</h2>
+        <button id="fulfillmentClose" class="modal-close" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="menu-content-card">
+        <p class="auth-note" style="margin:0;text-align:left;">Choose pickup or delivery to continue.</p>
+        <div class="fulfillment-options">
+          <button type="button" class="fulfillment-option" data-method="pickup">
+            <span class="fulfillment-option-icon">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 10L5.4 4.6C5.6 3.7 6.4 3 7.4 3H16.6C17.6 3 18.4 3.7 18.6 4.6L20 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 10H21V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V10Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 10V14C3 15.1 3.9 16 5 16C6.1 16 7 15.1 7 14V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 10V14.5C7 15.6 7.9 16.5 9 16.5C10.1 16.5 11 15.6 11 14.5V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 10V14.5C11 15.6 11.9 16.5 13 16.5C14.1 16.5 15 15.6 15 14.5V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 10V14C15 15.1 15.9 16 17 16C18.1 16 19 15.1 19 14V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="fulfillment-option-body">
+              <strong>PICKUP FROM STORE</strong>
+              <span>Collect your order at our store</span>
+            </span>
+          </button>
+          <button type="button" class="fulfillment-option" data-method="delivery">
+            <span class="fulfillment-option-icon">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 7H14V17H3V7Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 10H17.5L21 13.5V17H14V10Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="18.5" r="1.6" stroke="currentColor" stroke-width="1.8"/><circle cx="17.5" cy="18.5" r="1.6" stroke="currentColor" stroke-width="1.8"/></svg>
+            </span>
+            <span class="fulfillment-option-body">
+              <strong>DELIVERY</strong>
+              <span>Delivered straight to your address.</span>
+              <span class="fee-tag" id="fulfillmentDeliveryFeeTag">+$5.00</span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="pickupBackdrop" class="modal-backdrop" aria-hidden="true">
+    <section class="account-sheet" role="dialog" aria-modal="true" aria-labelledby="pickupTitle">
+      <div class="sheet-modal-header">
+        <h2 id="pickupTitle">PICKUP LOCATION</h2>
+        <button id="pickupClose" class="modal-close" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="menu-content-card">
+        <div class="pickup-location-card">
+          <span class="pickup-location-icon">
+            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M512 1012.8c-253.6 0-511.2-54.4-511.2-158.4 0-92.8 198.4-131.2 283.2-143.2h3.2c12 0 22.4 8.8 24 20.8 0.8 6.4-0.8 12.8-4.8 17.6-4 4.8-9.6 8.8-16 9.6-176.8 25.6-242.4 72-242.4 96 0 44.8 180.8 110.4 463.2 110.4s463.2-65.6 463.2-110.4c0-24-66.4-70.4-244.8-96-6.4-0.8-12-4-16-9.6-4-4.8-5.6-11.2-4.8-17.6 1.6-12 12-20.8 24-20.8h3.2c85.6 12 285.6 50.4 285.6 143.2 0.8 103.2-256 158.4-509.6 158.4z m-16.8-169.6c-12-11.2-288.8-272.8-288.8-529.6 0-168 136.8-304.8 304.8-304.8S816 145.6 816 313.6c0 249.6-276.8 517.6-288.8 528.8l-16 16-16-15.2zM512 56.8c-141.6 0-256.8 115.2-256.8 256.8 0 200.8 196 416 256.8 477.6 61.6-63.2 257.6-282.4 257.6-477.6C768.8 172.8 653.6 56.8 512 56.8z m0 392.8c-80 0-144.8-64.8-144.8-144.8S432 160 512 160c80 0 144.8 64.8 144.8 144.8 0 80-64.8 144.8-144.8 144.8zM512 208c-53.6 0-96.8 43.2-96.8 96.8S458.4 401.6 512 401.6c53.6 0 96.8-43.2 96.8-96.8S564.8 208 512 208z"/></svg>
+          </span>
+          <div class="pickup-location-info">
+            <strong id="pickupStoreName">Our store</strong>
+            <span id="pickupStoreAddress">The store location hasn't been set yet.</span>
+          </div>
+        </div>
+        <a id="pickupMapsLink" class="pickup-maps-btn" href="#" target="_blank" rel="noopener" aria-disabled="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 20L3 17V4L9 7M9 20L15 17M9 20V7M15 17L21 20V7L15 4M15 17V4M9 7L15 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          OPEN IN GOOGLE MAPS
+        </a>
+        <p class="auth-note" style="margin:14px 0 0;text-align:left;">just show your tickets when you arrive.</p>
+        <button id="pickupConfirmBtn" class="menu-primary" type="button" style="width:100%;margin-top:14px;">CONFIRM PICKUP ORDER</button>
+        <div id="pickupStatus" class="menu-status"></div>
       </div>
     </section>
   </div>
@@ -2859,6 +3050,8 @@ height: clamp(58px, 18vw, 80px);
     const authBackdrop = document.getElementById("authBackdrop");
     const menuBackdrop = document.getElementById("menuBackdrop");
     const addressBackdrop = document.getElementById("addressBackdrop");
+    const fulfillmentBackdrop = document.getElementById("fulfillmentBackdrop");
+    const pickupBackdrop = document.getElementById("pickupBackdrop");
     const infoBackdrop = document.getElementById("infoBackdrop");
     const stickyTopNav = document.getElementById("stickyTopNav");
     const phoneStep = document.getElementById("phoneStep");
@@ -2881,6 +3074,44 @@ height: clamp(58px, 18vw, 80px);
     let activeSection = "home";
     let pendingSection = null;
     let pendingCheckout = false;
+    const DELIVERY_FEE = 5;
+    let storeLocation = { name:"", address:"", lat:null, lng:null, mapsUrl:"" };
+
+    function storeLocationMapsUrl(){
+      if (storeLocation.mapsUrl) return storeLocation.mapsUrl;
+      if (storeLocation.lat != null && storeLocation.lng != null) {
+        return `https://www.google.com/maps/search/?api=1&query=${storeLocation.lat},${storeLocation.lng}`;
+      }
+      if (storeLocation.address) {
+        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(storeLocation.address)}`;
+      }
+      return "";
+    }
+
+    function renderPickupLocation(){
+      const nameEl = document.getElementById("pickupStoreName");
+      const addressEl = document.getElementById("pickupStoreAddress");
+      const mapsLink = document.getElementById("pickupMapsLink");
+      if (!nameEl || !addressEl || !mapsLink) return;
+      nameEl.textContent = storeLocation.name || "Our store";
+      const hasCoords = storeLocation.lat != null && storeLocation.lng != null;
+      if (storeLocation.address) {
+        addressEl.textContent = storeLocation.address;
+      } else if (hasCoords) {
+        addressEl.textContent = "Tap below to open our pickup spot in Google Maps.";
+      } else {
+        addressEl.textContent = "The store location hasn't been set yet.";
+      }
+      const url = storeLocationMapsUrl();
+      if (url) {
+        mapsLink.href = url;
+        mapsLink.removeAttribute("aria-disabled");
+      } else {
+        mapsLink.href = "#";
+        mapsLink.setAttribute("aria-disabled", "true");
+      }
+    }
+    window.renderPickupLocation = renderPickupLocation;
 
     function readWalletPayment(){
       try { return JSON.parse(localStorage.getItem(WALLET_PAYMENT_KEY)) || null; }
@@ -3060,14 +3291,83 @@ height: clamp(58px, 18vw, 80px);
       document.getElementById("addressNotes").value = address.notes || "";
       document.getElementById("addressStatus").textContent = "";
       setModal(menuBackdrop, false);
+      setModal(fulfillmentBackdrop, false);
+      setModal(pickupBackdrop, false);
       setModal(addressBackdrop, true);
     };
+
+    window.openFulfillmentPanel = (forCheckout = true) => {
+      if (!isLoggedIn()) {
+        pendingCheckout = forCheckout;
+        pendingSection = "cart";
+        openAuthPanel();
+        return;
+      }
+      pendingCheckout = forCheckout;
+      if (forCheckout && !hasWalletPaymentDetails()) {
+        setSection("wallet");
+        window.setTimeout(() => document.getElementById("walletName")?.focus(), 180);
+        return;
+      }
+      setModal(menuBackdrop, false);
+      setModal(addressBackdrop, false);
+      setModal(pickupBackdrop, false);
+      setModal(fulfillmentBackdrop, true);
+    };
+
+    document.getElementById("fulfillmentClose").addEventListener("click", () => setModal(fulfillmentBackdrop, false));
+    document.getElementById("pickupClose").addEventListener("click", () => setModal(pickupBackdrop, false));
+    document.querySelectorAll(".fulfillment-option").forEach((option) => {
+      option.addEventListener("click", () => {
+        const method = option.dataset.method;
+        setModal(fulfillmentBackdrop, false);
+        if (method === "pickup") {
+          pendingCheckout = false;
+          document.getElementById("pickupStatus").textContent = "";
+          renderPickupLocation();
+          setModal(pickupBackdrop, true);
+        } else {
+          window.openAddressPanel?.(true);
+        }
+      });
+    });
+    document.getElementById("pickupConfirmBtn").addEventListener("click", async (event) => {
+      const button = event.currentTarget;
+      const status = document.getElementById("pickupStatus");
+      setButtonLoading(button, true);
+      status.textContent = "Placing your order…";
+      try {
+        if (typeof window.placeOrder !== "function") throw new Error("Checkout is still loading.");
+        await window.placeOrder(null, "pickup");
+        setModal(pickupBackdrop, false);
+      } catch (err) {
+        status.textContent = err.message || "Could not place the order.";
+      } finally {
+        setButtonLoading(button, false);
+      }
+    });
+    [fulfillmentBackdrop, pickupBackdrop].forEach((backdrop) => {
+      backdrop.addEventListener("click", (event) => {
+        if (event.target === backdrop) setModal(backdrop, false);
+      });
+    });
 
     window.applyAppSettings = (settings = {}) => {
       document.getElementById("menuHowText").textContent = settings.howItWorks ||
         "Shop, choose a product, collect tickets, and follow the draw date to see if you win.";
       document.getElementById("menuAboutText").textContent = settings.aboutUs ||
         "Shop & Win is part of a global community built around rewarding everyday shopping with more chances to win.";
+      // Store pickup location — set by the admin from admin.html and
+      // synced through the same `appSettings/general` document as the
+      // "how it works" / "about us" text above.
+      storeLocation = {
+        name: settings.storeLocationName || settings.storeName || "",
+        address: settings.storeLocationAddress || settings.storeAddress || "",
+        lat: settings.storeLocationLat ?? settings.storeLat ?? null,
+        lng: settings.storeLocationLng ?? settings.storeLng ?? null,
+        mapsUrl: settings.storeLocationMapsUrl || settings.storeMapsUrl || ""
+      };
+      renderPickupLocation();
     };
 
     document.querySelectorAll(".login-btn").forEach((button) => {
@@ -3133,7 +3433,7 @@ height: clamp(58px, 18vw, 80px);
       if (pendingCheckout) {
         pendingCheckout = false;
         setSection("cart");
-        window.setTimeout(() => window.openAddressPanel?.(true), 180);
+        window.setTimeout(() => window.openFulfillmentPanel?.(true), 180);
       }
       form.querySelector("button[type=submit]")?.blur();
     });
@@ -3187,7 +3487,7 @@ height: clamp(58px, 18vw, 80px);
         status.textContent = pendingCheckout ? "Address saved. Preparing your order…" : "Address saved.";
         if (pendingCheckout && typeof window.placeOrder === "function") {
           pendingCheckout = false;
-          await window.placeOrder(address);
+          await window.placeOrder(address, "delivery");
           setModal(addressBackdrop, false);
         }
       } catch (err) {
@@ -3256,7 +3556,7 @@ height: clamp(58px, 18vw, 80px);
         const nextSection = pendingSection;
         pendingSection = null;
         if (nextSection) setSection(nextSection);
-        if (pendingCheckout && window.openAddressPanel) window.openAddressPanel(true);
+        if (pendingCheckout && window.openFulfillmentPanel) window.openFulfillmentPanel(true);
       } catch (err) {
         authError.textContent = err.message || "Could not save your profile.";
         authError.style.display = "block";
@@ -3297,7 +3597,7 @@ height: clamp(58px, 18vw, 80px);
         setSection(nextSection);
       }
       if (pendingCheckout && window.firebaseUser && window.firebaseProfile) {
-        window.openAddressPanel?.(true);
+        window.openFulfillmentPanel?.(true);
       }
     });
 
@@ -3521,7 +3821,7 @@ height: clamp(58px, 18vw, 80px);
       signInWithEmailAndPassword, createUserWithEmailAndPassword, fetchSignInMethodsForEmail
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import {
-      getFirestore, collection, onSnapshot, orderBy, query, where, doc, getDoc, setDoc, addDoc, increment, serverTimestamp
+      getFirestore, collection, onSnapshot, getDocs, orderBy, query, where, doc, getDoc, setDoc, addDoc, increment, serverTimestamp
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const app = initializeApp(firebaseConfig);
@@ -3603,16 +3903,17 @@ height: clamp(58px, 18vw, 80px);
         card.className = "cart-item";
         card.innerHTML = `
           <img src="${escapeHtml(item.imageUrl || DEFAULT_BANNER)}" alt="${escapeHtml(item.productName)}">
-          <div>
+          <div class="cart-item-body">
             <h3>${escapeHtml(item.productName)}</h3>
             <p>${escapeHtml(item.campaignName || "Winning campaign")}<br>Quantity: ${qty} • ${tickets * qty} ticket${tickets * qty === 1 ? "" : "s"}</p>
+            <div class="cart-item-foot">
+              <span class="cart-price">${money(price * qty)}</span>
+            </div>
           </div>
-          <div class="cart-price">${money(price * qty)}</div>
-          <button class="cart-remove" type="button">
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 7H18M10 7V5H14V7M8 7L9 19H15L16 7M10 11V16M14 11V16" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+          <button class="cart-remove" type="button" title="Remove item" aria-label="Remove ${escapeHtml(item.productName)} from cart">
+            <svg aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M12,2 C17.5228475,2 22,6.4771525 22,12 C22,17.5228475 17.5228475,22 12,22 C6.4771525,22 2,17.5228475 2,12 C2,6.4771525 6.4771525,2 12,2 Z M12,4 C7.581722,4 4,7.581722 4,12 C4,16.418278 7.581722,20 12,20 C16.418278,20 20,16.418278 20,12 C20,7.581722 16.418278,4 12,4 Z M7.29325,7.29325 C7.65417308,6.93232692 8.22044527,6.90456361 8.61296051,7.20996006 L8.70725,7.29325 L12.00025,10.58625 L15.29325,7.29325 C15.68425,6.90225 16.31625,6.90225 16.70725,7.29325 C17.0681731,7.65417308 17.0959364,8.22044527 16.7905399,8.61296051 L16.70725,8.70725 L13.41425,12.00025 L16.70725,15.29325 C17.09825,15.68425 17.09825,16.31625 16.70725,16.70725 C16.51225,16.90225 16.25625,17.00025 16.00025,17.00025 C15.7869167,17.00025 15.5735833,16.9321944 15.3955509,16.796662 L15.29325,16.70725 L12.00025,13.41425 L8.70725,16.70725 C8.51225,16.90225 8.25625,17.00025 8.00025,17.00025 C7.74425,17.00025 7.48825,16.90225 7.29325,16.70725 C6.93232692,16.3463269 6.90456361,15.7800547 7.20996006,15.3875395 L7.29325,15.29325 L10.58625,12.00025 L7.29325,8.70725 C6.90225,8.31625 6.90225,7.68425 7.29325,7.29325 Z"/>
             </svg>
-            REMOVE
           </button>`;
       card.querySelector(".cart-remove").addEventListener("click", async (event) => {
         const button = event.currentTarget;
@@ -3627,10 +3928,10 @@ height: clamp(58px, 18vw, 80px);
       });
       cartTotal.hidden = false;
       cartTotal.innerHTML = `
-        <div><span>${ticketTotal} ticket${ticketTotal === 1 ? "" : "s"}</span><br><span>${money(total)}</span></div>
+        <div><span>${ticketTotal} ticket${ticketTotal === 1 ? "" : "s"}</span><br><span>${money(total)}</span><br><span style="font-weight:600;color:#8b8b93;font-size:.62rem;">+$5.00 if you choose delivery</span></div>
         <button id="checkoutBtn" class="add-cart-btn" type="button">CHECKOUT</button>`;
       document.getElementById("checkoutBtn").addEventListener("click", () => {
-        window.openAddressPanel?.(true);
+        window.openFulfillmentPanel?.(true);
       });
     }
     window.renderCart = renderCart;
@@ -3715,12 +4016,18 @@ height: clamp(58px, 18vw, 80px);
       const target = document.getElementById("ordersList");
       if (!target) return;
       target.innerHTML = userOrders.length
-        ? userOrders.map((order) => `
+        ? userOrders.map((order) => {
+            const isPickup = order.fulfillment?.method === "pickup";
+            const fulfillmentLine = isPickup
+              ? `Pickup at ${escapeHtml(order.fulfillment?.pickupLocation?.name || "our store")}`
+              : `Delivery to ${escapeHtml(order.address?.street || "")}, ${escapeHtml(order.address?.area || "")}, ${escapeHtml(order.address?.city || "")}`;
+            return `
           <div class="menu-order-item">
             <strong>Order ${escapeHtml(order.orderNumber || order.id || "—")}</strong>
             <span>${escapeHtml(order.status || "Pending")} • ${money(order.total)} • ${Number(order.totalTickets || 0)} tickets</span>
-            <span>${escapeHtml(order.address?.street || "")}, ${escapeHtml(order.address?.area || "")}, ${escapeHtml(order.address?.city || "")}</span>
-          </div>`).join("")
+            <span>${fulfillmentLine}</span>
+          </div>`;
+          }).join("")
         : `<p class="auth-note" style="margin:0;text-align:left;">No orders yet. Your confirmed purchases will appear here.</p>`;
     };
 
@@ -3936,14 +4243,20 @@ height: clamp(58px, 18vw, 80px);
       );
     }
 
-    window.placeOrder = async (address) => {
+    window.placeOrder = async (address, method = "delivery") => {
       if (!firebaseUser || !cartItems.length) throw new Error("Add a product before checkout.");
       const payment = window.getWalletPaymentDetails?.();
       if (!payment?.name || !payment?.number || !payment?.expiry || !payment?.cvv) {
         throw new Error("Add your payment details in Wallet before checkout.");
       }
-      const total = cartItems.reduce((sum, item) =>
+      const isPickup = method === "pickup";
+      if (!isPickup && (!address || !address.street || !address.city)) {
+        throw new Error("Add a delivery address before checkout.");
+      }
+      const deliveryFee = isPickup ? 0 : DELIVERY_FEE;
+      const itemsTotal = cartItems.reduce((sum, item) =>
         sum + (Number.parseFloat(item.price) || 0) * (Number(item.quantity) || 1), 0);
+      const total = itemsTotal + deliveryFee;
       const totalTickets = cartItems.reduce((sum, item) =>
         sum + (Number.parseInt(item.tickets, 10) || 1) * (Number(item.quantity) || 1), 0);
       const orderNumber = `SW-${Date.now().toString().slice(-8)}`;
@@ -3958,7 +4271,15 @@ height: clamp(58px, 18vw, 80px);
           lastName: firebaseProfile?.lastName || "",
           email: firebaseProfile?.email || ""
         },
-        address,
+        address: isPickup ? null : address,
+        fulfillment: {
+          method: isPickup ? "pickup" : "delivery",
+          deliveryFee,
+          pickupLocation: isPickup ? {
+            name: storeLocation.name || "",
+            address: storeLocation.address || ""
+          } : null
+        },
         payment: {
           method: "Card",
           cardholderName: payment.name,
@@ -3966,6 +4287,8 @@ height: clamp(58px, 18vw, 80px);
           expiry: payment.expiry
         },
         items: cartItems,
+        itemsTotal,
+        deliveryFee,
         total,
         totalTickets,
         status: "Pending",
@@ -4667,23 +4990,27 @@ height: clamp(58px, 18vw, 80px);
       if (event.target === sheetBackdrop) closeProductSheet();
     });
 
-    onSnapshot(categoriesCol, (snap) => {
+    // Categories (and their tickets-needed / tickets-sold totals) are read
+    // once from Firestore instead of kept live, so ticket counts on the
+    // home page don't shift under a shopper's finger while they browse.
+    getDocs(categoriesCol).then((snap) => {
       categories = newestFirst(snap.docs.map((d) => ({ id: d.id, ...d.data() }))).reverse();
       renderCategories();
       renderCampaigns();
       renderDraws();
       markAppDataLoaded("categories");
-    }, (err) => {
+    }).catch((err) => {
       markAppDataLoaded("categories");
       console.warn("Categories unavailable:", err);
     });
 
-    onSnapshot(campaignsCol, (snap) => {
+    // Same one-time-read approach for campaigns and their ticket totals.
+    getDocs(campaignsCol).then((snap) => {
       campaigns = newestFirst(snap.docs.map((d) => ({ id: d.id, ...d.data() }))).reverse();
       renderCampaigns();
       renderDraws();
       markAppDataLoaded("campaigns");
-    }, (err) => {
+    }).catch((err) => {
       markAppDataLoaded("campaigns");
       console.warn("Campaigns unavailable:", err);
     });
