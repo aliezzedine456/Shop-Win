@@ -2974,7 +2974,7 @@ height: clamp(58px, 18vw, 80px);
         </svg>
       </div>
       <div class="order-success-title">Order confirmed!</div>
-      <div class="order-success-copy">Order <strong id="orderSuccessNumber">SW-00000000</strong> is on its way. Track it any time under <strong>My Orders</strong>.</div>
+      <strong id="orderSuccessNumber" style="display:none;">SW-00000000</strong>
       <button id="orderSuccessPrimary" class="primary-action" type="button">VIEW MY ORDERS</button>
       <button id="orderSuccessClose" class="order-success-secondary" type="button">Keep shopping</button>
     </div>
@@ -4332,7 +4332,7 @@ height: clamp(58px, 18vw, 80px);
       window.renderOrders?.();
       window.renderTickets?.();
       window.renderCart?.();
-      window.showOrderSuccess?.(orderNumber);
+      window.showOrderSuccess?.(orderNumber, isPickup);
     };
 
     onAuthStateChanged(auth, async (user) => {
@@ -5097,7 +5097,7 @@ height: clamp(58px, 18vw, 80px);
       successBackdrop.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
     }
-    function showOrderSuccess(orderNumber){
+    function showOrderSuccess(orderNumber, isPickup){
       if (!successBackdrop) return;
       if (successNumberEl) successNumberEl.textContent = orderNumber || "your order";
       successBackdrop.classList.add("open");
