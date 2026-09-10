@@ -3936,16 +3936,23 @@ height: clamp(58px, 18vw, 80px);
     }
     window.renderCart = renderCart;
 
+    let pendingCartWrites = 0;
+
     async function persistCart(){
       localStorage.setItem("sw_cart_items", JSON.stringify(cartItems));
       localStorage.setItem("sw_cart_count", String(cartItems.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0)));
       renderCart();
       if (firebaseUser) {
-        await setDoc(doc(db, "carts", firebaseUser.uid), {
-          userId: firebaseUser.uid,
-          items: cartItems,
-          updatedAt: serverTimestamp()
-        }, { merge:true });
+        pendingCartWrites++;
+        try {
+          await setDoc(doc(db, "carts", firebaseUser.uid), {
+            userId: firebaseUser.uid,
+            items: cartItems,
+            updatedAt: serverTimestamp()
+          }, { merge:true });
+        } finally {
+          pendingCartWrites = Math.max(0, pendingCartWrites - 1);
+        }
       }
     }
 
@@ -4087,6 +4094,11 @@ height: clamp(58px, 18vw, 80px);
     async function syncCartForUser(user){
       if (unsubscribeCart) unsubscribeCart();
       unsubscribeCart = onSnapshot(doc(db, "carts", user.uid), async (snap) => {
+        // While we still have a write in flight (e.g. right after removing an
+        // item), ignore snapshots that are only the local optimistic echo —
+        // otherwise a stale pre-write version can briefly flash the removed
+        // item back before the server-confirmed snapshot lands.
+        if (pendingCartWrites > 0 && snap.metadata.hasPendingWrites) return;
         const remote = snap.exists() && Array.isArray(snap.data().items) ? snap.data().items : [];
         if (remote.length || !cartItems.length) {
           cartItems = remote;

@@ -793,7 +793,7 @@
       <p class="empty-note" id="ordersEmptyNote">No purchases yet.</p>
       <div class="user-table-wrap">
         <table class="user-table order-table">
-          <thead><tr><th>Order</th><th>Customer</th><th>Phone</th><th>Address</th><th>Items</th><th>Total</th><th>Tickets</th><th>Status</th><th>Created</th></tr></thead>
+          <thead><tr><th>Order</th><th>Customer</th><th>Phone</th><th>Address</th><th>Items</th><th>Campaign</th><th>Total</th><th>Tickets</th><th>Status</th><th>Created</th></tr></thead>
           <tbody id="orderTableBody"></tbody>
         </table>
       </div>
@@ -1587,6 +1587,9 @@
             const itemSummary = Array.isArray(order.items)
               ? order.items.map((item) => `${item.productName || "Product"} ×${item.quantity || 1}`).join(", ")
               : "—";
+            const campaignSummary = Array.isArray(order.items)
+              ? [...new Set(order.items.map((item) => item.campaignName || item.campaignTitle).filter(Boolean))].join(", ")
+              : "";
             const created = order.createdAt?.toDate
               ? order.createdAt.toDate().toLocaleString()
               : "—";
@@ -1597,6 +1600,7 @@
               <td>${adminEscape(order.userPhone || "—")}</td>
               <td>${adminEscape([address.street, address.area, address.city, address.building].filter(Boolean).join(", ") || "—")}</td>
               <td>${adminEscape(itemSummary)}</td>
+              <td>${adminEscape(campaignSummary || "—")}</td>
               <td>$${Number(order.total || 0).toFixed(2)}</td>
               <td>${Number(order.totalTickets || 0)}</td>
               <td><span class="order-status">${adminEscape(order.status || "Pending")}</span></td>
